@@ -15,7 +15,7 @@
     - [Limit](#limit)
     - [Offset](#offset)
     - [Expand](#expand)
-    - [Filter](#filter)
+    - [Filters](#filters)
     - [Order](#order)
   - [Static Methods](#static-methods)
     - [Validate API URL](#validate-api-url)
@@ -26,10 +26,10 @@
     - [Set or Get API Key](#set-or-get-api-key)
     - [Close CURL Session](#close-curl-session)
     - [Reinitialize CURL session](#reinitialize-curl-session)
+    - [Stringify Options](#stringify-options)
     - [Custom Query](#custom-query)
   - [Private Methods](#private-methods)
     - [Initialize CURL Session](#initialize-curl-session)
-    - [Stringify Options](#stringify-options)
     - [Construct URL](#construct-url)
     - [Executing Query](#executing-query)
   - [Endpoints](#endpoints)
@@ -59,7 +59,6 @@
   - [Example Query](#example-query)
   - [Return Values](#return-values)
 
-
 ## Introduction
 The class's main purpose is to provide a simple solution to fetch data from IGDB's database using PHP. Method names are matching the IGDB's endpoint names.
 
@@ -88,7 +87,7 @@ $IGDB = new IGDB('<YOUR API URL>', '<YOUR API KEY>');
 ``private IGDB::$DEFAULT_OFFSET ( number )``: the default value of the offset in the queries. It's a predefined value, that you can update calling [``IGDB::set_default()``](#set-default) method. In case you set an offset parameter in the [``$options``](#options-parameters) array, this value will be ignored. By default this value is 0.
 
 ### Default Fields
-``private IGDB::$DEFAULT_FIELDS ( string )``: the default value of the fields in the queries. It's a predefined value, that you can update calling [``IGDB::set_default()``](#set-default) method. In case you set a limit parameter in the [``$options``](#options-parameters) array, this value will be ignored. By default this value is * (all fields).
+``private IGDB::$DEFAULT_FIELDS ( string )``: the default value of the fields in the queries. It's a predefined value, that you can update calling [``IGDB::set_default()``](#set-default) method. In case you set a fields parameter in the [``$options``](#options-parameters) array, this value will be ignored. By default this value is * (all fields).
 
 ### CURL Resource Handler
 ``private IGDB::$CH ( resource )``: CURL resource handler. Return value of [``curl_init()``](http://php.net/curl_init). You can close  [``IGDB::close_handler()``](##close-curl-session) and reinitialize [``IGDB::reinit_handler()``](#reinitialize-curl-session) the session.
@@ -122,22 +121,22 @@ $options = array(
 ### Limit
 ``limit ( number ) [ optional ]``: the maximum number of results in a single query. (minimum = 0; default = 10; maximum = 50)
 
-> [IGDB Pagination Documentation](https://igdb.github.io/api/references/fields/)
+> [IGDB Pagination Documentation](https://igdb.github.io/api/references/pagination/)
 
 ### Offset
 ``offset ( number ) [ optional ]``: this will start the result list at the provided value and will give ``limit`` number of results. The lowest value it can get is 0 and the greatest is 50.
 
-> [IGDB Pagination Documentation](https://igdb.github.io/api/references/fields/)
+> [IGDB Pagination Documentation](https://igdb.github.io/api/references/pagination/)
 
 ### Expand
 ``expand ( array | string ) [ optional ]``: the expander feature is used to combine multiple requests. If this parameter is defined, than you have to provide the ``fields`` parameter as well.
 
 > [IGDB Expander Documentation ](https://igdb.github.io/api/references/expander/)
 
-### Filter
+### Filters
 ``filter ( string ) [ optional ]``: filters are used to swift through results to get what you want. You can exclude and include results based on their properties.
 
-> [IGDB Filter Documentation](https://igdb.github.io/api/references/filter/)
+> [IGDB Filters Documentation](https://igdb.github.io/api/references/filters/)
 
 ### Order
 ``order ( string ) [ optional ]``: ordering (sorting) is used to order results by a specific field. When not provided, the results will be ordered ASCENDING by ID.
@@ -156,7 +155,7 @@ Validates whether the provided ``$url`` is valid or not. Returns a ( boolean ) T
 Validates whether the provided ``$key`` is valid or not. Returns a ( boolean ) TRUE if valid, ( boolean ) FALSE otherwise.
 
 ## Public Methods
-These methods does not return any values, nor launch any queries.
+
 ### Set Default
 ``public IGDB::set_default ( string $parameter, mixed $value ) : void``<br/>
 Set the default values for the following parameters:
@@ -191,9 +190,13 @@ You can close the CURL session handler manually if you need to. The class will n
 ``public IGDB::reinit_handler ( ) : void``<br/>
 After you closed the CURL session manually with [``IGDB::close_handler()``](#close-curl-session) than you will not be able to run any query against IGDB with the current instance of the class. However, if you need to run a query again, just call this method, and the CURL handler will be reinitialized.
 
+### Stringify Options
+``public IGDB::stringify_options ( array $options ) : string``<br/>
+This method is checking every parameter passed to it. Throwing Exceptions in case of errors. If everything is fine, the complete options array is returned as a query string. You can check the request string with this method.
+
 ### Custom Query
-``public IGDB::custom_query ( string $url ) : void``<br/>
-You can launch manually assembled queries with this method. Great solution for testing purposes.
+``public IGDB::custom_query ( string $url ) : array``<br/>
+You can launch manually assembled queries with this method. Great solution for testing purposes. This method automatically executes the query against IGDB and will return the result array.
 
 Parameter:
  - ``$url ( string )``: this URL will be appended to the API URL.
@@ -208,10 +211,6 @@ These methods cannot be accessed from outside of the class. These are responsibl
 ### Initialize CURL Session
 ``private IGDB::_init_curl ( ) : void``<br/>
 This method creates the CURL session and sets a few additional configuration to it.
-
-### Stringify Options
-``private IGDB::_stringify_options ( array $options ) : string``<br/>
-This method is checking every parameter passed to it. Throwing Exceptions in case of errors. If everything is fine, the complete options array is returned as a query string.
 
 ### Construct URL
 ``private IGDB::_construct_url ( string $endpoint, array $options ) : string``<br/>

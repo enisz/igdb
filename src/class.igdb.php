@@ -93,7 +93,7 @@
          * @throws Exception If unrecognized parameter is provided in the options array.
          * @return $url ( string ) Query string from the options array.
          */
-        private function _stringify_options($options)
+        public function stringify_options($options)
         {
             // Throwing Exception if neither id nor search is provided
             if(!isset($options['id']) && !isset($options['search']))
@@ -152,6 +152,13 @@
                 else // Else replacing every whitespace in the value
                     $value = preg_replace('# #', '', $value);
 
+                if($parameter == 'filter') // filters needs to be constructed differently
+                {
+                    list($x, $y) = explode('=', $value);
+                    $parameter = 'filter' . $x;
+                    $value = $y;
+                }
+
                 array_push($params, $parameter . '=' . $value);
             }
 
@@ -170,7 +177,7 @@
          */
         private function _construct_url($endpoint, $options)
         {
-            return rtrim($this->API_URL, '/') . '/' . $endpoint . '/' . $this->_stringify_options($options);
+            return rtrim($this->API_URL, '/') . '/' . $endpoint . '/' . $this->stringify_options($options);
         }
 
         /**
