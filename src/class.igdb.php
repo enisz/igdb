@@ -5,7 +5,7 @@
      * 
      * Fethching data from IGDB's database.
      * 
-     * @version 1.0
+     * @version 1.0.1
      * @author Enisz Abdalla <enisz87@gmail.com>
      */
 
@@ -45,28 +45,6 @@
         }
 
         /**
-         * Checking the passed API URL whether it is a valid API URL or not.
-         * 
-         * @param $url ( string ) the URL of the IGDB API
-         * @return boolean whether $url is valid url or not.
-         */
-        public static function validate_api_url($url)
-        {
-            return preg_match('#^https://api-[0-9].*\.apicast.io(/|)#', $url) == false ? false : true;
-        }
-
-        /**
-         * Checking the passed API Key whether it is a valid API Key or not.
-         * 
-         * @param $key ( string ) the API Key provided by IGDB
-         * @return boolean whether the key is valid or not
-         */
-        public static function validate_api_key($key)
-        {
-            return preg_match('#^[a-f0-9]{32}$#', $key) == false ? false : true;
-        }
-
-        /**
          * Initializing Curl Session. Doesn't have return value.
          * 
          * @return void
@@ -91,6 +69,7 @@
          * @throws Exception If neither id nor search parameter is set.
          * @throws Exception If fields parameter is missing when you want to use expander feature.
          * @throws Exception If unrecognized parameter is provided in the options array.
+         * @throws Exception If filter parameter is missing values or containing invalid values
          * @return $url ( string ) Query string from the options array.
          */
         public function stringify_options($options)
@@ -120,16 +99,21 @@
 
             $query = '';
 
+            // If ID provided in the options
             if(array_key_exists('id', $options))
             {
+                // If both ID and SEARCH provided, remove the search element from the options
                 if(array_key_exists('search', $options))
                     unset($options['search']);
 
+                // If the ID is an array, implode it with commas
                 if(is_array($options['id']))
                     $options['id'] = implode(',', $options['id']);
                 
+                // Append the ID to the query url
                 $query .= $options['id'];
 
+                // Remove the ID from the options to avoid being stringified later
                 unset($options['id']);
             }
 
@@ -143,23 +127,100 @@
                 if(!in_array($parameter, $available_options))
                     throw new Exception('Unrecognized option parameter: ' . $parameter . '!');
                 
-                // Search parameter have to be URL encoded
-                if($parameter == 'search')
-                    $value = urlencode($value);
-                
-                if(is_array($value)) // If the value is an array, than implode it with commas
-                    $value = implode(',', $value);
-                else // Else replacing every whitespace in the value
-                    $value = preg_replace('# #', '', $value);
-
-                if($parameter == 'filter') // filters needs to be constructed differently
+                switch($parameter)
                 {
-                    list($x, $y) = explode('=', $value);
-                    $parameter = 'filter' . $x;
-                    $value = $y;
+                    // The search parameter have to be url encoded
+                    case 'search':
+                        $value = urlencode($value);
+                    break;
+
+                    // The filter parameters have to be constructed differently
+                    case 'filter':
+                        $available_postfixes = array(
+                            'eq', // Equal: Exact match equal.
+                            'not_eq', // Not Equal: Exact match equal.
+                            'gt', // Greater than works only on numbers.
+                            'gte', // Greater than or equal to works only on numbers.
+                            'lt', // Less than works only on numbers.
+                            'lte', // Less than or equal to works only on numbers.
+                            'prefix', // Prefix of a value only works on strings.
+                            'exists', // The value is not null.
+                            'not_exists', // The value is null.
+                            'in', // The value exists within the (comma separated) array (AND between values).
+                            'not_in', // The values must not exists within the (comma separated) array (AND between values).
+                            'any', // The value has any within the (comma separated) array (OR between values).
+                        );
+
+                        // Only one filter parameter as array => converting to array
+                        if(is_array($value) && array_key_exists('field', $value) && array_key_exists('postfix', $value) && array_key_exists('value', $value))
+                        {
+                            $value = array(
+                                array(
+                                    'field' => $value['field'],
+                                    'postfix' => $value['postfix'],
+                                    'value' => $value['value']
+                                )
+                            );
+                        }
+
+                        // Several filter parameters as array
+                        else if(is_array($value) && array_key_exists(0, $value))
+                        {
+                            // Empty clause, just checking the type
+                        }
+
+                        // One parameter as string
+                        else if(!is_array($value) && preg_match('#\[([^\]]*)\]\[([^\]]*)\]=(.*)#i', $value, $match))
+                        {
+                            list($match, $field, $postfix, $param) = $match;
+
+                            $value = array(
+                                array(
+                                    'field' => $field,
+                                    'postfix' => $postfix,
+                                    'value' => $param
+                                )
+                            );
+                        }
+
+                        else
+                            throw new Exception('Invalid or missing filter parameters!');
+
+                        // Temp variables
+                        $tempparameters = array();
+                        $tempvalues = array();
+
+                        foreach($value as $index => $filter)
+                        {
+                            if(!array_key_exists('field', $filter) || !array_key_exists('postfix', $filter) || !array_key_exists('value', $filter))
+                                throw new Exception('Invalid or missing filter parameter in filter #' . $index . '!');
+
+                            if(!in_array($filter['postfix'], $available_postfixes))
+                                throw new Exception('Invalid postfix value ' . $filter['postfix'] . ' in filter #' . $index . '!');
+                            
+                            array_push($tempparameters, 'filter[' . $filter['field'] . '][' . $filter['postfix'] . ']');
+                            array_push($tempvalues, $filter['value']);
+                        }
+
+                        $parameter = $tempparameters;
+                        $value = $tempvalues;
+
+                        // Removing temp variables
+                        unset($tempparameters, $tempvalues);
+                    break;
+
+                    // If the parameters value is an array then implode it with commas
+                    // Else remove the whitespaces, if thers is any
+                    default:
+                        is_array($value) ? $value = implode(',', $value) : $value = preg_replace('# #', '', $value);
+                    break;
                 }
 
-                array_push($params, $parameter . '=' . $value);
+                if(is_array($parameter))
+                    foreach($parameter as $index => $param)
+                        array_push($params, $param . '=' . $value[$index]);
+                else
+                    array_push($params, $parameter . '=' . $value);
             }
 
             $query .= implode('&', $params);
@@ -187,7 +248,7 @@
          * 
          * @param $url ( string ) The complete IGDB URL.
          * @throws Exception in case the curl session has been closed manually.
-         * @throws Exception in case of failed request
+         * @throws Exception in case of HTTP 0 response (Failed Request)
          * @throws Exception in case of HTTP 400 response (Bad Request)
          * @throws Exception in case of HTTP 401 response (Unauthorized)
          * @throws Exception in case of HTTP 403 response (Forbidden)
@@ -212,7 +273,7 @@
             switch($request['http_code'])
             {
                 case 0: // Failed Request
-                    throw new Exception('Request failed! Check your API URL!');
+                    throw new Exception('Request failed! Check the Request URL!');
                 break;
 
                 case 200: // OK
@@ -221,19 +282,7 @@
                 break;
 
                 case 400: // Bad Request
-                    if(property_exists($result, 'Err'))
-                        $error = $result->Err->message;
-                    
-                    if(property_exists($result, 'message'))
-                        $error = $result->message;
-
-                    if(!isset($error))
-                        $error = 'Error 400: Bad Request!';
-                    
-                    var_dump($result);
-                    var_dump($request);
-
-                    throw new Exception($error);
+                    throw new Exception('Error 400: Bad Request!');
                 break;
 
                 case 401: // Unauthorized
@@ -363,8 +412,6 @@
          * Reinitialize the CURL session. Simply calls the _init_curl private method.
          * 
          * Doesn't have return value.
-         * 
-         * @param void
          */
         public function reinit_handler()
         {

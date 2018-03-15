@@ -1,4 +1,5 @@
 # **Internet Game Database API Class Documentation**
+
   - [Introduction](#introduction)
   - [Initializing Class](#initializing-class)
   - [Class Properties](#class-properties)
@@ -17,9 +18,6 @@
     - [Expand](#expand)
     - [Filters](#filters)
     - [Order](#order)
-  - [Static Methods](#static-methods)
-    - [Validate API URL](#validate-api-url)
-    - [Validate API Key](#validate-api-key)
   - [Public Methods](#public-methods)
     - [Set Default](#set-default)
     - [Set or Get API URL](#set-or-get-api-url)
@@ -58,6 +56,8 @@
     - [Versions](#versions)
   - [Example Query](#example-query)
   - [Return Values](#return-values)
+  - [Changes](#changes)
+
 
 ## Introduction
 The class's main purpose is to provide a simple solution to fetch data from IGDB's database using PHP. Method names are matching the IGDB's endpoint names.
@@ -105,54 +105,138 @@ $options = array(
 	'limit' => 15 // 15 elements per query
 );
 ```
+
 > Note: the order of the parameters in the ``$options`` array does not matter!
 
 ### ID
 ``id ( array | number )``: one ore more item ID's. When ID is provided, the ``search`` parameter will be ignored.
 
+```
+// Providing one ID
+$options = array(
+  'id' => 5
+)
+
+// Providing several ID's
+$options = array(
+  'id' => array(5, 6, 7, 8)
+);
+```
+
 ### Search
 ``search ( string )``: the query will search the name field looking for this value. If ``id`` is provided in the same options array, than this value will be ignored.
 
+```
+// Provide search string
+$options = array(
+  'search' => 'star wars'
+);
+```
+
 ### Fields
 ``fields ( array | string ) [ optional ]``: the fields you want to see in the result array. If not provided all available fields will be returned (default = *). If the field list is provided as string, you have to separate the field names using comma (id,name).
+
+```
+// Provide single or multiple fields as a string separated by comma
+$options = array(
+  'fields' => 'id,name'
+);
+
+// Provide single or multiple fields as an array
+$options = array(
+  'fields' => array('id', 'name');
+);
+```
 
 > [IGDB Fields Documentation](https://igdb.github.io/api/references/fields/)
 
 ### Limit
 ``limit ( number ) [ optional ]``: the maximum number of results in a single query. (minimum = 0; default = 10; maximum = 50)
 
+```
+// Provide a limit parameter
+$options = array(
+  'limit' => 20
+);
+```
+
 > [IGDB Pagination Documentation](https://igdb.github.io/api/references/pagination/)
 
 ### Offset
 ``offset ( number ) [ optional ]``: this will start the result list at the provided value and will give ``limit`` number of results. The lowest value it can get is 0 and the greatest is 50.
+
+```
+// Provide an offset parameter
+$options = array(
+  'offset' => 5
+);
+```
 
 > [IGDB Pagination Documentation](https://igdb.github.io/api/references/pagination/)
 
 ### Expand
 ``expand ( array | string ) [ optional ]``: the expander feature is used to combine multiple requests. If this parameter is defined, than you have to provide the ``fields`` parameter as well.
 
+```
+// Provide single or multiple expander rule as a string separated by comma
+$options = array(
+  'expand' => array('game', 'themes')
+);
+
+// Provide single or multiple expander rule as an array
+$options = array(
+  'expand' => 'game,themes'
+);
+```
+
 > [IGDB Expander Documentation ](https://igdb.github.io/api/references/expander/)
 
 ### Filters
-``filter ( string ) [ optional ]``: filters are used to swift through results to get what you want. You can exclude and include results based on their properties.
+``filter ( string | array ) [ optional ]``: filters are used to swift through results to get what you want. You can exclude and include results based on their properties.
+
+```
+// Provide a single filter rule as a string
+$options = array(
+  'filter' => '[release_dates.platform][eq]=8'
+);
+
+// Provide a single filter rule as an array
+// In this case you must have field, postfix and value elements in the array
+$options = array(
+  'field' => 'release_dates.platform',
+  'postfix' => 'eq',
+  'value' => 8
+);
+
+// Provide multiple filter rules as an array
+// In this case you must have field, postfix and value elements in the arrays
+$options = array(
+  array(
+    'field' => 'release_dates.platform',
+    'postfix' => 'eq',
+    'value' => 8
+  ),
+  array(
+    'field' => 'total_rating',
+    'postfix' => 'gte',
+    'value' => 70
+  )
+);
+```
 
 > [IGDB Filters Documentation](https://igdb.github.io/api/references/filters/)
 
 ### Order
 ``order ( string ) [ optional ]``: ordering (sorting) is used to order results by a specific field. When not provided, the results will be ordered ASCENDING by ID.
 
+```
+// Provide an order parameter
+$options = array(
+  'order' => 'name:asc'
+);
+```
+
 > [IGDB Ordering Documentation](https://igdb.github.io/api/references/ordering/)
-
-## Static Methods
-There are two methods you can call without instantiating the class.
-
-### Validate API URL
-``public static IGDB::validate_api_url ( string $url ) : boolean``<br/>
-Validates whether the provided ``$url`` is valid or not. Returns a ( boolean ) TRUE if valid, ( boolean ) FALSE otherwise.
-
-### Validate API Key
-``public static IGDB::validate_api_key ( string $key ) : boolean``<br/>
-Validates whether the provided ``$key`` is valid or not. Returns a ( boolean ) TRUE if valid, ( boolean ) FALSE otherwise.
 
 ## Public Methods
 
@@ -318,7 +402,7 @@ These methods returns an array with objects decoded from IGDB response JSON. Ref
 > [IGDB VERSIONS Endpoint Documentation](https://igdb.github.io/api/endpoints/versions/)
 
 ## Example Query
-Let's do a simple example. Get the second page of a game list, where the game we are looking for is LIKE "uncharted" (this example is available in _examples/\_basic.php_)
+Let's do a simple example. Get the third page of a game list, where the game we are looking for is LIKE "uncharted" (this example is available in _examples/\_basic.php_)
 ```
 <?php
 
@@ -412,3 +496,12 @@ As you can see, the ``$result`` variable holds an array, containing 5 elements (
 > Please note, that sometimes there are records which missing one or more fields.<br/>
 > Refer to the IGDB's endpoint documentation regarding the mandatory fields.<br/>
 > Working with non-mandatory fileds requires you to check for availability before accessing them.
+
+## Changes
+
+### v1.0.1 - March 16, 2018
+ - Added [Changes](#changes) section to the ReadMe
+ - Fixed [filter parameter](#filters) constructing; the parameter input has been changed.
+ - Added example snippets to the [Options Parameters](#options-parameters) section
+ - Added example file _filter_multiple_criteria.php_
+ - Added example file _filter_single_criteria.php_
