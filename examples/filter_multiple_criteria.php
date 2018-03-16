@@ -2,10 +2,8 @@
 
     require '../src/class.igdb.php';
 
-    // Instantiate the class
-    $IGDB = new IGDB('<YOUR API URL>', '<YOUR API KEY>');
+    $IGDB = new IGDB('<YOUR API KEY>');
 
-    // Setting up the query parameters
     $options = array(
         'search' => '', // looking for every game
         'fields' => 'id, name, platforms, genres', // we want to see these fields in the result
@@ -28,19 +26,8 @@
         )
     );
 
-    try
-    {
-        // Running the query against IGDB; passing the options parameter
-        $result = $IGDB->game($options);
+    $result = $IGDB->game($options);
 
-        // Showing the result
-        var_dump($result);   
-    }
-
-    catch (Exception $e)
-    {
-        // Catching Exceptions, if there is any
-        echo $e->getMessage();
-    }
+    var_dump($result);   
 
 ?>

@@ -3,7 +3,7 @@
     require '../src/class.igdb.php';
 
     // Instantiate the class
-    $IGDB = new IGDB('<YOUR API URL>', '<YOUR API KEY>');
+    $IGDB = new IGDB('<YOUR API KEY>');
 
     // Setting up the query parameters
     $options = array(

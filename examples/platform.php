@@ -2,7 +2,7 @@
 
     include '../src/class.igdb.php';
 
-    $IGDB = new IGDB('<YOUR API URL>', '<YOUR API KEY>');
+    $IGDB = new IGDB('<YOUR API KEY>');
 
     $options = array(
         'search' => 'xbox', // Searching the platforms for XBOX. 

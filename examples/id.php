@@ -2,7 +2,7 @@
 
     include '../src/class.igdb.php';
 
-    $IGDB = new IGDB('<YOUR API URL>', '<YOUR API KEY>');
+    $IGDB = new IGDB('<YOUR API KEY>');
 
     // One ID is passed as parameter
     $options = array(
@@ -16,7 +16,7 @@
     var_dump($result);
 
     // Now update the ID fields with multiple ID-s (pass ID-s as array)
-    // Note, that the fields parameter is untouhed
+    // Note, that the fields parameter is untouched
     $options['id'] = array(1,2,3);
 
     $result = $IGDB->game($options);
