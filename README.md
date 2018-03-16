@@ -20,15 +20,13 @@
     - [Order](#order)
   - [Public Methods](#public-methods)
     - [Set Default](#set-default)
-    - [Set or Get API URL](#set-or-get-api-url)
-    - [Set or Get API Key](#set-or-get-api-key)
     - [Close CURL Session](#close-curl-session)
     - [Reinitialize CURL session](#reinitialize-curl-session)
-    - [Stringify Options](#stringify-options)
     - [Custom Query](#custom-query)
   - [Private Methods](#private-methods)
     - [Initialize CURL Session](#initialize-curl-session)
     - [Construct URL](#construct-url)
+    - [Stringify Options](#stringify-options)
     - [Executing Query](#executing-query)
   - [Endpoints](#endpoints)
     - [Character](#character)
@@ -57,7 +55,6 @@
   - [Example Query](#example-query)
   - [Return Values](#return-values)
   - [Changes](#changes)
-
 
 ## Introduction
 The class's main purpose is to provide a simple solution to fetch data from IGDB's database using PHP. Method names are matching the IGDB's endpoint names.
@@ -521,7 +518,7 @@ As you can see, the ``$result`` variable holds an array, containing 5 elements (
 > Working with non-mandatory fileds requires you to check for availability before accessing them.
 
 ## Changes
-### v1.0.2 - March 17, 2018 [test]
+### v1.0.2 - March 17, 2018
  - Modified the [constructor](#initializing-class) to ask only for the API Key. The API URL has been changed to be fix for every user (by IGDB).
  - The API URL and KEY setter and getter methods has been removed.
  - The API URL and KEY validator methods has been removed
