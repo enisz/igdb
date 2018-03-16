@@ -318,95 +318,118 @@ Exceptions are thrown in case of any errors.
 These methods returns an array with objects decoded from IGDB response JSON by default. If you provide boolean ``FALSE`` as a second parameter, the method returns the full URL as a string, but will not execute the query. Refer to the [Return Values](#return-values) Section for more details
 
 ### Character
-``public IGDB::character ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using CHARACTER endpoint.
+``public IGDB::character ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using CHARACTER endpoint.
 > [IGDB CHARACTER Endpoint Documentation](https://igdb.github.io/api/endpoints/character/)
 
 ### Collection
-``public IGDB::collection ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using COLLECTION endpoint.
+``public IGDB::collection ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using COLLECTION endpoint.
 > [IGDB COLLECTION Endpoint Documentation](https://igdb.github.io/api/endpoints/collection/)
 
 ### Company
-``public IGDB::company ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using COMPANY endpoint.
+``public IGDB::company ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using COMPANY endpoint.
 > [IGDB COMPANY Endpoint Documentation](https://igdb.github.io/api/endpoints/company/)
 
 ### Credit
-``public IGDB::credit ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using CREDIT endpoint.
+``public IGDB::credit ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using CREDIT endpoint.
 > [IGDB CREDIT Endpoint Documentation](https://igdb.github.io/api/endpoints/credit/)
 
 ### Feed
-``public IGDB::feed ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using FEED endpoint.
+``public IGDB::feed ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using FEED endpoint.
 > [IGDB FEED Endpoint Documentation](https://igdb.github.io/api/endpoints/feed/)
 
 ### Franchise
-``public IGDB::franchise ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using FRANCHISE endpoint.
+``public IGDB::franchise ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using FRANCHISE endpoint.
 > [IGDB FRANCHISE Endpoint Documentation](https://igdb.github.io/api/endpoints/franchise/)
 
 ### Games
-``public IGDB::game ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using GAME endpoint.
+``public IGDB::game ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using GAME endpoint.
 > [IGDB GAME Endpoint Documentation](https://igdb.github.io/api/endpoints/game/)
 
 ### Game Engine
-``public IGDB::game_engine ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using GAME ENGINE endpoint.
+``public IGDB::game_engine ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using GAME ENGINE endpoint.
 > [IGDB GAME ENGINE Endpoint Documentation](https://igdb.github.io/api/endpoints/game-engine/)
 
 ### Game Mode
-``public IGDB::game_mode ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using GAME MODE endpoint.
+``public IGDB::game_mode ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using GAME MODE endpoint.
 > [IGDB GAME MODE Endpoint Documentation](https://igdb.github.io/api/endpoints/game-mode/)
 
 ### Genre
-``public IGDB::genre ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using GENRE endpoint.
+``public IGDB::genre ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using GENRE endpoint.
 > [IGDB GENRE Endpoint Documentation](https://igdb.github.io/api/endpoints/genre/)
 
 ### Keyword
-``public IGDB::keyword ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using KEYWORD endpoint.
+``public IGDB::keyword ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using KEYWORD endpoint.
 > [IGDB KEYWORD Endpoint Documentation](https://igdb.github.io/api/endpoints/keyword/)
 
 ### Page
-``public IGDB::page ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using PAGE endpoint.
+``public IGDB::page ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using PAGE endpoint.
 > [IGDB PAGE Endpoint Documentation](https://igdb.github.io/api/endpoints/page/)
 
 ### Person
-``public IGDB::person ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using PERSON endpoint.
+``public IGDB::person ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using PERSON endpoint.
 > [IGDB PERSON Endpoint Documentation](https://igdb.github.io/api/endpoints/person/)
 
 ### Platform
-``public IGDB::platform ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using PLATFORM endpoint.
+``public IGDB::platform ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using PLATFORM endpoint.
 > [IGDB PLATFORM Endpoint Documentation](https://igdb.github.io/api/endpoints/platform/)
 
 ### Player Perspective
-``public IGDB::player_perspective ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using PLAYER PERSPECTIVE endpoint.
+``public IGDB::player_perspective ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using PLAYER PERSPECTIVE endpoint.
 > [IGDB PLAYER PERSPECTIVE Endpoint Documentation](https://igdb.github.io/api/endpoints/player-perspective/)
 
 ### Pulse
-``public IGDB::pulse ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using PULSE endpoint.
+``public IGDB::pulse ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using PULSE endpoint.
 > [IGDB PULSE Endpoint Documentation](https://igdb.github.io/api/endpoints/pulse/)
 
 ### Pulse Group
-``public IGDB::pulse_group ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using PULSE GROUP endpoint.
+``public IGDB::pulse_group ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using PULSE GROUP endpoint.
 > [IGDB PULSE GROUP Endpoint Documentation](https://igdb.github.io/api/endpoints/pulse-group/)
 
 ### Pulse Source
-``public IGDB::pulse_source ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using PULSE SOURCE endpoint.
+``public IGDB::pulse_source ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using PULSE SOURCE endpoint.
 > [IGDB PULSE SOURCE Endpoint Documentation](https://igdb.github.io/api/endpoints/pulse-source/)
 
 ### Release Date
-``public IGDB::release_date ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using RELEASE DATE endpoint.
+``public IGDB::release_date ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using RELEASE DATE endpoint.
 > [IGDB RELEASE DATE Endpoint Documentation](https://igdb.github.io/api/endpoints/release-date/)
 
 ### Review
-``public IGDB::review ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using REVIEW endpoint.
+``public IGDB::review ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using REVIEW endpoint.
 > [IGDB REVIEW Endpoint Documentation](https://igdb.github.io/api/endpoints/review/)
 
 ### Theme
-``public IGDB::theme ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using THEME endpoint.
+``public IGDB::theme ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using THEME endpoint.
 > [IGDB THEME Endpoint Documentation](https://igdb.github.io/api/endpoints/theme/)
 
 ### Title
-``public IGDB::title ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using TITLE endpoint.
+``public IGDB::title ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using TITLE endpoint.
 > [IGDB TITLE Endpoint Documentation](https://igdb.github.io/api/endpoints/title/)
 
 ### Versions
-``public IGDB::versions ( array $options, boolean ?$execute = TRUE ) : array | string`` - Fetch data using VERSIONS endpoint.
+``public IGDB::versions ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
+Fetch data using VERSIONS endpoint.
 > [IGDB VERSIONS Endpoint Documentation](https://igdb.github.io/api/endpoints/versions/)
 
 ## Example Query
