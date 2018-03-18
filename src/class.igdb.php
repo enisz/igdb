@@ -5,7 +5,7 @@
      * 
      * Fethching data from IGDB's database.
      * 
-     * @version 1.0.2
+     * @version 1.0.3
      * @author Enisz Abdalla <enisz87@gmail.com>
      */
 
@@ -64,33 +64,26 @@
          * Returns the options as a query string.
          * 
          * @param $options ( array ) An array containing option parameters for the query.
-         * @throws Exception If neither id nor search parameter is set.
-         * @throws Exception If fields parameter is missing when you want to use expander feature.
-         * @throws Exception If unrecognized parameter is provided in the options array.
-         * @throws Exception If filter parameter is missing values or containing invalid values
+         * @param $add_defaults ( boolean ) Whether append the default parameters to the query string
+         * @throws Exception In case of invalid or missing parameters.
          * @return $url ( string ) Query string from the options array.
          */
-        private function _stringify_options($options)
+        private function _stringify_options($options, $add_defaults = true)
         {
-            // Throwing Exception if neither id nor search is provided
-            if(!isset($options['id']) && !isset($options['search']))
-                throw new Exception('ID or search parameter must be set!');
+            if($add_defaults)
+            {
+                // Setting the default fields option in case it's not defined
+                if(!array_key_exists('fields', $options))
+                    $options['fields'] = $this->DEFAULT_FIELDS;
 
-            // Throwing Exception if expander function is missing the fields parameter
-            if(isset($options['expand']) && !isset($options['fields']))
-                throw new Exception('The expander function requires the fields parameter!');
-            
-            // Setting the default fields option in case it's not defined
-            if(!array_key_exists('fields', $options))
-                $options['fields'] = $this->DEFAULT_FIELDS;
+                // Setting the default limit option in case it's not defined
+                if(!array_key_exists('limit', $options))
+                    $options['limit'] = $this->DEFAULT_LIMIT;
 
-            // Setting the default limit option in case it's not defined
-            if(!array_key_exists('limit', $options))
-                $options['limit'] = $this->DEFAULT_LIMIT;
-
-            // Setting the default offset option in case it's not defined
-            if(!array_key_exists('offset', $options))
-                $options['offset'] = $this->DEFAULT_OFFSET;
+                // Setting the default offset option in case it's not defined
+                if(!array_key_exists('offset', $options))
+                    $options['offset'] = $this->DEFAULT_OFFSET;
+            }
 
             // All available fields parameter
             $available_options = array('id', 'search', 'fields', 'limit', 'offset', 'expand', 'filter', 'order');
@@ -123,7 +116,7 @@
             {
                 // Throwing an Exception if the parameter is not in the available options array
                 if(!in_array($parameter, $available_options))
-                    throw new Exception('Unrecognized option parameter: ' . $parameter . '!');
+                    throw new Exception('Invalid option parameter: ' . $parameter . '!');
                 
                 switch($parameter)
                 {
@@ -134,28 +127,48 @@
 
                     // Constructing order parameter
                     case 'order':
+                        $available_directions = array('asc', 'desc');
+                        $available_subfilters = array('min', 'max', 'avg', 'sum', 'median');
+
                         // If it is provided as array
                         if(is_array($value))
                         {
-                            if(!array_key_exists('field', $value) || !array_key_exists('order', $value))
-                                throw new Exception('Invalid or missing order parameter!');
+                            if(!array_key_exists('field', $value))
+                                throw new Exception('Missing order parameter: field!');
+
+                            if(!array_key_exists('direction', $value))
+                                throw new Exception('Missing order parameter: direction!');
+
+                            if(!in_array($value['direction'], $available_directions))
+                                throw new Exception('Invalid direction parameter: ' . $value['direction']);
                             
-                            $value = $value['field'] . ':' . $value['order'] . (array_key_exists('subfilter', $value) ? ':' . $value['subfilter'] : '');
+                            if(array_key_exists('subfilter', $value) && !in_array($value['subfilter'], $available_subfilters))
+                                throw new Exception('Invalid subfilter parameter: ' . $value['subfilter']);
+                            
+                            $value = $value['field'] . ':' . $value['direction'] . (array_key_exists('subfilter', $value) ? ':' . $value['subfilter'] : '');
                         }
 
                         // If it is provided as string
-                        else if(preg_match('#^([^:]*):(asc|desc)(?:$|:(min|max|avg|sum|median))$#i', $value, $match))
+                        else if(preg_match('#^([^:]*):([^:]*)(?:$|:(.+))$#i', $value, $match))
                         {
                             $field = $match[1];
-                            $order = $match[2];
+                            $direction = $match[2];
                             $subfilter = array_key_exists(3, $match) ? $match[3] : null;
 
-                            $value = $field . ':' . $order . (is_null($subfilter) ? '' : ':' . $subfilter);
+                            if(!in_array($direction, $available_directions))
+                                throw new Exception('Invalid direction parameter: ' . $direction . '!');
+
+                            if(isset($subfilter) && !in_array($subfilter, $available_subfilters))
+                                throw new Exception('Invalid subfilter parameter: ' . $subfilter . '!');
+
+                            $value = $field . ':' . $direction . (is_null($subfilter) ? '' : ':' . $subfilter);
                         }
 
                         // Invalid string or parameters
                         else
                             throw new Exception('Invalid or missing order parameter!');
+
+                        var_dump($parameter, $value);exit;
                     break;
 
                     // The filter parameters have to be constructed differently
@@ -218,8 +231,14 @@
 
                         foreach($value as $index => $filter)
                         {
-                            if(!array_key_exists('field', $filter) || !array_key_exists('postfix', $filter) || !array_key_exists('value', $filter))
-                                throw new Exception('Invalid or missing filter parameter in filter #' . $index . '!');
+                            if(!array_key_exists('field', $filter))
+                                throw new Exception('Missing \'field\' filter parameter in filter #' . $index . '!');
+
+                            if(!array_key_exists('postfix', $filter))
+                                throw new Exception('Missing \'postfix\' filter parameter in filter #' . $index . '!');
+
+                            if(!array_key_exists('value', $filter))
+                                throw new Exception('Missing \'value\' filter parameter in filter #' . $index . '!');
 
                             if(!in_array($filter['postfix'], $available_postfixes))
                                 throw new Exception('Invalid postfix value ' . $filter['postfix'] . ' in filter #' . $index . '!');
@@ -252,6 +271,53 @@
             $query .= implode('&', $params);
 
             return $query;
+        }
+
+        /**
+         * Get the number of all the records on the given endpoint matching the provided filters.
+         * 
+         * @param $endpoint The name of the endpoint
+         * @param $filters An optional $option array with only a filter parameter.
+         * @throws Exception in case of invalid endpoint.
+         * @return $result ( number ) The total count of the records.
+         */
+        public function count($endpoint, $filters = array())
+        {
+            // Available endpoints
+            $available_endpoints = array(
+                'character' => 'characters',
+                'collection' => 'collections',
+                'company' => 'companies',
+                'credit' => 'credits',
+                'feed' => 'feeds',
+                'franchise' => 'franchises',
+                'game' => 'games',
+                'game_engine' => 'game_engines',
+                'game_mode' => 'game_modes',
+                'genre' => 'genres',
+                'keyword' => 'keywords',
+                'page' => 'pages',
+                'person' => 'persons',
+                'platform' => 'platforms',
+                'player_perspective' => 'player_perspectives',
+                'pulse' => 'pulses',
+                'pulse_group' => 'pulse_groups',
+                'pulse_source' => 'pulse_sources',
+                'release_date' => 'release_dates',
+                'review' => 'reviews',
+                'theme' => 'themes',
+                'title' => 'titles',
+                'versions' => 'game_versions'
+            );
+
+            // If invalid endpoint is provided
+            if(!array_key_exists($endpoint, $available_endpoints))
+                throw new Exception('Invalid endpoint: ' . $endpoint . '!');
+
+            // Query IGDB for the data
+            $result = $this->_exec_query(rtrim($this->API_URL, '/') . '/' . $available_endpoints[$endpoint] . '/count' . (is_null($filters) ? '' : $this->_stringify_options($filters, false)));
+            
+            return $result->count;
         }
 
         /**
@@ -303,7 +369,20 @@
                 break;
 
                 case 400: // Bad Request
-                    throw new Exception('Error 400: Bad Request!');
+                    var_dump($result);
+                    if(is_object($result))
+                    {
+                        if(property_exists($result, 'message'))
+                            $message = $result->message;
+
+                        if(property_exists($result, 'Err'))
+                            $message = $result->Err->message;
+                    }
+
+                    if(property_exists($result[0], 'error'))
+                        $message = implode(' ', $result[0]->error);
+
+                    throw new Exception('Error 400: Bad Request!' . (isset($message) ? ' ' . $message : ''));
                 break;
 
                 case 401: // Unauthorized
@@ -738,7 +817,7 @@
          */
         public function pulse_source($options, $execute = true)
         {
-            $url = $this->_construct_url('pulse_source', $options);
+            $url = $this->_construct_url('pulse_sources', $options);
 
             if($execute)
                 return $this->_exec_query($url);

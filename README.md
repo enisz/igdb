@@ -1,60 +1,68 @@
 # **Internet Game Database API Class Documentation**
 
-  - [Introduction](#introduction)
-  - [Initializing Class](#initializing-class)
-  - [Class Properties](#class-properties)
-    - [API URL](#api-url)
-    - [API Key](#api-key)
-    - [Default Limit](#default-limit)
-    - [Default Offset](#default-offset)
-    - [Default Fields](#default-fields)
-    - [CURL Resource Handler](#curl-resource-handler)
-  - [Options Parameters](#options-parameters)
-    - [ID](#id)
-    - [Search](#search)
-    - [Fields](#fields)
-    - [Limit](#limit)
-    - [Offset](#offset)
-    - [Expand](#expand)
-    - [Filters](#filters)
-    - [Order](#order)
-  - [Public Methods](#public-methods)
-    - [Set Default](#set-default)
-    - [Close CURL Session](#close-curl-session)
-    - [Reinitialize CURL session](#reinitialize-curl-session)
-    - [Custom Query](#custom-query)
-  - [Private Methods](#private-methods)
-    - [Initialize CURL Session](#initialize-curl-session)
-    - [Construct URL](#construct-url)
-    - [Stringify Options](#stringify-options)
-    - [Executing Query](#executing-query)
-  - [Endpoints](#endpoints)
-    - [Character](#character)
-    - [Collection](#collection)
-    - [Company](#company)
-    - [Credit](#credit)
-    - [Feed](#feed)
-    - [Franchise](#franchise)
-    - [Games](#games)
-    - [Game Engine](#game-engine)
-    - [Game Mode](#game-mode)
-    - [Genre](#genre)
-    - [Keyword](#keyword)
-    - [Page](#page)
-    - [Person](#person)
-    - [Platform](#platform)
-    - [Player Perspective](#player-perspective)
-    - [Pulse](#pulse)
-    - [Pulse Group](#pulse-group)
-    - [Pulse Source](#pulse-source)
-    - [Release Date](#release-date)
-    - [Review](#review)
-    - [Theme](#theme)
-    - [Title](#title)
-    - [Versions](#versions)
-  - [Example Query](#example-query)
-  - [Return Values](#return-values)
-  - [Changes](#changes)
+<!-- toc -->
+
+- [Introduction](#introduction)
+- [Initializing Class](#initializing-class)
+- [Class Properties](#class-properties)
+  * [API URL](#api-url)
+  * [API Key](#api-key)
+  * [Default Limit](#default-limit)
+  * [Default Offset](#default-offset)
+  * [Default Fields](#default-fields)
+  * [CURL Resource Handler](#curl-resource-handler)
+- [Options Parameters](#options-parameters)
+  * [ID](#id)
+  * [Search](#search)
+  * [Fields](#fields)
+  * [Limit](#limit)
+  * [Offset](#offset)
+  * [Expand](#expand)
+  * [Filters](#filters)
+  * [Order](#order)
+- [Public Methods](#public-methods)
+  * [Set Default](#set-default)
+  * [Close CURL Session](#close-curl-session)
+  * [Reinitialize CURL session](#reinitialize-curl-session)
+  * [Custom Query](#custom-query)
+  * [Count](#count)
+- [Private Methods](#private-methods)
+  * [Initialize CURL Session](#initialize-curl-session)
+  * [Construct URL](#construct-url)
+  * [Stringify Options](#stringify-options)
+  * [Executing Query](#executing-query)
+- [Endpoints](#endpoints)
+  * [Character](#character)
+  * [Collection](#collection)
+  * [Company](#company)
+  * [Credit](#credit)
+  * [Feed](#feed)
+  * [Franchise](#franchise)
+  * [Games](#games)
+  * [Game Engine](#game-engine)
+  * [Game Mode](#game-mode)
+  * [Genre](#genre)
+  * [Keyword](#keyword)
+  * [Page](#page)
+  * [Person](#person)
+  * [Platform](#platform)
+  * [Player Perspective](#player-perspective)
+  * [Pulse](#pulse)
+  * [Pulse Group](#pulse-group)
+  * [Pulse Source](#pulse-source)
+  * [Release Date](#release-date)
+  * [Review](#review)
+  * [Theme](#theme)
+  * [Title](#title)
+  * [Versions](#versions)
+- [Example Query](#example-query)
+- [Return Values](#return-values)
+- [Changes](#changes)
+  * [v1.0.3 - March 18, 2018](#v103---march-18-2018)
+  * [v1.0.2 - March 17, 2018](#v102---march-17-2018)
+  * [v1.0.1 - March 16, 2018](#v101---march-16-2018)
+
+<!-- tocstop -->
 
 ## Introduction
 The class's main purpose is to provide a simple solution to fetch data from IGDB's database using PHP. Method names are matching the IGDB's endpoint names.
@@ -172,7 +180,7 @@ $options = array(
 > [IGDB Pagination Documentation](https://igdb.github.io/api/references/pagination/)
 
 ### Expand
-``expand ( array | string ) [ optional ]``: the expander feature is used to combine multiple requests. If this parameter is defined, than you have to provide the ``fields`` parameter as well.
+``expand ( array | string ) [ optional ]``: the expander feature is used to combine multiple requests.
 
 ```
 // Provide single or multiple expander rule as a string separated by comma
@@ -232,8 +240,8 @@ $options = array(
 ### Order
 ``order ( string | array ) [ optional ]``: ordering (sorting) is used to order results by a specific field. When not provided, the results will be ordered ASCENDING by ID. IF you provide the Order parameter as an array, you must have at least two (and an optional third) values in it with the following indexes:
  - ``field``: The field you want to do the ordering by
- - ``order``: The direction of the ordering. It must be either ``asc`` for ascending or ``desc`` for descending ordering.
- - ``subfilter [optional]``: You can apply this optional subfilter for even more complex ordering. Refer to the IGDB Ordering Documentation for available subfilters.
+ - ``direction``: The direction of the ordering. It must be either ``asc`` for ascending or ``desc`` for descending ordering.
+ - ``subfilter [optional]``: You can apply this optional subfilter for even more complex ordering. Available subfilters are: ``min``, ``max``, ``avg``, ``sum``, ``median``.
 
 ```
 // Provide an order parameter as an array
@@ -260,15 +268,27 @@ $options = array(
 
 ### Set Default
 ``public IGDB::set_default ( string $parameter, mixed $value ) : void``<br/>
-Set the default values for the following parameters:
+This method will set the default values.
+
+<p>Parameters:</p>
+
  - ``fields ( array | string )``: set the default fields of the queries. Default is all fields (*).
  - ``limit ( number )``: set the default limit of the queries. Value must be a number between 1 and 50. Default is 10.
  - ``offset ( number )``: set the default offset of the queries. Value must be a number greater or equal to 0. Default is 0.
 
+ <p>Return</p>
+ This method has no return values.
+
  Example
 ```
+// Setting the default fields
 $IGDB->set_default('fields', array('id', 'name'));
+$IGDB->set_default('fields', 'id,name');
+
+// Setting the default limit
 $IGDB->set_default('limit', 15);
+
+// Setting the default offset
 $IGDB->set_default('offset', 5);
 ```
 
@@ -284,12 +304,48 @@ After you closed the CURL session manually with [``IGDB::close_handler()``](#clo
 ``public IGDB::custom_query ( string $url ) : array``<br/>
 You can launch manually assembled queries with this method. Great solution for testing purposes. This method automatically executes the query against IGDB and will return the result array.
 
-Parameter:
+<p>Parameters:</p>
+
  - ``$url ( string )``: this URL will be appended to the API URL.
+
+<p>Return</p>
+
+The IGDB response will be returned as an array. Refer to the [return values](#return-values) section of the readme.
 
 Example
 ```
 $result = $IGDB->custom_query('games/?search=uncharted&fields=id,name&order=name:asc');
+```
+
+### Count
+``public IGDB::count ( string $endpoint, array ?$filters = NULL ) : number``<br/>
+You can count all the records on the given ``$endpoint``. If no ``$filter`` is provided, then all the records will be counted. The ``$filters`` parameter is an [``$option``](#options-parameters) array with only a filter parameter in it.
+
+<p>Parameters</p>
+
+ - ``$endpoint ( string )`` : the name of the endpoint you want to count the records on. Refer to the [endpoints section](#endpoints) or [IGDB Endpoint Documentation](https://igdb.github.io/api/endpoints/) for endpoint names.
+ - ``$filters [optional] ( array )`` : This is a simple [option](#options-parameters) array containing only filter parameters (single or multiple).
+
+ <p>Return</p>
+
+ This method will return the number of counted records.
+
+```
+$options = array(       // all games will be counted
+  'filter' => 'rating', // with rating
+  'postfix' => 'gt',    // greater than
+  'value' => 75         // 75
+);
+
+// Will return the number of all games with rating more than 75
+$IGDB->count('game', $options);
+```
+
+You can call this method with more [filters](#filters) (the same way you would do for an endpoint method) or even without them.
+
+```
+  // Calling the method without filters
+  $IGDB->count('game');
 ```
 
 ## Private Methods
@@ -303,19 +359,54 @@ This method creates the CURL session and sets a few additional configuration to 
 ``private IGDB::_construct_url ( string $endpoint, array $options ) : string``<br/>
 This method is responsible for constructing the complete request URL. It is done by calling the [``IGDB::_stringify_options()``](#stringify-options) method. Returns the complete constructed request URL.
 
+<p>Parameters:</p>
+
+- ``$endpoint ( string )``: The name of the endpoint
+- ``$options ( array )``: The array holding the parameters for the query.
+
+<p>Return</p>
+
+Will return the full constructed URL with the query string constructed from the ``$options`` array.
+
 ### Stringify Options
-``private IGDB::_stringify_options ( array $options ) : string``<br/>
+``private IGDB::_stringify_options ( array $options, boolean ?$add_defaults = TRUE ) : string``<br/>
 This method is checking every parameter passed to it. Throwing Exceptions in case of errors. If everything is fine, the complete options array is returned as a query string.
+
+<p>Parameters</p>
+
+ - ``$options ( array )`` : The array holding the option parameters that needs to be stringified.
+ - ``$add_defaults ( boolean )`` : This parameter will tell if the default parameters should be added to the query string. 
+
+<p>Return</p>
+The method will return the constructed query string.
 
 ### Executing Query
 ``private IGDB::_exec_query ( string $url ) : array`` - This method will start the query against IGDB. The ``$url`` parameter is constructed by the [``IGBB::_construct_url()``](#construct-url) method. Returns the JSON decoded response from IGDB as an array.
 
+<p>Parameters</p>
+ 
+ - ``$url ( string )`` : The complete constructed URL with the query string.
+
+<p>Return</p>
+The method returns the IGDB response as an array.
+
 ## Endpoints
 Every endpoint method takes an ``$options`` array as a parameter to set up the query (check the [Options Parameters](#options-parameters) Section for more details about the available parameters and values). As a second optional parameter you can pass a boolean ``$execute``.
 
-Exceptions are thrown in case of any errors.
+These methods are returning an array with objects decoded from IGDB response JSON by default. If you provide boolean ``FALSE`` as a second parameter, it will prevent the class to execute the query, and returns the constructed URL instead.
 
-These methods returns an array with objects decoded from IGDB response JSON by default. If you provide boolean ``FALSE`` as a second parameter, the method returns the full URL as a string, but will not execute the query. Refer to the [Return Values](#return-values) Section for more details
+Exceptions are thrown in any case of errors.
+
+Refer to the [Return Values](#return-values) Section for more details about the return values of these methods.
+
+<p>Parameters</p>
+
+ - ``$options ( array )`` : The options array
+ - ``$execute [optional] (boolean)`` : Whether you want to run the query against IGDB. If this value is ``FALSE`` then the constructed URL will be returned.
+
+ <p>Return</p>
+
+ If ``$execute`` parameter is set to ``FALSE`` the constructed URL will be returned. Otherwise the IGDB response as an array.
 
 ### Character
 ``public IGDB::character ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
@@ -433,14 +524,14 @@ Fetch data using VERSIONS endpoint.
 > [IGDB VERSIONS Endpoint Documentation](https://igdb.github.io/api/endpoints/versions/)
 
 ## Example Query
-Let's do a simple example. Get the third page of a game list, where the game we are looking for is LIKE "uncharted" (this example is available in _examples/\_basic.php_)
+Let's do a simple example. Get the third page of a game list, where the game we are looking for is LIKE "uncharted" (this example is available in _examples/\_basic_example.php_)
 ```
 <?php
 
     require 'class.igdb.php';
 
     // Instantiate the class
-    $IGDB = new IGDB('<YOUR API URL>', '<YOUR API KEY>');
+    $IGDB = new IGDB('<YOUR API KEY>');
 
     // Setting up the query parameters
     $options = array(
@@ -536,25 +627,32 @@ array (size=5)
 ```
 As you can see, the ``$result`` variable holds an array, containing 5 elements (the ``limit`` parameter is set to 5), and these elements are on the third page of the results. (``offset`` is set to 10) Every element of the ``$result`` array is an object, containing properties called like the fields from options ``fields`` parameter.
 
-> Please note, that sometimes there are records which missing one or more fields.<br/>
+> Please note, that sometimes there are records which are missing one or more fields.<br/>
 > Refer to the IGDB's endpoint documentation regarding the mandatory fields.<br/>
 > Working with non-mandatory fileds requires you to check for availability before accessing them.
 
 ## Changes
+### v1.0.3 - March 18, 2018
+ - Providing either search or id parameter in the options array are not mandatory anymore.
+ - Providing fields parameter when using expander is not mandatory anymore.
+ - Ordering parameter 'order' in the options array has been renamed to 'direction'. Refer to the [order](#order) section of the [options parameters](#options-parameters).
+ - Implemented count method. Refer to the [count](#count) section of the Readme.
+ - Example _count.php_ has been added.
+ - Updated Readme
 ### v1.0.2 - March 17, 2018
  - Modified the [constructor](#initializing-class) to ask only for the API Key. The API URL has been changed to be fix for every user (by IGDB).
  - The API URL and KEY setter and getter methods has been removed.
- - The API URL and KEY validator methods has been removed
- - New method for order parameter constructing has been implemented.
+ - The API URL and KEY validator methods has been removed.
+ - New method for order parameter constructing has been implemented. 
  - [Stringify Options](#stringify-options) method is private again. Use the updated endpoint methods instead.
  - Updated [Endpoint Methods](#endpoints) to accept a second optional parameter to return the constructed URL instead of executing the query.
  - _basic.php_ example file has been renamed to _basic.example.php_.
  - _order.php_ example has been added.
  - _order_subfilter.php_ example has been added.
- - All example files has been modified with the updated constructor
+ - All example files has been modified with the updated constructor.
 ### v1.0.1 - March 16, 2018
- - Added [Changes](#changes) section to the ReadMe
+ - Added [Changes](#changes) section to the ReadMe.
  - Fixed [filter parameter](#filters) constructing; the parameter input has been changed.
- - Added example snippets to the [Options Parameters](#options-parameters) section
+ - Added example snippets to the [Options Parameters](#options-parameters) section.
  - Added example file _filter_multiple_criteria.php_
  - Added example file _filter_single_criteria.php_
