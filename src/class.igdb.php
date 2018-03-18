@@ -377,7 +377,6 @@
                 break;
 
                 case 400: // Bad Request
-                    var_dump($result);
                     if(is_object($result))
                     {
                         if(property_exists($result, 'message'))
