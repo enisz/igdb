@@ -122,7 +122,7 @@
                 {
                     // The search parameter have to be url encoded
                     case 'search':
-                        $value = urlencode($value);
+                            $value = urlencode($value);
                     break;
 
                     // Constructing order parameter
@@ -133,15 +133,19 @@
                         // If it is provided as array
                         if(is_array($value))
                         {
+                            // If field is missing from the array
                             if(!array_key_exists('field', $value))
                                 throw new Exception('Missing order parameter: field!');
 
+                            // If direction is missing from the array
                             if(!array_key_exists('direction', $value))
                                 throw new Exception('Missing order parameter: direction!');
 
+                            // If the provided direction is not among the available ones
                             if(!in_array($value['direction'], $available_directions))
                                 throw new Exception('Invalid direction parameter: ' . $value['direction']);
                             
+                            // If there is a subfilter, but it is not among the available ones
                             if(array_key_exists('subfilter', $value) && !in_array($value['subfilter'], $available_subfilters))
                                 throw new Exception('Invalid subfilter parameter: ' . $value['subfilter']);
                             
@@ -155,9 +159,11 @@
                             $direction = $match[2];
                             $subfilter = array_key_exists(3, $match) ? $match[3] : null;
 
+                            // If the provided direction is not among the available ones
                             if(!in_array($direction, $available_directions))
                                 throw new Exception('Invalid direction parameter: ' . $direction . '!');
 
+                            // If the provided subfilter is not among the available ones
                             if(isset($subfilter) && !in_array($subfilter, $available_subfilters))
                                 throw new Exception('Invalid subfilter parameter: ' . $subfilter . '!');
 
@@ -167,8 +173,6 @@
                         // Invalid string or parameters
                         else
                             throw new Exception('Invalid or missing order parameter!');
-
-                        var_dump($parameter, $value);exit;
                     break;
 
                     // The filter parameters have to be constructed differently
@@ -231,15 +235,19 @@
 
                         foreach($value as $index => $filter)
                         {
+                            // If the field parameter is missing
                             if(!array_key_exists('field', $filter))
                                 throw new Exception('Missing \'field\' filter parameter in filter #' . $index . '!');
 
+                            // If the postfix parameter is missing
                             if(!array_key_exists('postfix', $filter))
                                 throw new Exception('Missing \'postfix\' filter parameter in filter #' . $index . '!');
 
+                            // If the value parameter is missing
                             if(!array_key_exists('value', $filter))
                                 throw new Exception('Missing \'value\' filter parameter in filter #' . $index . '!');
 
+                            // If the provided postfix value is not among the available ones
                             if(!in_array($filter['postfix'], $available_postfixes))
                                 throw new Exception('Invalid postfix value ' . $filter['postfix'] . ' in filter #' . $index . '!');
                             
@@ -274,14 +282,14 @@
         }
 
         /**
-         * Get the number of all the records on the given endpoint matching the provided filters.
+         * Get the number of all the records on the given endpoint matching the optionally provided filters.
          * 
          * @param $endpoint The name of the endpoint
          * @param $filters An optional $option array with only a filter parameter.
          * @throws Exception in case of invalid endpoint.
          * @return $result ( number ) The total count of the records.
          */
-        public function count($endpoint, $filters = array())
+        public function count($endpoint, $filters = null)
         {
             // Available endpoints
             $available_endpoints = array(

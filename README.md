@@ -103,11 +103,11 @@ For every [endpoint method](#endpoints) that fetching data from IGDB you will ne
 Let's see an example options array:
 ```
 $options = array(
-	'search' => 'uncharted', // searching elements by the name UNCHARTED
+	'search' => 'uncharted',         // searching elements by the name UNCHARTED
 	'fields' => array('id', 'name'), // the result object will contain only the ID and NAME fields
-	'order' => 'name:asc', // ordering the results ASCENDING by NAME field
-	'offset' => 15, // second page of a 15 element result
-	'limit' => 15 // 15 elements per query
+	'order' => 'name:asc',           // ordering the results ASCENDING by NAME field
+	'offset' => 15,                  // second page of a 15 element result
+	'limit' => 15                    // 15 elements per query
 );
 ```
 
@@ -402,7 +402,7 @@ Refer to the [Return Values](#return-values) Section for more details about the 
 <p>Parameters</p>
 
  - ``$options ( array )`` : The options array
- - ``$execute [optional] (boolean)`` : Whether you want to run the query against IGDB. If this value is ``FALSE`` then the constructed URL will be returned.
+ - ``$execute (boolean) [optional]`` : Whether you want to run the query against IGDB. If this value is ``FALSE`` then the constructed URL will be returned.
 
  <p>Return</p>
 
