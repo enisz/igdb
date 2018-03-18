@@ -9,14 +9,14 @@
         'fields' => array('id', 'name'), // Showing ID and NAME fields in the results
         'order' => array(
             'field' => 'name', // ORDER the results by NAME field
-            'order' => 'asc', // ASCENDING order
+            'direction' => 'asc', // ASCENDING order
         )
     );
 
     /*
-        You can also provide the order parameter as a string.
+        You can also provide the direction parameter as a string.
         
-        $options['order'] = 'name:asc';
+        $options['direction'] = 'name:asc';
     */
 
     $result = $IGDB->game($options);

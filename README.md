@@ -248,7 +248,7 @@ $options = array(
 $options = array(
     'order' => array(
         'field' => 'release_dates.date',
-        'order' => 'desc',
+        'direction' => 'desc',
         'subfilter' => 'min'
     )
 );
