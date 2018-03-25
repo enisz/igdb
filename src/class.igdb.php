@@ -5,7 +5,7 @@
      * 
      * Fethching data from IGDB's database.
      * 
-     * @version 1.0.3
+     * @version 1.0.4
      * @author Enisz Abdalla <enisz87@gmail.com>
      */
 
@@ -16,15 +16,6 @@
 
         // IGDB API key
         private $API_KEY;
-
-        // Default limit for queries
-        private $DEFAULT_LIMIT = 10;
-
-        // Default offset for queries
-        private $DEFAULT_OFFSET = 0;
-
-        // Default fields for queries
-        private $DEFAULT_FIELDS = '*';
 
         // CURL handler
         private $CH;
@@ -68,23 +59,8 @@
          * @throws Exception In case of invalid or missing parameters.
          * @return $url ( string ) Query string from the options array.
          */
-        private function _stringify_options($options, $add_defaults = true)
+        private function _stringify_options($options)
         {
-            if($add_defaults)
-            {
-                // Setting the default fields option in case it's not defined
-                if(!array_key_exists('fields', $options))
-                    $options['fields'] = $this->DEFAULT_FIELDS;
-
-                // Setting the default limit option in case it's not defined
-                if(!array_key_exists('limit', $options))
-                    $options['limit'] = $this->DEFAULT_LIMIT;
-
-                // Setting the default offset option in case it's not defined
-                if(!array_key_exists('offset', $options))
-                    $options['offset'] = $this->DEFAULT_OFFSET;
-            }
-
             // All available fields parameter
             $available_options = array('id', 'search', 'fields', 'limit', 'offset', 'expand', 'filter', 'order');
 
@@ -323,7 +299,7 @@
                 throw new Exception('Invalid endpoint: ' . $endpoint . '!');
 
             // Query IGDB for the data
-            $result = $this->_exec_query(rtrim($this->API_URL, '/') . '/' . $available_endpoints[$endpoint] . '/count' . (is_null($filters) ? '' : $this->_stringify_options($filters, false)));
+            $result = $this->_exec_query(rtrim($this->API_URL, '/') . '/' . $available_endpoints[$endpoint] . '/count' . (is_null($filters) ? '' : $this->_stringify_options($filters)));
             
             return $result->count;
         }
@@ -409,53 +385,6 @@
         }
 
         /**
-         * Set the default values for query parameters. Doesn't have return value.
-         * 
-         * @param $parameter ( string ) Name of the parameter you want to set.
-         * @param $value ( mixed ) Value of the parameter. Vary depending on the parameter.
-         * @throws Exception in case parameter is limit and the value is not a number.
-         * @throws Exception in case parameter is limit and the value is not between 0 and 50.
-         * @throws Exception in case parameter is offset and the value is not a number.
-         * @throws Exception in case parameter is offset and the value is lower than 0.
-         * @throws Exception in case parameter is unrecognizable.
-         * @return void
-         */
-        public function set_default($parameter, $value)
-        {
-            switch(strtolower($parameter))
-            {
-                case 'fields':
-                    if(is_array($value))
-                        $this->DEFAULT_FIELDS = implode(',', $value);
-                    else
-                        $this->DEFAULT_FIELDS = $value;
-                break;
-
-                case 'limit':
-                    if(!is_numeric($value))
-                        throw new Exception('Limit parameter must be a number!');
-                    else if($value < 0 || $value > 50)
-                        throw new Exception('Limit parameter must be a number between 0 and 50!');
-                    else
-                        $this->DEFAULT_LIMIT = (int)$value;
-                break;
-
-                case 'offset':
-                    if(!is_numeric($value))
-                        throw new Exception('Offset parameter must be a number!');
-                    else if($value < 0)
-                        throw new Exception('Offset parameter must be a number between 0 and 50!');
-                    else
-                        $this->DEFAULT_OFFSET = (int)$value;
-                break;
-                
-                default:
-                    throw new Exception('Unrecognized parameter: ' . $parameter . '!');
-                break;
-            }
-        }
-
-        /**
          * Closes the CURL handler.
          * 
          * After this method is called, the class cannot run any queries against IGDB unless you reinitialize it manually.
@@ -497,16 +426,11 @@
          * 
          * @param $options ( array ) an options parameter setting up the details of the query.
          * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
+         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
          */
         public function character($options, $execute = true)
         {
-            $url = $this->_construct_url('characters', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('characters', $options)) : $this->_construct_url('characters', $options);
         }
 
         /**
@@ -516,16 +440,11 @@
          * 
          * @param $options ( array ) an options parameter setting up the details of the query.
          * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
+         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
          */
         public function collection($options, $execute = true)
         {
-            $url = $this->_construct_url('collections', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('collections', $options)) : $this->_construct_url('collections', $options);
         }
 
         /**
@@ -535,16 +454,11 @@
          * 
          * @param $options ( array ) an options parameter setting up the details of the query.
          * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
+         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
          */
         public function company($options, $execute = true)
         {
-            $url = $this->_construct_url('companies', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('companies', $options)) : $this->_construct_url('companies', $options);
         }
 
         /**
@@ -554,16 +468,11 @@
          * 
          * @param $options ( array ) an options parameter setting up the details of the query.
          * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
+         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
          */
         public function credit($options, $execute = true)
         {
-            $url = $this->_construct_url('credits', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('credits', $options)) : $this->_construct_url('credits', $options);
         }
 
         /**
@@ -573,16 +482,11 @@
          * 
          * @param $options ( array ) an options parameter setting up the details of the query.
          * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
+         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
          */
         public function feed($options, $execute = true)
         {
-            $url = $this->_construct_url('feeds', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('feeds', $options)) : $this->_construct_url('feeds', $options);
         }
 
         /**
@@ -592,16 +496,11 @@
          * 
          * @param $options ( array ) an options parameter setting up the details of the query.
          * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
+         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
          */
         public function franchise($options, $execute = true)
         {
-            $url = $this->_construct_url('franchises', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('franchises', $options)) : $this->_construct_url('franchises', $options);
         }
 
         /**
@@ -611,16 +510,11 @@
          * 
          * @param $options ( array ) an options parameter setting up the details of the query.
          * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
+         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
          */
         public function game($options, $execute = true)
         {
-            $url = $this->_construct_url('games', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('games', $options)) : $this->_construct_url('games', $options);
         }
 
         /**
@@ -630,301 +524,221 @@
          * 
          * @param $options ( array ) an options parameter setting up the details of the query.
          * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
+         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
          */
         public function game_engine($options, $execute = true)
         {
-            $url = $this->_construct_url('game_engines', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('game_engines', $options)) : $this->_construct_url('game_engines', $options);
         }
 
         /**
-         * Fetch data from IGDB using GAME MODE endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/game-mode/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using GAME MODE endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/game-mode/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function game_mode($options, $execute = true)
         {
-            $url = $this->_construct_url('game_modes', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('game_modes', $options)) : $this->_construct_url('game_modes', $options);
         }
 
         /**
-         * Fetch data from IGDB using GENRE endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/genre/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using GENRE endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/genre/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function genre($options, $execute = true)
         {
-            $url = $this->_construct_url('genres', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('genres', $options)) : $this->_construct_url('genres', $options);
         }
 
         /**
-         * Fetch data from IGDB using KEYWORD endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/keyword/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using KEYWORD endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/keyword/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function keyword($options, $execute = true)
         {
-            $url = $this->_construct_url('keywords', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('keywords', $options)) : $this->_construct_url('keywords', $options);
         }
 
         /**
-         * Fetch data from IGDB using PAGE endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/page/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using PAGE endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/page/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function page($options, $execute = true)
         {
-            $url = $this->_construct_url('pages', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('pages', $options)) : $this->_construct_url('pages', $options);
         }
 
         /**
-         * Fetch data from IGDB using PERSON endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/person/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using PERSON endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/person/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function person($options, $execute = true)
         {
-            $url = $this->_construct_url('persons', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('persons', $options)) : $this->_construct_url('persons', $options);
         }
 
         /**
-         * Fetch data from IGDB using PLATFORM endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/platform/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using PLATFORM endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/platform/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function platform($options, $execute = true)
         {
-            $url = $this->_construct_url('platforms', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('platforms', $options)) : $this->_construct_url('platforms', $options);
         }
 
         /**
-         * Fetch data from IGDB using PLAYER PERSPECTIVE endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/player-perspective/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using PLAYER PERSPECTIVE endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/player-perspective/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function player_perspective($options, $execute = true)
         {
-            $url = $this->_construct_url('player_perspectives', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('player_perspectives', $options)) : $this->_construct_url('player_perspectives', $options);
         }
 
         /**
-         * Fetch data from IGDB using PULSE endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/pulse/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using PULSE endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/pulse/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function pulse($options, $execute = true)
         {
-            $url = $this->_construct_url('pulses', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('pulses', $options)) : $this->_construct_url('pulses', $options);
         }
 
         /**
-         * Fetch data from IGDB using PULSE GROUP endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/pulse-group/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using PULSE GROUP endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/pulse-group/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function pulse_group($options, $execute = true)
         {
-            $url = $this->_construct_url('pulse_groups', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('pulse_groups', $options)) : $this->_construct_url('pulse_groups', $options);
         }
 
         /**
-         * Fetch data from IGDB using PULSE SOURCE endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/pulse-source/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using PULSE SOURCE endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/pulse-source/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function pulse_source($options, $execute = true)
         {
-            $url = $this->_construct_url('pulse_sources', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('pulse_sources', $options)) : $this->_construct_url('pulse_sources', $options);
         }
 
         /**
-         * Fetch data from IGDB using RELEASE DATE endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/release-date/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using RELEASE DATE endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/release-date/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function release_date($options, $execute = true)
         {
-            $url = $this->_construct_url('release_dates', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('release_dates', $options)) : $this->_construct_url('release_dates', $options);
         }
 
         /**
-         * Fetch data from IGDB using REVIEW endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/review/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using REVIEW endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/review/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function review($options, $execute = true)
         {
-            $url = $this->_construct_url('reviews', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('reviews', $options)) : $this->_construct_url('reviews', $options);
         }
 
         /**
-         * Fetch data from IGDB using THEME endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/theme/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using THEME endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/theme/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function theme($options, $execute = true)
         {
-            $url = $this->_construct_url('themes', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('themes', $options)) : $this->_construct_url('themes', $options);
         }
 
         /**
-         * Fetch data from IGDB using TITLE endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/title/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using TITLE endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/title/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function title($options, $execute = true)
         {
-            $url = $this->_construct_url('titles', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('titles', $options)) : $this->_construct_url('titles', $options);
         }
 
         /**
-         * Fetch data from IGDB using VERSIONS endpoint. 
-         * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/versions/
-         * 
-         * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL. Depending on the $execute parameter
-         */
+            * Fetch data from IGDB using VERSIONS endpoint. 
+            * Returns an array with JSON object decoded from IGDB response.
+            * @link https://igdb.github.io/api/endpoints/versions/
+            * 
+            * @param $options ( array ) an options parameter setting up the details of the query.
+            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
+            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+            */
         public function versions($options, $execute = true)
         {
-            $url = $this->_construct_url('game_versions', $options);
-
-            if($execute)
-                return $this->_exec_query($url);
-            else
-                return $url;
+            return $execute ? $this->_exec_query($this->_construct_url('game_versions', $options)) : $this->_construct_url('game_versions', $options);
         }
 
     }

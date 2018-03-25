@@ -7,9 +7,6 @@
 - [Class Properties](#class-properties)
   * [API URL](#api-url)
   * [API Key](#api-key)
-  * [Default Limit](#default-limit)
-  * [Default Offset](#default-offset)
-  * [Default Fields](#default-fields)
   * [CURL Resource Handler](#curl-resource-handler)
 - [Options Parameters](#options-parameters)
   * [ID](#id)
@@ -21,7 +18,6 @@
   * [Filters](#filters)
   * [Order](#order)
 - [Public Methods](#public-methods)
-  * [Set Default](#set-default)
   * [Close CURL Session](#close-curl-session)
   * [Reinitialize CURL session](#reinitialize-curl-session)
   * [Custom Query](#custom-query)
@@ -58,6 +54,7 @@
 - [Example Query](#example-query)
 - [Return Values](#return-values)
 - [Changes](#changes)
+  * [v1.0.4 - March 25, 2018](#v104---march-25-2018)
   * [v1.0.3 - March 18, 2018](#v103---march-18-2018)
   * [v1.0.2 - March 17, 2018](#v102---march-17-2018)
   * [v1.0.1 - March 16, 2018](#v101---march-16-2018)
@@ -85,15 +82,6 @@ $IGDB = new IGDB('<YOUR API KEY>');
 ### API Key
 ``private IGDB::$API_KEY ( string )``: your personal API Key provided by IGDB. It's value is set by [``IGDB::__construct()``](#initializing-class).
 
-### Default Limit
-``private IGDB::$DEFAULT_LIMIT ( number )``: the default value of the limit in the queries. It's a predefined value, that you can update calling [``IGDB::set_default()``](#set-default) method. In case you set a limit parameter in the [``$options``](#options-parameters) array, this value will be ignored. By default this value is 10.
-
-### Default Offset
-``private IGDB::$DEFAULT_OFFSET ( number )``: the default value of the offset in the queries. It's a predefined value, that you can update calling [``IGDB::set_default()``](#set-default) method. In case you set an offset parameter in the [``$options``](#options-parameters) array, this value will be ignored. By default this value is 0.
-
-### Default Fields
-``private IGDB::$DEFAULT_FIELDS ( string )``: the default value of the fields in the queries. It's a predefined value, that you can update calling [``IGDB::set_default()``](#set-default) method. In case you set a fields parameter in the [``$options``](#options-parameters) array, this value will be ignored. By default this value is * (all fields).
-
 ### CURL Resource Handler
 ``private IGDB::$CH ( resource )``: CURL resource handler. Return value of [``curl_init()``](http://php.net/curl_init). You can close  [``IGDB::close_handler()``](##close-curl-session) and reinitialize [``IGDB::reinit_handler()``](#reinitialize-curl-session) the session.
 
@@ -114,7 +102,7 @@ $options = array(
 > Note: the order of the parameters in the ``$options`` array does not matter!
 
 ### ID
-``id ( array | number )``: one ore more item ID's. When ID is provided, the ``search`` parameter will be ignored.
+``id ( array | number ) [ optional ]``: one ore more item ID's. When ID is provided, the ``search`` parameter will be ignored.
 
 ```
 // Providing one ID
@@ -129,7 +117,7 @@ $options = array(
 ```
 
 ### Search
-``search ( string )``: the query will search the name field looking for this value. If ``id`` is provided in the same options array, than this value will be ignored.
+``search ( string ) [ optional ]``: the query will search the name field looking for this value. If ``id`` is provided in the same options array, than this value will be ignored.
 
 ```
 // Provide search string
@@ -139,7 +127,10 @@ $options = array(
 ```
 
 ### Fields
-``fields ( array | string ) [ optional ]``: the fields you want to see in the result array. If not provided all available fields will be returned (default = *). If the field list is provided as string, you have to separate the field names using comma (id,name).
+``fields ( array | string ) [ optional ]``: the fields you want to see in the result array.
+ - If not provided only the ID field will be returned.
+ - If the field list is provided as string, you have to separate the field names using comma (id,name).
+ - If you want to see every fields in the result you have to pass a star (*).
 
 ```
 // Provide single or multiple fields as a string separated by comma
@@ -151,12 +142,17 @@ $options = array(
 $options = array(
   'fields' => array('id', 'name');
 );
+
+// Get all fields in the result
+$options = array(
+  'fields' => '*'
+);
 ```
 
 > [IGDB Fields Documentation](https://igdb.github.io/api/references/fields/)
 
 ### Limit
-``limit ( number ) [ optional ]``: the maximum number of results in a single query. (minimum = 0; default = 10; maximum = 50)
+``limit ( number ) [ optional ]``: the maximum number of results in a single query. This value must be a number between 1 and 50.
 
 ```
 // Provide a limit parameter
@@ -168,7 +164,7 @@ $options = array(
 > [IGDB Pagination Documentation](https://igdb.github.io/api/references/pagination/)
 
 ### Offset
-``offset ( number ) [ optional ]``: this will start the result list at the provided value and will give ``limit`` number of results. The lowest value it can get is 0 and the greatest is 50.
+``offset ( number ) [ optional ]``: this will start the result list at the provided value and will give ``limit`` number of results. This value must be 0 or greater.
 
 ```
 // Provide an offset parameter
@@ -266,32 +262,6 @@ $options = array(
 
 ## Public Methods
 
-### Set Default
-``public IGDB::set_default ( string $parameter, mixed $value ) : void``<br/>
-This method will set the default values.
-
-<p>Parameters:</p>
-
- - ``fields ( array | string )``: set the default fields of the queries. Default is all fields (*).
- - ``limit ( number )``: set the default limit of the queries. Value must be a number between 1 and 50. Default is 10.
- - ``offset ( number )``: set the default offset of the queries. Value must be a number greater or equal to 0. Default is 0.
-
- <p>Return</p>
- This method has no return values.
-
- Example
-```
-// Setting the default fields
-$IGDB->set_default('fields', array('id', 'name'));
-$IGDB->set_default('fields', 'id,name');
-
-// Setting the default limit
-$IGDB->set_default('limit', 15);
-
-// Setting the default offset
-$IGDB->set_default('offset', 5);
-```
-
 ### Close CURL Session
 ``public IGDB::close_handler ( ) : void``<br/>
 You can close the CURL session handler manually if you need to. The class will not do it by itself after any query in case you need to start several queries. After closing the session you will not be able to start new query with the actual instance of the class.
@@ -319,7 +289,7 @@ $result = $IGDB->custom_query('games/?search=uncharted&fields=id,name&order=name
 
 ### Count
 ``public IGDB::count ( string $endpoint, array ?$filters = NULL ) : number``<br/>
-You can count all the records on the given ``$endpoint``. If no ``$filter`` is provided, then all the records will be counted. The ``$filters`` parameter is an [``$option``](#options-parameters) array with only a filter parameter in it.
+You can count all the records on the given ``$endpoint``. If no ``$filter`` is provided, then all the records will be counted. The ``$filters`` parameter is an optional [``$option``](#options-parameters) array with only a filter parameter in it.
 
 <p>Parameters</p>
 
@@ -632,6 +602,9 @@ As you can see, the ``$result`` variable holds an array, containing 5 elements (
 > Working with non-mandatory fileds requires you to check for availability before accessing them.
 
 ## Changes
+### v1.0.4 - March 25, 2018
+ - Default properties has been removed.
+ - set\_default public method has been removed.
 ### v1.0.3 - March 18, 2018
  - Providing either search or id parameter in the options array are not mandatory anymore.
  - Providing fields parameter when using expander is not mandatory anymore.
