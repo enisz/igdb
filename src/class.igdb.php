@@ -5,7 +5,7 @@
      * 
      * Fethching data from IGDB's database.
      * 
-     * @version 1.0.4
+     * @version 1.0.5
      * @author Enisz Abdalla <enisz87@gmail.com>
      */
 
@@ -318,6 +318,15 @@
         }
 
         /**
+         * Returning the details of the latest query
+         * @return $info ( array ) Return value of curl_getinfo()
+         */
+        public function get_request_info()
+        {
+            return curl_getinfo($this->CH);
+        }
+
+        /**
          * Executes the query against the constructed URL.
          * After the request the HTTP response code is examined.
          * Returns an array decoded from IGDB JSON response or throws Exception in case of error
@@ -362,8 +371,11 @@
                             $message = $result->Err->message;
                     }
 
-                    if(property_exists($result[0], 'error'))
+                    else if(property_exists($result[0], 'error'))
                         $message = implode(' ', $result[0]->error);
+
+                    else
+                        $message = 'Unknown error occured! Check the request results!';
 
                     throw new Exception('Error 400: Bad Request!' . (isset($message) ? ' ' . $message : ''));
                 break;

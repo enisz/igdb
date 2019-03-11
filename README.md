@@ -22,6 +22,7 @@
   * [Reinitialize CURL session](#reinitialize-curl-session)
   * [Custom Query](#custom-query)
   * [Count](#count)
+  * [Get Request Information](#get-request-information)
 - [Private Methods](#private-methods)
   * [Initialize CURL Session](#initialize-curl-session)
   * [Construct URL](#construct-url)
@@ -54,6 +55,7 @@
 - [Example Query](#example-query)
 - [Return Values](#return-values)
 - [Changes](#changes)
+  * [v1.0.5 - March 11, 2019](#v105---march-11-2019)
   * [v1.0.4 - March 25, 2018](#v104---march-25-2018)
   * [v1.0.3 - March 18, 2018](#v103---march-18-2018)
   * [v1.0.2 - March 17, 2018](#v102---march-17-2018)
@@ -317,6 +319,10 @@ You can call this method with more [filters](#filters) (the same way you would d
   // Calling the method without filters
   $IGDB->count('game');
 ```
+
+### Get Request Information
+``public IGDB::get_request_info() ( ) : array``<br/>
+If you need detailed information regarding the latest query, you can get it by this method. It returns the return value of [``curl_getinfo()``](http://php.net/curl_getinfo) php function.
 
 ## Private Methods
 These methods cannot be accessed from outside of the class. These are responsible to check option parameters, constructing URL's and query strings.
@@ -602,9 +608,15 @@ As you can see, the ``$result`` variable holds an array, containing 5 elements (
 > Working with non-mandatory fileds requires you to check for availability before accessing them.
 
 ## Changes
+
+### v1.0.5 - March 11, 2019
+ - Fixed a bug at the request's error handling
+ - [``public IGDB::get_request_info()``](#get-request-information) public method added
+
 ### v1.0.4 - March 25, 2018
  - Default properties has been removed.
  - set\_default public method has been removed.
+
 ### v1.0.3 - March 18, 2018
  - Providing either search or id parameter in the options array are not mandatory anymore.
  - Providing fields parameter when using expander is not mandatory anymore.
@@ -612,6 +624,7 @@ As you can see, the ``$result`` variable holds an array, containing 5 elements (
  - Implemented count method. Refer to the [count](#count) section of the Readme.
  - Example _count.php_ has been added.
  - Updated Readme
+
 ### v1.0.2 - March 17, 2018
  - Modified the [constructor](#initializing-class) to ask only for the API Key. The API URL has been changed to be fix for every user (by IGDB).
  - The API URL and KEY setter and getter methods has been removed.
@@ -623,6 +636,7 @@ As you can see, the ``$result`` variable holds an array, containing 5 elements (
  - _order.php_ example has been added.
  - _order_subfilter.php_ example has been added.
  - All example files has been modified with the updated constructor.
+
 ### v1.0.1 - March 16, 2018
  - Added [Changes](#changes) section to the ReadMe.
  - Fixed [filter parameter](#filters) constructing; the parameter input has been changed.
