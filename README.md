@@ -72,7 +72,7 @@ To use IGDB's database you have to register an account at [https://api.igdb.com]
 ``public IGDB::__construct ( string $key ) : void``<br/>
 You can initialize the class by passing your IGDB API Key to the constructor. The credentials will be verfied only by IGDB server when you send the query.
 
-```
+```php
 $IGDB = new IGDB('<YOUR API KEY>');
 ```
 
@@ -91,7 +91,7 @@ $IGDB = new IGDB('<YOUR API KEY>');
 For every [endpoint method](#endpoints) that fetching data from IGDB you will need to provide an ``$options`` array, that contains the parameters of the query.
 
 Let's see an example options array:
-```
+```php
 $options = array(
 	'search' => 'uncharted',         // searching elements by the name UNCHARTED
 	'fields' => array('id', 'name'), // the result object will contain only the ID and NAME fields
@@ -106,7 +106,7 @@ $options = array(
 ### ID
 ``id ( array | number ) [ optional ]``: one ore more item ID's. When ID is provided, the ``search`` parameter will be ignored.
 
-```
+```php
 // Providing one ID
 $options = array(
   'id' => 5
@@ -121,7 +121,7 @@ $options = array(
 ### Search
 ``search ( string ) [ optional ]``: the query will search the name field looking for this value. If ``id`` is provided in the same options array, than this value will be ignored.
 
-```
+```php
 // Provide search string
 $options = array(
   'search' => 'star wars'
@@ -134,7 +134,7 @@ $options = array(
  - If the field list is provided as string, you have to separate the field names using comma (id,name).
  - If you want to see every fields in the result you have to pass a star (*).
 
-```
+```php
 // Provide single or multiple fields as a string separated by comma
 $options = array(
   'fields' => 'id,name'
@@ -156,7 +156,7 @@ $options = array(
 ### Limit
 ``limit ( number ) [ optional ]``: the maximum number of results in a single query. This value must be a number between 1 and 50.
 
-```
+```php
 // Provide a limit parameter
 $options = array(
   'limit' => 20
@@ -180,7 +180,7 @@ $options = array(
 ### Expand
 ``expand ( array | string ) [ optional ]``: the expander feature is used to combine multiple requests.
 
-```
+```php
 // Provide single or multiple expander rule as a string separated by comma
 $options = array(
   'expand' => array('game', 'themes')
@@ -200,7 +200,7 @@ $options = array(
  - ``postfix``: The postfix you want to use with the filter. Refer to the IGDB Filters Documentation for available postfixes.
  - ``value``: The value of the filter.
 
-```
+```php
 // Provide a single filter rule as an array
 // In this case you must have field, postfix and value elements in the array
 $options = array(
@@ -226,7 +226,7 @@ $options = array(
 ```
 
 You can provide the filter parameter as string. In this case you can pass the string as you would as an URL segment:
-```
+```php
 // Provide a single filter rule as a string
 $options = array(
   'filter' => '[release_dates.platform][eq]=8'
@@ -241,7 +241,7 @@ $options = array(
  - ``direction``: The direction of the ordering. It must be either ``asc`` for ascending or ``desc`` for descending ordering.
  - ``subfilter [optional]``: You can apply this optional subfilter for even more complex ordering. Available subfilters are: ``min``, ``max``, ``avg``, ``sum``, ``median``.
 
-```
+```php
 // Provide an order parameter as an array
 $options = array(
     'order' => array(
@@ -253,7 +253,7 @@ $options = array(
 ```
 
 You can also provide the order parameter as string. In this case you can pass the string as you would as an URL segment:
-```
+```php
 // Provide an order parameter as a string
 $options = array(
   'order' => 'release_dates.date:desc:min'
@@ -285,7 +285,7 @@ You can launch manually assembled queries with this method. Great solution for t
 The IGDB response will be returned as an array. Refer to the [return values](#return-values) section of the readme.
 
 Example
-```
+```php
 $result = $IGDB->custom_query('games/?search=uncharted&fields=id,name&order=name:asc');
 ```
 
@@ -302,7 +302,7 @@ You can count all the records on the given ``$endpoint``. If no ``$filter`` is p
 
  This method will return the number of counted records.
 
-```
+```php
 $options = array(       // all games will be counted
   'filter' => 'rating', // with rating
   'postfix' => 'gt',    // greater than
@@ -315,7 +315,7 @@ $IGDB->count('game', $options);
 
 You can call this method with more [filters](#filters) (the same way you would do for an endpoint method) or even without them.
 
-```
+```php
   // Calling the method without filters
   $IGDB->count('game');
 ```
@@ -501,7 +501,7 @@ Fetch data using VERSIONS endpoint.
 
 ## Example Query
 Let's do a simple example. Get the third page of a game list, where the game we are looking for is LIKE "uncharted" (this example is available in _examples/\_basic_example.php_)
-```
+``` php
 <?php
 
     require 'class.igdb.php';
@@ -543,18 +543,18 @@ Let's do a simple example. Get the third page of a game list, where the game we 
 ## Return Values
 Every [Endpoint Method](#endpoints) can return two different type of results, depending on the second parameter provided for them:
  - By default the second ``$execute`` parameter is boolean ``TRUE``. this means, that the query string will be constructed, then will be ran against the IGDB, returning a ``$result`` array.
- ```
+ ```php
  // This will return an array with the results
  $IGDB->game($options);
  ```
  - If you pass a boolean ``FALSE`` as a second parameter, then you will get the full constructed URL, but the query will not be ran against IGDB.
- ```
+ ```php
  // This will return a string with the full URL.
  $IGDB->game($options, false);
  ```
  
  The result object's properties will vary depending on the provided field list in the [``options``](#options-parameters) array. Let's see what is the result of the above example query:
-```
+```php
 array (size=5)
   0 => 
     object(stdClass)[2]
