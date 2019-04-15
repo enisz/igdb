@@ -1,3 +1,7 @@
+**This class is DEPRECATED**
+
+This class was written to the V2 api of IGDB. This version of the api will be discontinued and unsupported from 30th of June, 2019. 
+
 # **Internet Game Database API Class Documentation**
 
 <!-- toc -->
