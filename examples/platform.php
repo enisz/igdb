@@ -5,7 +5,7 @@
     $IGDB = new IGDB('<YOUR API KEY>');
 
     $options = array(
-        'search' => 'xbox', // Searching the platforms for XBOX. 
+        'search' => 'xbox',                     // Searching the platforms for XBOX.
         'fields' => array('id', 'name', 'slug') // Showing ID, NAME and SLUG fields in the results
     );
 

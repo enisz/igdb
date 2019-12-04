@@ -31,8 +31,7 @@
     // Now I'm defining a new one to use a different endpoint with the same instance
     $second_options = array(
         'search' => 'xbox',
-        'fields' => 'id, name, slug',
-        'order' => 'name:asc'
+        'fields' => 'id, name, slug'
     );
 
     $second_result = $IGDB->platform($second_options);
