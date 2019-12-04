@@ -2,9 +2,9 @@
 
     /**
      * Internet Game Database Api Class
-     * 
+     *
      * Fethching data from IGDB's database.
-     * 
+     *
      * @version 1.0.5
      * @author Enisz Abdalla <enisz87@gmail.com>
      */
@@ -12,7 +12,7 @@
     class IGDB {
 
         // IGDB API url
-        private $API_URL = 'https://api-endpoint.igdb.com';
+        private $API_URL = 'https://api-v3.igdb.com';
 
         // IGDB API key
         private $API_KEY;
@@ -22,27 +22,22 @@
 
         /**
          * Sets the API key and the CURL handler. Doesn't have return value.
-         * 
+         *
          * @param $key ( string ) The API key provided by IGDB
-         * @return void
          */
-        public function __construct($key)
-        {
+        public function __construct($key) {
             $this->API_KEY = $key;
-
             $this->_init_curl();
         }
 
         /**
          * Initializing Curl Session. Doesn't have return value.
-         * 
-         * @return void
          */
-        private function _init_curl()
-        {
+        private function _init_curl() {
             $this->CH = curl_init();
             curl_setopt($this->CH, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($this->CH, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($this->CH, CURLOPT_POST, true);
             curl_setopt($this->CH, CURLOPT_HTTPHEADER, array(
             'user-key: ' . $this->API_KEY,
             'Accept: application/json'
@@ -50,304 +45,243 @@
         }
 
         /**
-         * Stringify the options array for the URL.
-         * Checking every value; throwing Exception in case of errors
-         * Returns the options as a query string.
-         * 
-         * @param $options ( array ) An array containing option parameters for the query.
-         * @param $add_defaults ( boolean ) Whether append the default parameters to the query string
-         * @throws Exception In case of invalid or missing parameters.
-         * @return $url ( string ) Query string from the options array.
+         * The API Status endpoint is a way to see a usage report for an API key.
+         * It shows stats such as requests made in the current period and when that period ends
+         *
+         * @return $result ( array ) with one element containing an object with the information
          */
-        private function _stringify_options($options)
-        {
-            // All available fields parameter
-            $available_options = array('id', 'search', 'fields', 'limit', 'offset', 'expand', 'filter', 'order');
+        public function api_status() {
+            // setting request type ot GET
+            curl_setopt($this->CH, CURLOPT_HTTPGET, true);
 
+            // Set the request URL
+            curl_setopt($this->CH, CURLOPT_URL, $this->API_URL . '/api_status');
+
+            $result = json_decode(curl_exec($this->CH));
+
+            // setting request type back to POST
+            curl_setopt($this->CH, CURLOPT_POST, true);
+
+            return $result;
+        }
+
+        /**
+         * Parsing the Apicalypse query string from the options array
+         *
+         * @throws Exception In case of missing parameters
+         * @throws Exception When invalid parameters passed
+         * @param $options The options array to parse
+         */
+        public function apicalypse($options) {
+            $fields = array('search', 'fields', 'exclude', 'where', 'limit', 'offset', 'sort');
             $query = '';
 
-            // If ID provided in the options
-            if(array_key_exists('id', $options))
-            {
-                // If both ID and SEARCH provided, remove the search element from the options
-                if(array_key_exists('search', $options))
-                    unset($options['search']);
+            // id provided; push it in the where statement
+            if(!array_key_exists('where', $options) && array_key_exists('id', $options)) {
+                if(!is_array($options['id'])) {
+                    $options['id'] = array_map( function ($item) { return trim($item); }, explode(',', $options['id']));
+                }
 
-                // If the ID is an array, implode it with commas
-                if(is_array($options['id']))
-                    $options['id'] = implode(',', $options['id']);
-                
-                // Append the ID to the query url
-                $query .= $options['id'];
+                $options['where'] = array(
+                    'field' => 'id',
+                    'postfix' => '=',
+                    'value' => (count($options['id']) > 1 ? '(' : '') . implode(',', $options['id']) . (count($options['id']) > 1 ? ')' : '')
+                );
 
-                // Remove the ID from the options to avoid being stringified later
                 unset($options['id']);
             }
 
-            $query .= '?';
+            foreach($fields as $parameter) {
+                if(array_key_exists($parameter, $options)) {
+                    switch($parameter) {
+                        case 'search':
+                            $query .= 'search "' . $options[$parameter] . '"';
+                        break;
 
-            $params = array();
+                        case 'fields':
+                        case 'exclude':
+                            if(!is_array($options[$parameter])) {
+                                $options[$parameter] = array_map( function($item) { return trim($item); }, explode(',', $options[$parameter]));
+                            }
 
-            foreach($options as $parameter => $value)
-            {
-                // Throwing an Exception if the parameter is not in the available options array
-                if(!in_array($parameter, $available_options))
-                    throw new Exception('Invalid option parameter: ' . $parameter . '!');
-                
-                switch($parameter)
-                {
-                    // The search parameter have to be url encoded
-                    case 'search':
-                            $value = urlencode($value);
-                    break;
+                            $query .= $parameter . ' ' . implode(',', $options[$parameter]);
+                        break;
 
-                    // Constructing order parameter
-                    case 'order':
-                        $available_directions = array('asc', 'desc');
-                        $available_subfilters = array('min', 'max', 'avg', 'sum', 'median');
+                        case 'where':
+                            if(is_string($options[$parameter])) { // as string
+                                $params = explode(' ', $options[$parameter]);
 
-                        // If it is provided as array
-                        if(is_array($value))
-                        {
-                            // If field is missing from the array
-                            if(!array_key_exists('field', $value))
-                                throw new Exception('Missing order parameter: field!');
+                                if(count($params) != 3) {
+                                    throw new Exception('when "where" statement is passed as a string, it has to contain a field name, a postfix and a value separated by spaces!');
+                                }
 
-                            // If direction is missing from the array
-                            if(!array_key_exists('direction', $value))
-                                throw new Exception('Missing order parameter: direction!');
+                                $options[$parameter] = array(
+                                    array(
+                                        'field' => $params[0],
+                                        'postfix' => $params[1],
+                                        'value' => $params[2]
+                                    )
+                                );
+                            } else if(is_array($options[$parameter]) && array_key_exists(0, $options[$parameter]) && is_string($options[$parameter][0]))  { // array of strings
+                                $new_value = array();
 
-                            // If the provided direction is not among the available ones
-                            if(!in_array($value['direction'], $available_directions))
-                                throw new Exception('Invalid direction parameter: ' . $value['direction']);
-                            
-                            // If there is a subfilter, but it is not among the available ones
-                            if(array_key_exists('subfilter', $value) && !in_array($value['subfilter'], $available_subfilters))
-                                throw new Exception('Invalid subfilter parameter: ' . $value['subfilter']);
-                            
-                            $value = $value['field'] . ':' . $value['direction'] . (array_key_exists('subfilter', $value) ? ':' . $value['subfilter'] : '');
-                        }
+                                foreach($options[$parameter] as $param) {
+                                    $params = explode(' ', $param);
 
-                        // If it is provided as string
-                        else if(preg_match('#^([^:]*):([^:]*)(?:$|:(.+))$#i', $value, $match))
-                        {
-                            $field = $match[1];
-                            $direction = $match[2];
-                            $subfilter = array_key_exists(3, $match) ? $match[3] : null;
+                                    if(count($params) != 3) {
+                                        throw new Exception('when "where" statement is passed as a string, it has to contain a field name, a postfix and a value separated by spaces!');
+                                    }
 
-                            // If the provided direction is not among the available ones
-                            if(!in_array($direction, $available_directions))
-                                throw new Exception('Invalid direction parameter: ' . $direction . '!');
+                                    array_push($new_value, array(
+                                        'field' => $params[0],
+                                        'postfix' => $params[1],
+                                        'value' => $params[2]
+                                    ));
+                                }
 
-                            // If the provided subfilter is not among the available ones
-                            if(isset($subfilter) && !in_array($subfilter, $available_subfilters))
-                                throw new Exception('Invalid subfilter parameter: ' . $subfilter . '!');
+                                $options[$parameter] = $new_value;
+                            } else if(is_array($options[$parameter]) && array_key_exists('field', $options[$parameter])) { // filter array
+                                $options[$parameter] = array(
+                                    array(
+                                        'field' => $options[$parameter]['field'],
+                                        'postfix' => $options[$parameter]['postfix'],
+                                        'value' => $options[$parameter]['value']
+                                    )
+                                );
+                            } else if(is_array($options[$parameter]) && array_key_exists(0, $options[$parameter]) && array_key_exists('field', $options[$parameter][0])) { // array of filter arrays
+                                // data is in correct format, nothing to do here
+                            } else {
+                                throw new Exception('"where" statement in the options array contains invalid data!');
+                            }
 
-                            $value = $field . ':' . $direction . (is_null($subfilter) ? '' : ':' . $subfilter);
-                        }
+                            // id provided; push it in the where statement
+                            if(array_key_exists('id', $options)) {
+                                if(!is_array($options['id'])) {
+                                    $options['id'] = array_map( function ($item) { return trim($item); }, explode(',', $options['id']));
+                                }
 
-                        // Invalid string or parameters
-                        else
-                            throw new Exception('Invalid or missing order parameter!');
-                    break;
+                                if(!array_key_exists('where', $options)) {
+                                    $options['where'] = array();
+                                }
 
-                    // The filter parameters have to be constructed differently
-                    case 'filter':
-                        $available_postfixes = array(
-                            'eq', // Equal: Exact match equal.
-                            'not_eq', // Not Equal: Exact match equal.
-                            'gt', // Greater than works only on numbers.
-                            'gte', // Greater than or equal to works only on numbers.
-                            'lt', // Less than works only on numbers.
-                            'lte', // Less than or equal to works only on numbers.
-                            'prefix', // Prefix of a value only works on strings.
-                            'exists', // The value is not null.
-                            'not_exists', // The value is null.
-                            'in', // The value exists within the (comma separated) array (AND between values).
-                            'not_in', // The values must not exists within the (comma separated) array (AND between values).
-                            'any', // The value has any within the (comma separated) array (OR between values).
-                        );
+                                array_unshift($options['where'], array(
+                                    'field' => 'id',
+                                    'postfix' => '=',
+                                    'value' => (count($options['id']) > 1 ? '(' : '') . implode(',', $options['id']) . (count($options['id']) > 1 ? ')' : '')
+                                ));
+                            }
 
-                        // Only one filter parameter as array => converting to array
-                        if(is_array($value) && array_key_exists('field', $value) && array_key_exists('postfix', $value) && array_key_exists('value', $value))
-                        {
-                            $value = array(
-                                array(
-                                    'field' => $value['field'],
-                                    'postfix' => $value['postfix'],
-                                    'value' => $value['value']
-                                )
-                            );
-                        }
+                            $items = array();
 
-                        // Several filter parameters as array
-                        else if(is_array($value) && array_key_exists(0, $value))
-                        {
-                            // Empty clause, just checking the type
-                        }
+                            foreach($options[$parameter] as $filter) {
+                                if(!array_key_exists('field', $filter)) {
+                                    throw new Exception('"field" parameter is missing from the where statement!');
+                                }
 
-                        // One parameter as string
-                        else if(!is_array($value) && preg_match('#\[([^\]]*)\]\[([^\]]*)\]=(.*)#i', $value, $match))
-                        {
-                            $field = $match[1];
-                            $postfix = $match[2];
-                            $param = $match[3];
+                                if(!array_key_exists('postfix', $filter)) {
+                                    throw new Exception('"postfix" parameter is missing from the where statement!');
+                                }
 
-                            $value = array(
-                                array(
-                                    'field' => $field,
-                                    'postfix' => $postfix,
-                                    'value' => $param
-                                )
-                            );
-                        }
+                                if(!array_key_exists('value', $filter)) {
+                                    throw new Exception('"value" parameter is missing from the where statement!');
+                                }
 
-                        else
-                            throw new Exception('Invalid or missing filter parameters!');
+                                $available_postfixes = array('=', '!=', '>', '>=', '<', '<=', '~');
 
-                        // Temp variables
-                        $tempparameters = array();
-                        $tempvalues = array();
+                                if(!in_array($filter['postfix'], $available_postfixes)) {
+                                    throw new Exception('invalid postfix "' . $filter['postfix'] . '" in where statement!');
+                                }
 
-                        foreach($value as $index => $filter)
-                        {
-                            // If the field parameter is missing
-                            if(!array_key_exists('field', $filter))
-                                throw new Exception('Missing \'field\' filter parameter in filter #' . $index . '!');
+                                array_push($items, $filter['field'] . ' ' . $filter['postfix'] . ' ' . $filter['value']);
+                            }
 
-                            // If the postfix parameter is missing
-                            if(!array_key_exists('postfix', $filter))
-                                throw new Exception('Missing \'postfix\' filter parameter in filter #' . $index . '!');
+                            $query .= 'where ' . implode(' & ', $items);
+                        break;
 
-                            // If the value parameter is missing
-                            if(!array_key_exists('value', $filter))
-                                throw new Exception('Missing \'value\' filter parameter in filter #' . $index . '!');
+                        case 'limit':
+                        case 'offset':
+                            $value = $options[$parameter];
 
-                            // If the provided postfix value is not among the available ones
-                            if(!in_array($filter['postfix'], $available_postfixes))
-                                throw new Exception('Invalid postfix value ' . $filter['postfix'] . ' in filter #' . $index . '!');
-                            
-                            array_push($tempparameters, 'filter[' . $filter['field'] . '][' . $filter['postfix'] . ']');
-                            array_push($tempvalues, $filter['value']);
-                        }
+                            if($parameter == 'limit' && ($value < 1 || $value > 50)) {
+                                throw new Exception('Limit value must be between 1 and 50!');
+                            }
 
-                        $parameter = $tempparameters;
-                        $value = $tempvalues;
+                            $query .= $parameter . ' ' . $value;
+                        break;
 
-                        // Removing temp variables
-                        unset($tempparameters, $tempvalues);
-                    break;
+                        case 'sort':
+                            $available_directions = array('asc', 'desc');
 
-                    // If the parameters value is an array then implode it with commas
-                    // Else remove the whitespaces, if there is any
-                    default:
-                        is_array($value) ? $value = implode(',', $value) : $value = preg_replace('# #', '', $value);
-                    break;
+                            if(is_array($options[$parameter])) {
+                                // field parameter is missing
+                                if(!array_key_exists('field', $options[$parameter])) {
+                                    throw new Exception('"field" parameter is missing from the sort statement!');
+                                }
+
+                                // order parameter is missing
+                                if(!array_key_exists('direction', $options[$parameter])) {
+                                    throw new Exception('"direction" parameter is missing from the sort statement!');
+                                }
+
+                                // order parameter is invalid
+                                if(!in_array($options[$parameter]['direction'], $available_directions)) {
+                                    throw new Exception('the value of the "direction" field is invalid (' . $options[$parameter] . ')! it has to be either asc or desc!');
+                                }
+
+                                $query .= $parameter . ' ' . $options[$parameter]['field'] . ' ' . $options[$parameter]['direction'];
+                            } else {
+                                $params = explode(' ', $options[$parameter]);
+
+                                if(count($params) != 2) {
+                                    throw new Exception('sort parameter must contain a field name and the sorting direction separated with a space!');
+                                }
+
+                                if(!in_array($params[1], $available_directions)) {
+                                    throw new Exception('the direction of sorting must be either "asc" or "desc"!');
+                                }
+
+                                $query .= $parameter . ' ' . $params[0] . ' ' . $params[1];
+                            }
+
+                        break;
+                    }
+
+                    $query .= ";\n";
                 }
-
-                if(is_array($parameter))
-                    foreach($parameter as $index => $param)
-                        array_push($params, $param . '=' . $value[$index]);
-                else
-                    array_push($params, $parameter . '=' . $value);
             }
 
-            $query .= implode('&', $params);
-
-            return $query;
+            return trim($query);
         }
 
         /**
-         * Get the number of all the records on the given endpoint matching the optionally provided filters.
-         * 
-         * @param $endpoint The name of the endpoint
-         * @param $filters An optional $option array with only a filter parameter.
-         * @throws Exception in case of invalid endpoint.
-         * @return $result ( number ) The total count of the records.
-         */
-        public function count($endpoint, $filters = null)
-        {
-            // Available endpoints
-            $available_endpoints = array(
-                'character' => 'characters',
-                'collection' => 'collections',
-                'company' => 'companies',
-                'credit' => 'credits',
-                'feed' => 'feeds',
-                'franchise' => 'franchises',
-                'game' => 'games',
-                'game_engine' => 'game_engines',
-                'game_mode' => 'game_modes',
-                'genre' => 'genres',
-                'keyword' => 'keywords',
-                'page' => 'pages',
-                'person' => 'persons',
-                'platform' => 'platforms',
-                'player_perspective' => 'player_perspectives',
-                'pulse' => 'pulses',
-                'pulse_group' => 'pulse_groups',
-                'pulse_source' => 'pulse_sources',
-                'release_date' => 'release_dates',
-                'review' => 'reviews',
-                'theme' => 'themes',
-                'title' => 'titles',
-                'versions' => 'game_versions'
-            );
-
-            // If invalid endpoint is provided
-            if(!array_key_exists($endpoint, $available_endpoints))
-                throw new Exception('Invalid endpoint: ' . $endpoint . '!');
-
-            // Query IGDB for the data
-            $result = $this->_exec_query(rtrim($this->API_URL, '/') . '/' . $available_endpoints[$endpoint] . '/count' . (is_null($filters) ? '' : $this->_stringify_options($filters)));
-            
-            return $result->count;
-        }
-
-        /**
-         * Constructs the complete query URL using the provided endpoint and options array.
-         * Returns the contsturcted URL.
-         * 
-         * @param $endpoint ( string ) The IGDB endpoint name
-         * @param $options ( array ) The array containing the parameters for the query.
-         * @return $url ( string ) The complete query URL.
-         */
-        private function _construct_url($endpoint, $options)
-        {
-            return rtrim($this->API_URL, '/') . '/' . $endpoint . '/' . $this->_stringify_options($options);
-        }
-
-        /**
-         * Returning the details of the latest query
+         * Returning the details of the latest request
          * @return $info ( array ) Return value of curl_getinfo()
          */
-        public function get_request_info()
-        {
+        public function get_request_info() {
             return curl_getinfo($this->CH);
         }
 
         /**
-         * Executes the query against the constructed URL.
-         * After the request the HTTP response code is examined.
+         * Executes the query against IGDB API.
          * Returns an array decoded from IGDB JSON response or throws Exception in case of error
-         * 
-         * @param $url ( string ) The complete IGDB URL.
-         * @throws Exception in case the curl session has been closed manually.
-         * @throws Exception in case of HTTP 0 response (Failed Request)
-         * @throws Exception in case of HTTP 400 response (Bad Request)
-         * @throws Exception in case of HTTP 401 response (Unauthorized)
-         * @throws Exception in case of HTTP 403 response (Forbidden)
-         * @throws Exception in case of HTTP 500 response (Internal Server Error)
+         *
+         * @throws Exception in case of closed CURL session
+         * @throws Exception if the response code is any other than 200
+         * @param $endpoint ( string ) The url of the endpoint
+         * @param $options ( array ) The options array
          * @return $result ( array ) The response objects from IGDB in an array.
          */
-        private function _exec_query($url)
-        {
+        private function _exec_query($endpoint, $options) {
             // Throw Exception if CURL handler is null (closed)
-            if(is_null($this->CH))
+            if(is_null($this->CH)) {
                 throw new Exception('CURL session is closed!');
+            }
 
             // Set the request URL
-            curl_setopt($this->CH, CURLOPT_URL, $url);
+            curl_setopt($this->CH, CURLOPT_URL, $this->API_URL . '/' . $endpoint);
+
+            // Set the body of the request
+            curl_setopt($this->CH, CURLOPT_POSTFIELDS, $this->apicalypse($options));
 
             // Executing the request
             $result = json_decode(curl_exec($this->CH));
@@ -355,42 +289,9 @@
             // Getting request information
             $request = curl_getinfo($this->CH);
 
-            switch($request['http_code'])
-            {
-                case 0: // Failed Request
-                    throw new Exception('Request failed! Check the Request URL!');
-                break;
-
-                case 400: // Bad Request
-                    if(is_object($result))
-                    {
-                        if(property_exists($result, 'message'))
-                            $message = $result->message;
-
-                        if(property_exists($result, 'Err'))
-                            $message = $result->Err->message;
-                    }
-
-                    else if(property_exists($result[0], 'error'))
-                        $message = implode(' ', $result[0]->error);
-
-                    else
-                        $message = 'Unknown error occured! Check the request results!';
-
-                    throw new Exception('Error 400: Bad Request!' . (isset($message) ? ' ' . $message : ''));
-                break;
-
-                case 401: // Unauthorized
-                    throw new Exception('Error 401: Unauthorized!');
-                break;
-
-                case 403: // Forbidden
-                    throw new Exception('Error 403: Forbidden!');
-                break;
-
-                case 500: // Internal Server Error
-                    throw new Exception('Error 500: Internal Server Error!');
-                break;
+            // If there were errors
+            if($request['http_code'] != 200) {
+                throw new Exception('Error ' . $request['http_code'] . ': ' . (property_exists($result[0], 'cause') ? $result[0]->cause : 'unknown error'));
             }
 
             return $result;
@@ -398,359 +299,834 @@
 
         /**
          * Closes the CURL handler.
-         * 
          * After this method is called, the class cannot run any queries against IGDB unless you reinitialize it manually.
-         * Doesn't have return value.
-         * 
+         *
          * @return void
          */
-        public function close_handler()
-        {
+        public function close_handler() {
             curl_close($this->CH);
             $this->CH = null;
         }
 
         /**
          * Reinitialize the CURL session. Simply calls the _init_curl private method.
-         * 
-         * Doesn't have return value.
+         *
+         * @return void
          */
-        public function reinit_handler()
-        {
+        public function reinit_handler() {
             $this->_init_curl();
         }
 
         /**
-         * Executes a custom query on the IGDB. Great solution for testing requests manually.
-         * 
-         * @param $url ( string ) manually assembled query string with the endpoint
-         * @return $result ( array ) an array with Parsed JSON objects
-         */
-        public function custom_query($url)
-        {
-            return $this->_exec_query(rtrim($this->API_URL, '/') . '/' . ltrim($url, '/'));
-        }
-
-        /**
-         * Fetch data from IGDB using CHARACTER endpoint. 
+         * Fetch data from IGDB using Achievement endpoint.
          * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/character/
-         * 
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#achievement
+         *
          * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
          */
-        public function character($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('characters', $options)) : $this->_construct_url('characters', $options);
+        public function achievement($options, $count = false) {
+            return $this->_exec_query('achievements' . ($count ? '/count' : ''), $options);
         }
 
         /**
-         * Fetch data from IGDB using COLLECTION endpoint. 
+         * Fetch data from IGDB using Achievement Icon endpoint.
          * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/collection/
-         * 
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#achievement-icon
+         *
          * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
          */
-        public function collection($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('collections', $options)) : $this->_construct_url('collections', $options);
+        public function achievement_icon($options, $count = false) {
+            return $this->_exec_query('achievement_icons' . ($count ? '/count' : ''), $options);
         }
 
         /**
-         * Fetch data from IGDB using COMPANY endpoint. 
+         * Fetch data from IGDB using Age Rating endpoint.
          * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/company/
-         * 
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#age-rating
+         *
          * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
          */
-        public function company($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('companies', $options)) : $this->_construct_url('companies', $options);
+        public function age_rating($options, $count = false) {
+            return $this->_exec_query('age_ratings' . ($count ? '/count' : ''), $options);
         }
 
         /**
-         * Fetch data from IGDB using CREDIT endpoint. 
+         * Fetch data from IGDB using Age Rating Content Description endpoint.
          * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/credit/
-         * 
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#age-rating-content-description
+         *
          * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
          */
-        public function credit($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('credits', $options)) : $this->_construct_url('credits', $options);
+        public function age_rating_content_description($options, $count = false) {
+            return $this->_exec_query('age_rating_content_descriptions' . ($count ? '/count' : ''), $options);
         }
 
         /**
-         * Fetch data from IGDB using FEED endpoint. 
+         * Fetch data from IGDB using Alternative Name endpoint.
          * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/feed/
-         * 
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#alternative-name
+         *
          * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
          */
-        public function feed($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('feeds', $options)) : $this->_construct_url('feeds', $options);
+        public function alternative_name($options, $count = false) {
+            return $this->_exec_query('alternative_names' . ($count ? '/count' : ''), $options);
         }
 
         /**
-         * Fetch data from IGDB using FRANCHISE endpoint. 
+         * Fetch data from IGDB using Artwork endpoint.
          * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/franchise/
-         * 
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#artwork
+         *
          * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
          */
-        public function franchise($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('franchises', $options)) : $this->_construct_url('franchises', $options);
+        public function artwork($options, $count = false) {
+            return $this->_exec_query('artworks' . ($count ? '/count' : ''), $options);
         }
 
         /**
-         * Fetch data from IGDB using GAME endpoint. 
+         * Fetch data from IGDB using Character endpoint.
          * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/game/
-         * 
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#character
+         *
          * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
          */
-        public function game($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('games', $options)) : $this->_construct_url('games', $options);
+        public function character($options, $count = false) {
+            return $this->_exec_query('characters' . ($count ? '/count' : ''), $options);
         }
 
         /**
-         * Fetch data from IGDB using GAME ENGINE endpoint. 
+         * Fetch data from IGDB using Character Mug Shot endpoint.
          * Returns an array with JSON object decoded from IGDB response.
-         * @link https://igdb.github.io/api/endpoints/game-engine/
-         * 
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#character-mug-shot
+         *
          * @param $options ( array ) an options parameter setting up the details of the query.
-         * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-         * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
          */
-        public function game_engine($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('game_engines', $options)) : $this->_construct_url('game_engines', $options);
+        public function character_mug_shot($options, $count = false) {
+            return $this->_exec_query('character_mug_shots' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using GAME MODE endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/game-mode/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function game_mode($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('game_modes', $options)) : $this->_construct_url('game_modes', $options);
+         * Fetch data from IGDB using Collection endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#collection
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function collection($options, $count = false) {
+            return $this->_exec_query('collections' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using GENRE endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/genre/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function genre($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('genres', $options)) : $this->_construct_url('genres', $options);
+         * Fetch data from IGDB using Company endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#company
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function company($options, $count = false) {
+            return $this->_exec_query('companies' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using KEYWORD endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/keyword/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function keyword($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('keywords', $options)) : $this->_construct_url('keywords', $options);
+         * Fetch data from IGDB using Company Logo endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#company-logo
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function company_logo($options, $count = false) {
+            return $this->_exec_query('company_logos' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using PAGE endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/page/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function page($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('pages', $options)) : $this->_construct_url('pages', $options);
+         * Fetch data from IGDB using Company Website endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#company-website
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function company_website($options, $count = false) {
+            return $this->_exec_query('company_websites' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using PERSON endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/person/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function person($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('persons', $options)) : $this->_construct_url('persons', $options);
+         * Fetch data from IGDB using Cover endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#cover
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function cover($options, $count = false) {
+            return $this->_exec_query('covers' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using PLATFORM endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/platform/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function platform($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('platforms', $options)) : $this->_construct_url('platforms', $options);
+         * Fetch data from IGDB using External Game endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#external-game
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function external_game($options, $count = false) {
+            return $this->_exec_query('external_games' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using PLAYER PERSPECTIVE endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/player-perspective/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function player_perspective($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('player_perspectives', $options)) : $this->_construct_url('player_perspectives', $options);
+         * Fetch data from IGDB using Feed endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#feed
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function feed($options, $count = false) {
+            return $this->_exec_query('feeds' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using PULSE endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/pulse/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function pulse($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('pulses', $options)) : $this->_construct_url('pulses', $options);
+         * Fetch data from IGDB using Feed Follow endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#feed-follow
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function feed_follow($options, $count = false) {
+            return $this->_exec_query('private/feed_follows' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using PULSE GROUP endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/pulse-group/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function pulse_group($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('pulse_groups', $options)) : $this->_construct_url('pulse_groups', $options);
+         * Fetch data from IGDB using Follow endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#follow
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function follow($options, $count = false) {
+            return $this->_exec_query('private/follows' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using PULSE SOURCE endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/pulse-source/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function pulse_source($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('pulse_sources', $options)) : $this->_construct_url('pulse_sources', $options);
+         * Fetch data from IGDB using Franchise endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#franchise
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function franchise($options, $count = false) {
+            return $this->_exec_query('franchises' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using RELEASE DATE endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/release-date/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function release_date($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('release_dates', $options)) : $this->_construct_url('release_dates', $options);
+         * Fetch data from IGDB using Game endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#game
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game($options, $count = false) {
+            return $this->_exec_query('games' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using REVIEW endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/review/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function review($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('reviews', $options)) : $this->_construct_url('reviews', $options);
+         * Fetch data from IGDB using Game Engine endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#game-engine
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_engine($options, $count = false) {
+            return $this->_exec_query('game_engines' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using THEME endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/theme/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function theme($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('themes', $options)) : $this->_construct_url('themes', $options);
+         * Fetch data from IGDB using Game Engine Logo endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#game-engine-logo
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_engine_logo($options, $count = false) {
+            return $this->_exec_query('game_engine_logos' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using TITLE endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/title/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function title($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('titles', $options)) : $this->_construct_url('titles', $options);
+         * Fetch data from IGDB using Game Mode endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#game-mode
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_mode($options, $count = false) {
+            return $this->_exec_query('game_modes' . ($count ? '/count' : ''), $options);
         }
 
         /**
-            * Fetch data from IGDB using VERSIONS endpoint. 
-            * Returns an array with JSON object decoded from IGDB response.
-            * @link https://igdb.github.io/api/endpoints/versions/
-            * 
-            * @param $options ( array ) an options parameter setting up the details of the query.
-            * @param $execute ( boolean ) Wether you want to execute the query and get the result or get the full url of the query
-            * @return $result ( array | string ) an array with the Parsed JSON object or the full URL as a string. Depends on the $execute parameter
-            */
-        public function versions($options, $execute = true)
-        {
-            return $execute ? $this->_exec_query($this->_construct_url('game_versions', $options)) : $this->_construct_url('game_versions', $options);
+         * Fetch data from IGDB using Game Version endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#game-version
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_version($options, $count = false) {
+            return $this->_exec_query('game_versions' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Game Version Feature endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#game-version-feature
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_version_feature($options, $count = false) {
+            return $this->_exec_query('game_version_features' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Game Version Feature Value endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#game-version-feature-value
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_version_feature_value($options, $count = false) {
+            return $this->_exec_query('game_version_feature_values' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Game Video endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#game-video
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_video($options, $count = false) {
+            return $this->_exec_query('game_videos' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Genre endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#genre
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function genre($options, $count = false) {
+            return $this->_exec_query('genres' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Involved Company endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#involved-company
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function involved_company($options, $count = false) {
+            return $this->_exec_query('involved_companies' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Keyword endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#keyword
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function keyword($options, $count = false) {
+            return $this->_exec_query('keywords' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using List endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#list
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function list($options, $count = false) {
+            return $this->_exec_query('private/lists' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using List Entry endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#list-entry
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function list_entry($options, $count = false) {
+            return $this->_exec_query('private/list_entries' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Multiplayer Mode endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#multiplayer-mode
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function multiplayer_mode($options, $count = false) {
+            return $this->_exec_query('multiplayer_modes' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Page endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#page
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function page($options, $count = false) {
+            return $this->_exec_query('pages' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Page Background endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#page-background
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function page_background($options, $count = false) {
+            return $this->_exec_query('page_backgrounds' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Page Logo endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#page-logo
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function page_logo($options, $count = false) {
+            return $this->_exec_query('page_logos' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Page Website endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#page-website
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function page_website($options, $count = false) {
+            return $this->_exec_query('page_websites' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Platform endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#platform
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform($options, $count = false) {
+            return $this->_exec_query('platforms' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Platform Logo endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#platform-logo
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform_logo($options, $count = false) {
+            return $this->_exec_query('platform_logos' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Platform Version endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#platform-version
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform_version($options, $count = false) {
+            return $this->_exec_query('platform_versions' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Platform Version Company endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#platform-version-company
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform_version_company($options, $count = false) {
+            return $this->_exec_query('platform_version_companies' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Platform Version Release Date endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#platform-version-release-date
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform_version_release_date($options, $count = false) {
+            return $this->_exec_query('platform_version_release_dates' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Platform Website endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#platform-website
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform_website($options, $count = false) {
+            return $this->_exec_query('platform_websites' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Player Perspective endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#player-perspective
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function player_perspective($options, $count = false) {
+            return $this->_exec_query('player_perspectives' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Product Family endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#product-family
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function product_family($options, $count = false) {
+            return $this->_exec_query('product_families' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Pulse endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#pulse
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function pulse($options, $count = false) {
+            return $this->_exec_query('pulses' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Pulse Group endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#pulse-group
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function pulse_group($options, $count = false) {
+            return $this->_exec_query('pulse_groups' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Pulse Source endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#pulse-source
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function pulse_source($options, $count = false) {
+            return $this->_exec_query('pulse_sources' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Pulse Url endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#pulse-url
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function pulse_url($options, $count = false) {
+            return $this->_exec_query('pulse_urls' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Rate endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#rate
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function rate($options, $count = false) {
+            return $this->_exec_query('private/rates' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Release Date endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#release-date
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function release_date($options, $count = false) {
+            return $this->_exec_query('release_dates' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Review endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#review
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function review($options, $count = false) {
+            return $this->_exec_query('private/reviews' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Review Video endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#review-video
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function review_video($options, $count = false) {
+            return $this->_exec_query('private/review_videos' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Screenshot endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#screenshot
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function screenshot($options, $count = false) {
+            return $this->_exec_query('screenshots' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Search endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#search
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function search($options, $count = false) {
+            return $this->_exec_query('search' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Theme endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#theme
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function theme($options, $count = false) {
+            return $this->_exec_query('themes' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Time To Beat endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#time-to-beat
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function time_to_beat($options, $count = false) {
+            return $this->_exec_query('time_to_beats' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Title endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#title
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function title($options, $count = false) {
+            return $this->_exec_query('titles' . ($count ? '/count' : ''), $options);
+        }
+
+        /**
+         * Fetch data from IGDB using Website endpoint.
+         * Returns an array with JSON object decoded from IGDB response.
+         * Depending on the @param $count the response can be an array with objects, or an object with a count property.
+         * @link https://api-docs.igdb.com/#website
+         *
+         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $count ( boolean ) Whether the method should return the results or their count.
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function website($options, $count = false) {
+            return $this->_exec_query('websites' . ($count ? '/count' : ''), $options);
         }
 
     }

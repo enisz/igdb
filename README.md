@@ -1,8 +1,4 @@
-**This class is DEPRECATED**
-
-This class was written to the V2 api of IGDB. This version of the api will be discontinued and unsupported from 30th of June, 2019. 
-
-# **Internet Game Database API Class Documentation**
+# **IGDB API v3 Class Documentation**
 
 <!-- toc -->
 
@@ -18,47 +14,80 @@ This class was written to the V2 api of IGDB. This version of the api will be di
   * [Fields](#fields)
   * [Limit](#limit)
   * [Offset](#offset)
-  * [Expand](#expand)
-  * [Filters](#filters)
-  * [Order](#order)
+  * [Where](#where)
+  * [Sorting](#sorting)
 - [Public Methods](#public-methods)
   * [Close CURL Session](#close-curl-session)
   * [Reinitialize CURL session](#reinitialize-curl-session)
-  * [Custom Query](#custom-query)
-  * [Count](#count)
+  * [Convert Options to Apicalypse query string](#convert-options-to-apicalypse-query-string)
   * [Get Request Information](#get-request-information)
+  * [Get the status of your API Key](#get-the-status-of-your-api-key)
 - [Private Methods](#private-methods)
   * [Initialize CURL Session](#initialize-curl-session)
-  * [Construct URL](#construct-url)
-  * [Stringify Options](#stringify-options)
   * [Executing Query](#executing-query)
 - [Endpoints](#endpoints)
+  * [Achievement](#achievement)
+  * [Achievement Icon](#achievement-icon)
+  * [Age Rating](#age-rating)
+  * [Age Rating Content Description](#age-rating-content-description)
+  * [Alternative Name](#alternative-name)
+  * [Artwork](#artwork)
   * [Character](#character)
+  * [Character Mug Shot](#character-mug-shot)
   * [Collection](#collection)
   * [Company](#company)
-  * [Credit](#credit)
+  * [Company Logo](#company-logo)
+  * [Company Website](#company-website)
+  * [Cover](#cover)
+  * [External Game](#external-game)
   * [Feed](#feed)
+  * [Feed Follow](#feed-follow)
+  * [Follow](#follow)
   * [Franchise](#franchise)
-  * [Games](#games)
+  * [Game](#game)
   * [Game Engine](#game-engine)
+  * [Game Engine Logo](#game-engine-logo)
   * [Game Mode](#game-mode)
+  * [Game Version](#game-version)
+  * [Game Version Feature](#game-version-feature)
+  * [Game Version Feature Value](#game-version-feature-value)
+  * [Game Video](#game-video)
   * [Genre](#genre)
+  * [Involved Company](#involved-company)
   * [Keyword](#keyword)
+  * [List](#list)
+  * [List Entry](#list-entry)
+  * [Multiplayer Mode](#multiplayer-mode)
   * [Page](#page)
-  * [Person](#person)
+  * [Page Background](#page-background)
+  * [Page Logo](#page-logo)
+  * [Page Website](#page-website)
   * [Platform](#platform)
+  * [Platform Logo](#platform-logo)
+  * [Platform Version](#platform-version)
+  * [Platform Version Company](#platform-version-company)
+  * [Platform Version Release Date](#platform-version-release-date)
+  * [Platform Website](#platform-website)
   * [Player Perspective](#player-perspective)
+  * [Product Family](#product-family)
   * [Pulse](#pulse)
   * [Pulse Group](#pulse-group)
   * [Pulse Source](#pulse-source)
+  * [Pulse Url](#pulse-url)
+  * [Rate](#rate)
   * [Release Date](#release-date)
   * [Review](#review)
+  * [Review Video](#review-video)
+  * [Screenshot](#screenshot)
+  * [Search](#search-1)
   * [Theme](#theme)
+  * [Time To Beat](#time-to-beat)
   * [Title](#title)
-  * [Versions](#versions)
+  * [Website](#website)
 - [Example Query](#example-query)
 - [Return Values](#return-values)
 - [Changes](#changes)
+  * [v2.0.0 - December 04, 2019](#v200---december-04-2019)
   * [v1.0.5 - March 11, 2019](#v105---march-11-2019)
   * [v1.0.4 - March 25, 2018](#v104---march-25-2018)
   * [v1.0.3 - March 18, 2018](#v103---march-18-2018)
@@ -68,47 +97,40 @@ This class was written to the V2 api of IGDB. This version of the api will be di
 <!-- tocstop -->
 
 ## Introduction
-The class's main purpose is to provide a simple solution to fetch data from IGDB's database using PHP. Method names are matching the IGDB's endpoint names.
+The class's main purpose is to provide a simple solution to fetch data from IGDB's database using PHP.
 
-To use IGDB's database you have to register an account at [https://api.igdb.com](https://api.igdb.com).
+To use IGDB's database you have to register an account at [https://api.igdb.com](https://api.igdb.com). For details on how to use the IGDB API, what endpoints can be used or for informations in general check out the [Official Documentation of the IGDB API](https://api-docs.igdb.com).
 
 ## Initializing Class
 ``public IGDB::__construct ( string $key ) : void``<br/>
-You can initialize the class by passing your IGDB API Key to the constructor. The credentials will be verfied only by IGDB server when you send the query.
+After the class is imported in your project you can instantiate the class by passing your IGDB API Key to the constructor. The credentials will be verfied only by IGDB server when you send the query.
 
 ```php
+require 'class.igdb.php';
+
 $IGDB = new IGDB('<YOUR API KEY>');
 ```
+
+From now on multiple request can be sent to the IGDB API with the same instance.
 
 ## Class Properties
 
 ### API URL
-``private IGDB::$API_URL ( string )``: IGDB API URL. This is the address you have to send your query to. At the moment it is fixed (https://api-endpoint.igdb.com), so you don't have to change it.
+``private IGDB::$API_URL ( string )``: IGDB API URL. This is the address you have to send your query to.
 
 ### API Key
 ``private IGDB::$API_KEY ( string )``: your personal API Key provided by IGDB. It's value is set by [``IGDB::__construct()``](#initializing-class).
 
 ### CURL Resource Handler
-``private IGDB::$CH ( resource )``: CURL resource handler. Return value of [``curl_init()``](http://php.net/curl_init). You can close  [``IGDB::close_handler()``](##close-curl-session) and reinitialize [``IGDB::reinit_handler()``](#reinitialize-curl-session) the session.
+``private IGDB::$CH ( resource )``: CURL resource handler. Return value of [``curl_init()``](http://php.net/curl_init). You can close  [``IGDB::close_handler()``](##close-curl-session) and reinitialize [``IGDB::reinit_handler()``](#reinitialize-curl-session) the session anytime.
 
 ## Options Parameters
 For every [endpoint method](#endpoints) that fetching data from IGDB you will need to provide an ``$options`` array, that contains the parameters of the query.
 
-Let's see an example options array:
-```php
-$options = array(
-	'search' => 'uncharted',         // searching elements by the name UNCHARTED
-	'fields' => array('id', 'name'), // the result object will contain only the ID and NAME fields
-	'order' => 'name:asc',           // ordering the results ASCENDING by NAME field
-	'offset' => 15,                  // second page of a 15 element result
-	'limit' => 15                    // 15 elements per query
-);
-```
-
 > Note: the order of the parameters in the ``$options`` array does not matter!
 
 ### ID
-``id ( array | number ) [ optional ]``: one ore more item ID's. When ID is provided, the ``search`` parameter will be ignored.
+``id ( array | number ) [ optional ]``: one ore more item ID's.
 
 ```php
 // Providing one ID
@@ -122,8 +144,10 @@ $options = array(
 );
 ```
 
+> The new version of the IGDB API (v3) is handling item id's differently (from query perspective). Filtering the results by item id is now done by providing it in the `where` statement of the query. During runtime the class will add this value there. You can provide the id's in the `where` statement as well.
+
 ### Search
-``search ( string ) [ optional ]``: the query will search the name field looking for this value. If ``id`` is provided in the same options array, than this value will be ignored.
+``search ( string ) [ optional ]``: search based on name, results are sorted by similarity to the given search string.
 
 ```php
 // Provide search string
@@ -132,11 +156,10 @@ $options = array(
 );
 ```
 
+> [IGDB Search Documentation](https://api-docs.igdb.com/#search)
+
 ### Fields
-``fields ( array | string ) [ optional ]``: the fields you want to see in the result array.
- - If not provided only the ID field will be returned.
- - If the field list is provided as string, you have to separate the field names using comma (id,name).
- - If you want to see every fields in the result you have to pass a star (*).
+``fields ( array | string ) [ optional ]``: Fields are properties of an entity. For example, a Game field would be `genres` or `release_dates`. Some fields have properties of their own, for example, the `genres` field has the property `name`.
 
 ```php
 // Provide single or multiple fields as a string separated by comma
@@ -155,7 +178,7 @@ $options = array(
 );
 ```
 
-> [IGDB Fields Documentation](https://igdb.github.io/api/references/fields/)
+> [IGDB Fields Documentation](https://api-docs.igdb.com/#fields)
 
 ### Limit
 ``limit ( number ) [ optional ]``: the maximum number of results in a single query. This value must be a number between 1 and 50.
@@ -167,39 +190,26 @@ $options = array(
 );
 ```
 
-> [IGDB Pagination Documentation](https://igdb.github.io/api/references/pagination/)
+> [IGDB Pagination Documentation](https://api-docs.igdb.com/#pagination)
 
 ### Offset
 ``offset ( number ) [ optional ]``: this will start the result list at the provided value and will give ``limit`` number of results. This value must be 0 or greater.
 
-```
+```php
 // Provide an offset parameter
 $options = array(
   'offset' => 5
 );
 ```
 
-> [IGDB Pagination Documentation](https://igdb.github.io/api/references/pagination/)
+> [IGDB Pagination Documentation](https://api-docs.igdb.com/#pagination)
 
-### Expand
-``expand ( array | string ) [ optional ]``: the expander feature is used to combine multiple requests.
+### Where
+``filter ( string | array ) [ optional ]``: Filters are used to swift through results to get what you want. You can exclude and include results based on their properties. For example you could remove all Games where the rating was below 80 `(where rating >= 80)`.
 
-```php
-// Provide single or multiple expander rule as a string separated by comma
-$options = array(
-  'expand' => array('game', 'themes')
-);
+> Note: in the old (v2) IGDB API this field was called `filter`.
 
-// Provide single or multiple expander rule as an array
-$options = array(
-  'expand' => 'game,themes'
-);
-```
-
-> [IGDB Expander Documentation ](https://igdb.github.io/api/references/expander/)
-
-### Filters
-``filter ( string | array ) [ optional ]``: filters are used to swift through results to get what you want. You can exclude and include results based on their properties. If you provide the filter parameters as an array, you must have three values in it with the following indexes:
+If you provide the filter parameters as an array, you must have three values in it with the following indexes:
  - ``field``: The name of the field you want to apply the filter to
  - ``postfix``: The postfix you want to use with the filter. Refer to the IGDB Filters Documentation for available postfixes.
  - ``value``: The value of the filter.
@@ -209,7 +219,7 @@ $options = array(
 // In this case you must have field, postfix and value elements in the array
 $options = array(
   'field' => 'release_dates.platform',
-  'postfix' => 'eq',
+  'postfix' => '=',
   'value' => 8
 );
 
@@ -218,32 +228,51 @@ $options = array(
 $options = array(
   array(
     'field' => 'release_dates.platform',
-    'postfix' => 'eq',
+    'postfix' => '=',
     'value' => 8
   ),
   array(
     'field' => 'total_rating',
-    'postfix' => 'gte',
+    'postfix' => '>=',
     'value' => 70
   )
 );
 ```
 
-You can provide the filter parameter as string. In this case you can pass the string as you would as an URL segment:
+You can provide the filter parameter as string. In this case you can pass the string with apicalypse string:
+
 ```php
 // Provide a single filter rule as a string
 $options = array(
-  'filter' => '[release_dates.platform][eq]=8'
+  'where' => 'release_dates.platform = 8'
 );
 ```
 
-> [IGDB Filters Documentation](https://igdb.github.io/api/references/filters/)
+Or you can provide multiple criteria as an array with apicalypse syntax:
 
-### Order
-``order ( string | array ) [ optional ]``: ordering (sorting) is used to order results by a specific field. When not provided, the results will be ordered ASCENDING by ID. IF you provide the Order parameter as an array, you must have at least two (and an optional third) values in it with the following indexes:
+```php
+$options = array(
+    'fields' => 'id, name, platforms, genres',  // we want to see these fields in the result
+    'where' => array(                           // make sure to have each criteria as a separate element in the array
+        'release_dates.platform = 8',           // and separate field names, postfixes and values with space
+        'total_rating >= 70',
+        'genres = 4'
+    )
+);
+```
+
+In this case make sure to separate the field name, the postfix and the value with spaces!
+
+> [IGDB Filters Documentation](https://api-docs.igdb.com/#filters)
+
+### Sorting
+``order ( string | array ) [ optional ]``: ordering (sorting) is used to order results by a specific field.
+
+> Note: in the old (v2) IGDB API this field was called `order`.
+
+IF you provide the Order parameter as an array, you must have two values in it with the following indexes:
  - ``field``: The field you want to do the ordering by
  - ``direction``: The direction of the ordering. It must be either ``asc`` for ascending or ``desc`` for descending ordering.
- - ``subfilter [optional]``: You can apply this optional subfilter for even more complex ordering. Available subfilters are: ``min``, ``max``, ``avg``, ``sum``, ``median``.
 
 ```php
 // Provide an order parameter as an array
@@ -251,20 +280,20 @@ $options = array(
     'order' => array(
         'field' => 'release_dates.date',
         'direction' => 'desc',
-        'subfilter' => 'min'
     )
 );
 ```
 
-You can also provide the order parameter as string. In this case you can pass the string as you would as an URL segment:
+You can also provide the order parameter as string. In this case you can pass the string with apycalipse syntax:
+
 ```php
 // Provide an order parameter as a string
 $options = array(
-  'order' => 'release_dates.date:desc:min'
+  'order' => 'release_dates.date desc'
 );
 ```
 
-> [IGDB Ordering Documentation](https://igdb.github.io/api/references/ordering/)
+> [IGDB Sorting Documentation](https://api-docs.igdb.com/#sorting)
 
 ## Public Methods
 
@@ -276,104 +305,39 @@ You can close the CURL session handler manually if you need to. The class will n
 ``public IGDB::reinit_handler ( ) : void``<br/>
 After you closed the CURL session manually with [``IGDB::close_handler()``](#close-curl-session) than you will not be able to run any query against IGDB with the current instance of the class. However, if you need to run a query again, just call this method, and the CURL handler will be reinitialized.
 
-### Custom Query
-``public IGDB::custom_query ( string $url ) : array``<br/>
-You can launch manually assembled queries with this method. Great solution for testing purposes. This method automatically executes the query against IGDB and will return the result array.
-
-<p>Parameters:</p>
-
- - ``$url ( string )``: this URL will be appended to the API URL.
-
-<p>Return</p>
-
-The IGDB response will be returned as an array. Refer to the [return values](#return-values) section of the readme.
-
-Example
-```php
-$result = $IGDB->custom_query('games/?search=uncharted&fields=id,name&order=name:asc');
-```
-
-### Count
-``public IGDB::count ( string $endpoint, array ?$filters = NULL ) : number``<br/>
-You can count all the records on the given ``$endpoint``. If no ``$filter`` is provided, then all the records will be counted. The ``$filters`` parameter is an optional [``$option``](#options-parameters) array with only a filter parameter in it.
-
-<p>Parameters</p>
-
- - ``$endpoint ( string )`` : the name of the endpoint you want to count the records on. Refer to the [endpoints section](#endpoints) or [IGDB Endpoint Documentation](https://igdb.github.io/api/endpoints/) for endpoint names.
- - ``$filters [optional] ( array )`` : This is a simple [option](#options-parameters) array containing only filter parameters (single or multiple).
-
- <p>Return</p>
-
- This method will return the number of counted records.
-
-```php
-$options = array(       // all games will be counted
-  'filter' => 'rating', // with rating
-  'postfix' => 'gt',    // greater than
-  'value' => 75         // 75
-);
-
-// Will return the number of all games with rating more than 75
-$IGDB->count('game', $options);
-```
-
-You can call this method with more [filters](#filters) (the same way you would do for an endpoint method) or even without them.
-
-```php
-  // Calling the method without filters
-  $IGDB->count('game');
-```
+### Convert Options to Apicalypse query string
+``public IGDB::apicalypse( $options ) : string``<br/>
+You can convert the options array to IGDB's query language called Apicalypse. This method will return a string with the parsed parameters. You can read additional informations in the [IGDB Apicalypse Documentation](https://api-docs.igdb.com/#apicalypse)
 
 ### Get Request Information
-``public IGDB::get_request_info() ( ) : array``<br/>
+``public IGDB::get_request_info ( ) : array``<br/>
 If you need detailed information regarding the latest query, you can get it by this method. It returns the return value of [``curl_getinfo()``](http://php.net/curl_getinfo) php function.
 
+### Get the status of your API Key
+``public IGDB::api_status ( ) : array``<br/>
+The API Status endpoint is a way to see a usage report for an API key. It shows stats such as requests made in the current period and when that period ends. Requests to this endpoint does not count towards you monthly request limit, however this endpoint is not intended to be requested repeatedly before every request to other endpoints, but rather be used more sparingly. Therefore this endpoint is rate limited to 5 requests per minute. Exceeding this limit will suspend your access to THIS endpoint for 1 hour. If you have exceeded the limit and make another request you will receive a response with status code 429 ‘Too many requests’
+
 ## Private Methods
-These methods cannot be accessed from outside of the class. These are responsible to check option parameters, constructing URL's and query strings.
 
 ### Initialize CURL Session
 ``private IGDB::_init_curl ( ) : void``<br/>
 This method creates the CURL session and sets a few additional configuration to it.
 
-### Construct URL
-``private IGDB::_construct_url ( string $endpoint, array $options ) : string``<br/>
-This method is responsible for constructing the complete request URL. It is done by calling the [``IGDB::_stringify_options()``](#stringify-options) method. Returns the complete constructed request URL.
-
-<p>Parameters:</p>
-
-- ``$endpoint ( string )``: The name of the endpoint
-- ``$options ( array )``: The array holding the parameters for the query.
-
-<p>Return</p>
-
-Will return the full constructed URL with the query string constructed from the ``$options`` array.
-
-### Stringify Options
-``private IGDB::_stringify_options ( array $options, boolean ?$add_defaults = TRUE ) : string``<br/>
-This method is checking every parameter passed to it. Throwing Exceptions in case of errors. If everything is fine, the complete options array is returned as a query string.
-
-<p>Parameters</p>
-
- - ``$options ( array )`` : The array holding the option parameters that needs to be stringified.
- - ``$add_defaults ( boolean )`` : This parameter will tell if the default parameters should be added to the query string. 
-
-<p>Return</p>
-The method will return the constructed query string.
-
 ### Executing Query
-``private IGDB::_exec_query ( string $url ) : array`` - This method will start the query against IGDB. The ``$url`` parameter is constructed by the [``IGBB::_construct_url()``](#construct-url) method. Returns the JSON decoded response from IGDB as an array.
+``private IGDB::_exec_query ( string $endpoint, array $options ) : array`` - This method will start the query against IGDB. Returns the JSON decoded response from IGDB as an array.
 
 <p>Parameters</p>
- 
- - ``$url ( string )`` : The complete constructed URL with the query string.
+
+ - ``$endpoint ( string )`` : url of the endpoint to execute the query against
+ - ``$options ( array )`` : the options array
 
 <p>Return</p>
 The method returns the IGDB response as an array.
 
 ## Endpoints
-Every endpoint method takes an ``$options`` array as a parameter to set up the query (check the [Options Parameters](#options-parameters) Section for more details about the available parameters and values). As a second optional parameter you can pass a boolean ``$execute``.
+Every endpoint method takes an ``$options`` array as a parameter to set up the query (check the [Options Parameters](#options-parameters) Section for more details about the available parameters and values). As a second optional parameter you can pass a boolean ``$count``.
 
-These methods are returning an array with objects decoded from IGDB response JSON by default. If you provide boolean ``FALSE`` as a second parameter, it will prevent the class to execute the query, and returns the constructed URL instead.
+These methods are returning an array with objects decoded from IGDB response JSON by default. If you provide boolean ``true`` as a second parameter, it will execute a count query against the selected endpoint which will return an object with a `count` property holding the sum of the found items. You can filter the results with the `$options` array.
 
 Exceptions are thrown in any case of errors.
 
@@ -382,161 +346,331 @@ Refer to the [Return Values](#return-values) Section for more details about the 
 <p>Parameters</p>
 
  - ``$options ( array )`` : The options array
- - ``$execute (boolean) [optional]`` : Whether you want to run the query against IGDB. If this value is ``FALSE`` then the constructed URL will be returned.
+ - ``$count (boolean) [optional]`` : Whether you want to get the found items or the sum of them. If this value is ``true`` then the result count will be returned.
 
  <p>Return</p>
 
- If ``$execute`` parameter is set to ``FALSE`` the constructed URL will be returned. Otherwise the IGDB response as an array.
+ If ``$count`` parameter is set to ``true`` the number of items will be returned. Otherwise the IGDB response as an array.
+
+### Achievement
+``public IGDB::achievement ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Achievement endpoint.
+> [IGDB Achievement Documentation](https://api-docs.igdb.com/#achievement)
+
+### Achievement Icon
+``public IGDB::achievement_icon ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Achievement Icon endpoint.
+> [IGDB Achievement Icon Documentation](https://api-docs.igdb.com/#achievement-icon)
+
+### Age Rating
+``public IGDB::age_rating ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Age Rating endpoint.
+> [IGDB Age Rating Documentation](https://api-docs.igdb.com/#age-rating)
+
+### Age Rating Content Description
+``public IGDB::age_rating_content_description ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Age Rating Content Description endpoint.
+> [IGDB Age Rating Content Description Documentation](https://api-docs.igdb.com/#age-rating-content-description)
+
+### Alternative Name
+``public IGDB::alternative_name ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Alternative Name endpoint.
+> [IGDB Alternative Name Documentation](https://api-docs.igdb.com/#alternative-name)
+
+### Artwork
+``public IGDB::artwork ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Artwork endpoint.
+> [IGDB Artwork Documentation](https://api-docs.igdb.com/#artwork)
 
 ### Character
-``public IGDB::character ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using CHARACTER endpoint.
-> [IGDB CHARACTER Endpoint Documentation](https://igdb.github.io/api/endpoints/character/)
+``public IGDB::character ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Character endpoint.
+> [IGDB Character Documentation](https://api-docs.igdb.com/#character)
+
+### Character Mug Shot
+``public IGDB::character_mug_shot ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Character Mug Shot endpoint.
+> [IGDB Character Mug Shot Documentation](https://api-docs.igdb.com/#character-mug-shot)
 
 ### Collection
-``public IGDB::collection ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using COLLECTION endpoint.
-> [IGDB COLLECTION Endpoint Documentation](https://igdb.github.io/api/endpoints/collection/)
+``public IGDB::collection ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Collection endpoint.
+> [IGDB Collection Documentation](https://api-docs.igdb.com/#collection)
 
 ### Company
-``public IGDB::company ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using COMPANY endpoint.
-> [IGDB COMPANY Endpoint Documentation](https://igdb.github.io/api/endpoints/company/)
+``public IGDB::company ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Company endpoint.
+> [IGDB Company Documentation](https://api-docs.igdb.com/#company)
 
-### Credit
-``public IGDB::credit ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using CREDIT endpoint.
-> [IGDB CREDIT Endpoint Documentation](https://igdb.github.io/api/endpoints/credit/)
+### Company Logo
+``public IGDB::company_logo ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Company Logo endpoint.
+> [IGDB Company Logo Documentation](https://api-docs.igdb.com/#company-logo)
+
+### Company Website
+``public IGDB::company_website ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Company Website endpoint.
+> [IGDB Company Website Documentation](https://api-docs.igdb.com/#company-website)
+
+### Cover
+``public IGDB::cover ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Cover endpoint.
+> [IGDB Cover Documentation](https://api-docs.igdb.com/#cover)
+
+### External Game
+``public IGDB::external_game ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using External Game endpoint.
+> [IGDB External Game Documentation](https://api-docs.igdb.com/#external-game)
 
 ### Feed
-``public IGDB::feed ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using FEED endpoint.
-> [IGDB FEED Endpoint Documentation](https://igdb.github.io/api/endpoints/feed/)
+``public IGDB::feed ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Feed endpoint.
+> [IGDB Feed Documentation](https://api-docs.igdb.com/#feed)
+
+### Feed Follow
+``public IGDB::feed_follow ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Feed Follow endpoint.
+> [IGDB Feed Follow Documentation](https://api-docs.igdb.com/#feed-follow)
+
+### Follow
+``public IGDB::follow ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Follow endpoint.
+> [IGDB Follow Documentation](https://api-docs.igdb.com/#follow)
 
 ### Franchise
-``public IGDB::franchise ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using FRANCHISE endpoint.
-> [IGDB FRANCHISE Endpoint Documentation](https://igdb.github.io/api/endpoints/franchise/)
+``public IGDB::franchise ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Franchise endpoint.
+> [IGDB Franchise Documentation](https://api-docs.igdb.com/#franchise)
 
-### Games
-``public IGDB::game ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using GAME endpoint.
-> [IGDB GAME Endpoint Documentation](https://igdb.github.io/api/endpoints/game/)
+### Game
+``public IGDB::game ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Game endpoint.
+> [IGDB Game Documentation](https://api-docs.igdb.com/#game)
 
 ### Game Engine
-``public IGDB::game_engine ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using GAME ENGINE endpoint.
-> [IGDB GAME ENGINE Endpoint Documentation](https://igdb.github.io/api/endpoints/game-engine/)
+``public IGDB::game_engine ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Game Engine endpoint.
+> [IGDB Game Engine Documentation](https://api-docs.igdb.com/#game-engine)
+
+### Game Engine Logo
+``public IGDB::game_engine_logo ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Game Engine Logo endpoint.
+> [IGDB Game Engine Logo Documentation](https://api-docs.igdb.com/#game-engine-logo)
 
 ### Game Mode
-``public IGDB::game_mode ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using GAME MODE endpoint.
-> [IGDB GAME MODE Endpoint Documentation](https://igdb.github.io/api/endpoints/game-mode/)
+``public IGDB::game_mode ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Game Mode endpoint.
+> [IGDB Game Mode Documentation](https://api-docs.igdb.com/#game-mode)
+
+### Game Version
+``public IGDB::game_version ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Game Version endpoint.
+> [IGDB Game Version Documentation](https://api-docs.igdb.com/#game-version)
+
+### Game Version Feature
+``public IGDB::game_version_feature ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Game Version Feature endpoint.
+> [IGDB Game Version Feature Documentation](https://api-docs.igdb.com/#game-version-feature)
+
+### Game Version Feature Value
+``public IGDB::game_version_feature_value ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Game Version Feature Value endpoint.
+> [IGDB Game Version Feature Value Documentation](https://api-docs.igdb.com/#game-version-feature-value)
+
+### Game Video
+``public IGDB::game_video ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Game Video endpoint.
+> [IGDB Game Video Documentation](https://api-docs.igdb.com/#game-video)
 
 ### Genre
-``public IGDB::genre ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using GENRE endpoint.
-> [IGDB GENRE Endpoint Documentation](https://igdb.github.io/api/endpoints/genre/)
+``public IGDB::genre ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Genre endpoint.
+> [IGDB Genre Documentation](https://api-docs.igdb.com/#genre)
+
+### Involved Company
+``public IGDB::involved_company ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Involved Company endpoint.
+> [IGDB Involved Company Documentation](https://api-docs.igdb.com/#involved-company)
 
 ### Keyword
-``public IGDB::keyword ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using KEYWORD endpoint.
-> [IGDB KEYWORD Endpoint Documentation](https://igdb.github.io/api/endpoints/keyword/)
+``public IGDB::keyword ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Keyword endpoint.
+> [IGDB Keyword Documentation](https://api-docs.igdb.com/#keyword)
+
+### List
+``public IGDB::list ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using List endpoint.
+> [IGDB List Documentation](https://api-docs.igdb.com/#list)
+
+### List Entry
+``public IGDB::list_entry ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using List Entry endpoint.
+> [IGDB List Entry Documentation](https://api-docs.igdb.com/#list-entry)
+
+### Multiplayer Mode
+``public IGDB::multiplayer_mode ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Multiplayer Mode endpoint.
+> [IGDB Multiplayer Mode Documentation](https://api-docs.igdb.com/#multiplayer-mode)
 
 ### Page
-``public IGDB::page ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using PAGE endpoint.
-> [IGDB PAGE Endpoint Documentation](https://igdb.github.io/api/endpoints/page/)
+``public IGDB::page ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Page endpoint.
+> [IGDB Page Documentation](https://api-docs.igdb.com/#page)
 
-### Person
-``public IGDB::person ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using PERSON endpoint.
-> [IGDB PERSON Endpoint Documentation](https://igdb.github.io/api/endpoints/person/)
+### Page Background
+``public IGDB::page_background ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Page Background endpoint.
+> [IGDB Page Background Documentation](https://api-docs.igdb.com/#page-background)
+
+### Page Logo
+``public IGDB::page_logo ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Page Logo endpoint.
+> [IGDB Page Logo Documentation](https://api-docs.igdb.com/#page-logo)
+
+### Page Website
+``public IGDB::page_website ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Page Website endpoint.
+> [IGDB Page Website Documentation](https://api-docs.igdb.com/#page-website)
 
 ### Platform
-``public IGDB::platform ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using PLATFORM endpoint.
-> [IGDB PLATFORM Endpoint Documentation](https://igdb.github.io/api/endpoints/platform/)
+``public IGDB::platform ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Platform endpoint.
+> [IGDB Platform Documentation](https://api-docs.igdb.com/#platform)
+
+### Platform Logo
+``public IGDB::platform_logo ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Platform Logo endpoint.
+> [IGDB Platform Logo Documentation](https://api-docs.igdb.com/#platform-logo)
+
+### Platform Version
+``public IGDB::platform_version ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Platform Version endpoint.
+> [IGDB Platform Version Documentation](https://api-docs.igdb.com/#platform-version)
+
+### Platform Version Company
+``public IGDB::platform_version_company ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Platform Version Company endpoint.
+> [IGDB Platform Version Company Documentation](https://api-docs.igdb.com/#platform-version-company)
+
+### Platform Version Release Date
+``public IGDB::platform_version_release_date ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Platform Version Release Date endpoint.
+> [IGDB Platform Version Release Date Documentation](https://api-docs.igdb.com/#platform-version-release-date)
+
+### Platform Website
+``public IGDB::platform_website ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Platform Website endpoint.
+> [IGDB Platform Website Documentation](https://api-docs.igdb.com/#platform-website)
 
 ### Player Perspective
-``public IGDB::player_perspective ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using PLAYER PERSPECTIVE endpoint.
-> [IGDB PLAYER PERSPECTIVE Endpoint Documentation](https://igdb.github.io/api/endpoints/player-perspective/)
+``public IGDB::player_perspective ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Player Perspective endpoint.
+> [IGDB Player Perspective Documentation](https://api-docs.igdb.com/#player-perspective)
+
+### Product Family
+``public IGDB::product_family ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Product Family endpoint.
+> [IGDB Product Family Documentation](https://api-docs.igdb.com/#product-family)
 
 ### Pulse
-``public IGDB::pulse ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using PULSE endpoint.
-> [IGDB PULSE Endpoint Documentation](https://igdb.github.io/api/endpoints/pulse/)
+``public IGDB::pulse ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Pulse endpoint.
+> [IGDB Pulse Documentation](https://api-docs.igdb.com/#pulse)
 
 ### Pulse Group
-``public IGDB::pulse_group ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using PULSE GROUP endpoint.
-> [IGDB PULSE GROUP Endpoint Documentation](https://igdb.github.io/api/endpoints/pulse-group/)
+``public IGDB::pulse_group ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Pulse Group endpoint.
+> [IGDB Pulse Group Documentation](https://api-docs.igdb.com/#pulse-group)
 
 ### Pulse Source
-``public IGDB::pulse_source ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using PULSE SOURCE endpoint.
-> [IGDB PULSE SOURCE Endpoint Documentation](https://igdb.github.io/api/endpoints/pulse-source/)
+``public IGDB::pulse_source ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Pulse Source endpoint.
+> [IGDB Pulse Source Documentation](https://api-docs.igdb.com/#pulse-source)
+
+### Pulse Url
+``public IGDB::pulse_url ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Pulse Url endpoint.
+> [IGDB Pulse Url Documentation](https://api-docs.igdb.com/#pulse-url)
+
+### Rate
+``public IGDB::rate ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Rate endpoint.
+> [IGDB Rate Documentation](https://api-docs.igdb.com/#rate)
 
 ### Release Date
-``public IGDB::release_date ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using RELEASE DATE endpoint.
-> [IGDB RELEASE DATE Endpoint Documentation](https://igdb.github.io/api/endpoints/release-date/)
+``public IGDB::release_date ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Release Date endpoint.
+> [IGDB Release Date Documentation](https://api-docs.igdb.com/#release-date)
 
 ### Review
-``public IGDB::review ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using REVIEW endpoint.
-> [IGDB REVIEW Endpoint Documentation](https://igdb.github.io/api/endpoints/review/)
+``public IGDB::review ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Review endpoint.
+> [IGDB Review Documentation](https://api-docs.igdb.com/#review)
+
+### Review Video
+``public IGDB::review_video ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Review Video endpoint.
+> [IGDB Review Video Documentation](https://api-docs.igdb.com/#review-video)
+
+### Screenshot
+``public IGDB::screenshot ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Screenshot endpoint.
+> [IGDB Screenshot Documentation](https://api-docs.igdb.com/#screenshot)
+
+### Search
+``public IGDB::search ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Search endpoint.
+> [IGDB Search Documentation](https://api-docs.igdb.com/#search)
 
 ### Theme
-``public IGDB::theme ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using THEME endpoint.
-> [IGDB THEME Endpoint Documentation](https://igdb.github.io/api/endpoints/theme/)
+``public IGDB::theme ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Theme endpoint.
+> [IGDB Theme Documentation](https://api-docs.igdb.com/#theme)
+
+### Time To Beat
+``public IGDB::time_to_beat ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Time To Beat endpoint.
+> [IGDB Time To Beat Documentation](https://api-docs.igdb.com/#time-to-beat)
 
 ### Title
-``public IGDB::title ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using TITLE endpoint.
-> [IGDB TITLE Endpoint Documentation](https://igdb.github.io/api/endpoints/title/)
+``public IGDB::title ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Title endpoint.
+> [IGDB Title Documentation](https://api-docs.igdb.com/#title)
 
-### Versions
-``public IGDB::versions ( array $options, boolean ?$execute = TRUE ) : array | string`` <br/>
-Fetch data using VERSIONS endpoint.
-> [IGDB VERSIONS Endpoint Documentation](https://igdb.github.io/api/endpoints/versions/)
+### Website
+``public IGDB::website ( array $options, boolean $count = false ) : array | object `` <br/>
+Fetch data using Website endpoint.
+> [IGDB Website Documentation](https://api-docs.igdb.com/#website)
 
 ## Example Query
 Let's do a simple example. Get the third page of a game list, where the game we are looking for is LIKE "uncharted" (this example is available in _examples/\_basic_example.php_)
 ``` php
 <?php
 
-    require 'class.igdb.php';
+    require '../src/class.igdb.php';
 
     // Instantiate the class
     $IGDB = new IGDB('<YOUR API KEY>');
 
     // Setting up the query parameters
     $options = array(
-        'search' => 'uncharted', // searching for the game called "uncharted"
-        'fields' => array( // we want to see these values in the results
+        'search' => 'uncharted', // searching for games LIKE uncharted
+        'fields' => array(       // we want to see these values in the results
             'id',
             'name',
-            'cover',
+            'cover'
         ),
-        'limit' => 5, // we only need maximum 5 results per query (pagination)
-        'offset' => 10, // we would like to show the third page; fetch the results from the sixth element
-        'order' => 'name:asc' // order the results ASCENDING by the filed NAME
+        'limit' => 5,            // we only need maximum 5 results per query (pagination)
+        'offset' => 10           // we would like to show the third page; fetch the results from the tenth element (pagination)
     );
 
-    try
-    {
+    try {
         // Running the query against IGDB; passing the options parameter
         $result = $IGDB->game($options);
 
         // Showing the result
         var_dump($result);
-    }
-
-    catch (Exception $e)
-    {
+    } catch (Exception $e) {
         // Catching Exceptions, if there is any
         echo $e->getMessage();
     }
@@ -546,59 +680,59 @@ Let's do a simple example. Get the third page of a game list, where the game we 
 
 ## Return Values
 Every [Endpoint Method](#endpoints) can return two different type of results, depending on the second parameter provided for them:
- - By default the second ``$execute`` parameter is boolean ``TRUE``. this means, that the query string will be constructed, then will be ran against the IGDB, returning a ``$result`` array.
- ```php
- // This will return an array with the results
- $IGDB->game($options);
- ```
- - If you pass a boolean ``FALSE`` as a second parameter, then you will get the full constructed URL, but the query will not be ran against IGDB.
- ```php
- // This will return a string with the full URL.
- $IGDB->game($options, false);
- ```
- 
+ - By default the second ``$count`` parameter is boolean ``false``. this means, that the query will be ran against the IGDB, returning a ``$result`` array.
+    ```php
+    // This will return an array with the results
+    $IGDB->game($options);
+    ```
+ - If you pass a boolean ``true`` as a second parameter, then you will get an object with a `count` property containing the item count from the selected endpoint.
+    ```php
+    // This will return a string with the full URL.
+    $IGDB->game($options, false);
+    ```
+
  The result object's properties will vary depending on the provided field list in the [``options``](#options-parameters) array. Let's see what is the result of the above example query:
-```php
+```
 array (size=5)
-  0 => 
+  0 =>
     object(stdClass)[2]
       public 'id' => int 22117
       public 'name' => string 'Oceanhorn' (length=9)
-      public 'cover' => 
+      public 'cover' =>
         object(stdClass)[3]
           public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/dytkeomgzvjcech9q7ex.jpg' (length=68)
           public 'cloudinary_id' => string 'dytkeomgzvjcech9q7ex' (length=20)
           public 'width' => int 573
           public 'height' => int 606
-  1 => 
+  1 =>
     object(stdClass)[4]
       public 'id' => int 18975
       public 'name' => string 'Oceanhorn: Monster of Uncharted Seas' (length=36)
-      public 'cover' => 
+      public 'cover' =>
         object(stdClass)[5]
           public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/tevieaod1lnuuhwinnnw.jpg' (length=68)
           public 'cloudinary_id' => string 'tevieaod1lnuuhwinnnw' (length=20)
           public 'width' => int 688
           public 'height' => int 789
-  2 => 
+  2 =>
     object(stdClass)[6]
       public 'id' => int 9637
       public 'name' => string 'Orcs Must Die! Unchained' (length=24)
-      public 'cover' => 
+      public 'cover' =>
         object(stdClass)[7]
           public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/wsuw9rjpgbayrhl0ns59.jpg' (length=68)
           public 'cloudinary_id' => string 'wsuw9rjpgbayrhl0ns59' (length=20)
           public 'width' => int 1008
           public 'height' => int 1422
-  3 => 
+  3 =>
     object(stdClass)[8]
       public 'id' => int 52657
       public 'name' => string 'Pinball Heroes: Uncharted Drake's Fortune' (length=41)
-  4 => 
+  4 =>
     object(stdClass)[9]
       public 'id' => int 6906
       public 'name' => string 'Unchained Blades' (length=16)
-      public 'cover' => 
+      public 'cover' =>
         object(stdClass)[10]
           public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/khlmibn0bievi4kfecgw.jpg' (length=68)
           public 'cloudinary_id' => string 'khlmibn0bievi4kfecgw' (length=20)
@@ -612,6 +746,20 @@ As you can see, the ``$result`` variable holds an array, containing 5 elements (
 > Working with non-mandatory fileds requires you to check for availability before accessing them.
 
 ## Changes
+
+### v2.0.0 - December 04, 2019
+ - **IGDB Api v3 compatibility update**
+ - Removed `expander` parameter
+ - Renamed parameter `filter` to `where`
+ - Renamed parameter `order` to `sort`
+ - Removed multiple methods:
+    - `_stringify_options`
+    - `_construct_url`
+    - `count`
+    - `custom_query`
+ - Added method [`apicalypse`](#convert-options-to-apicalypse-query-string)
+ - Added method [`api_status`](#get-the-status-of-your-api-key)
+ - Updated every [endpoint method](#endpoints) (removed `$execute`, added `$count`)
 
 ### v1.0.5 - March 11, 2019
  - Fixed a bug at the request's error handling
@@ -633,7 +781,7 @@ As you can see, the ``$result`` variable holds an array, containing 5 elements (
  - Modified the [constructor](#initializing-class) to ask only for the API Key. The API URL has been changed to be fix for every user (by IGDB).
  - The API URL and KEY setter and getter methods has been removed.
  - The API URL and KEY validator methods has been removed.
- - New method for order parameter constructing has been implemented. 
+ - New method for order parameter constructing has been implemented.
  - [Stringify Options](#stringify-options) method is private again. Use the updated endpoint methods instead.
  - Updated [Endpoint Methods](#endpoints) to accept a second optional parameter to return the constructed URL instead of executing the query.
  - _basic.php_ example file has been renamed to _basic.example.php_.

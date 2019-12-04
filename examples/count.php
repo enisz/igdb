@@ -5,16 +5,16 @@
     $IGDB = new IGDB('<YOUR API KEY>');
 
     $options = array(
-        'filter' => array(
+        'where' => array(
             'field' => 'rating', // rating
-            'postfix' => 'gt',   // greater than
+            'postfix' => '>',    // greater than
             'value' => 75        // 75
         )
     );
 
     // Will return the number of all games with rating more than 75
-    $result = $IGDB->count('game', $options);
+    $result = $IGDB->game($options, true);
 
-    var_dump($result);   
+    var_dump($result);
 
 ?>
