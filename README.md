@@ -266,7 +266,7 @@ In this case make sure to separate the field name, the postfix and the value wit
 > [IGDB Filters Documentation](https://api-docs.igdb.com/#filters)
 
 ### Sorting
-``order ( string | array ) [ optional ]``: ordering (sorting) is used to order results by a specific field.
+``sort ( string | array ) [ optional ]``: sorting (ordering) is used to order results by a specific field.
 
 > Note: in the old (v2) IGDB API this field was called `order`.
 
@@ -275,21 +275,21 @@ IF you provide the Order parameter as an array, you must have two values in it w
  - ``direction``: The direction of the ordering. It must be either ``asc`` for ascending or ``desc`` for descending ordering.
 
 ```php
-// Provide an order parameter as an array
+// Provide an sort parameter as an array
 $options = array(
-    'order' => array(
+    'sort' => array(
         'field' => 'release_dates.date',
         'direction' => 'desc',
     )
 );
 ```
 
-You can also provide the order parameter as string. In this case you can pass the string with apycalipse syntax:
+You can also provide the sort parameter as string. In this case you can pass the string with apycalipse syntax:
 
 ```php
 // Provide an order parameter as a string
 $options = array(
-  'order' => 'release_dates.date desc'
+  'sort' => 'release_dates.date desc'
 );
 ```
 
@@ -309,13 +309,20 @@ After you closed the CURL session manually with [``IGDB::close_handler()``](#clo
 ``public IGDB::apicalypse( $options ) : string``<br/>
 You can convert the options array to IGDB's query language called Apicalypse. This method will return a string with the parsed parameters. You can read additional informations in the [IGDB Apicalypse Documentation](https://api-docs.igdb.com/#apicalypse)
 
+<p>Parameters</p>
+
+ - ``$options``: the options array to convert
+
+<p>Return</p>
+The method returns the query string with apicalypse syntax.
+
 ### Get Request Information
 ``public IGDB::get_request_info ( ) : array``<br/>
 If you need detailed information regarding the latest query, you can get it by this method. It returns the return value of [``curl_getinfo()``](http://php.net/curl_getinfo) php function.
 
 ### Get the status of your API Key
 ``public IGDB::api_status ( ) : array``<br/>
-The API Status endpoint is a way to see a usage report for an API key. It shows stats such as requests made in the current period and when that period ends. Requests to this endpoint does not count towards you monthly request limit, however this endpoint is not intended to be requested repeatedly before every request to other endpoints, but rather be used more sparingly. Therefore this endpoint is rate limited to 5 requests per minute. Exceeding this limit will suspend your access to THIS endpoint for 1 hour. If you have exceeded the limit and make another request you will receive a response with status code 429 ‘Too many requests’
+The API Status endpoint is a way to see a usage report for an API key. It shows stats such as requests made in the current period and when that period ends. Requests to this endpoint does not count towards you monthly request limit, however this endpoint is not intended to be requested repeatedly before every request to other endpoints, but rather be used more sparingly. Therefore this endpoint is rate limited to 5 requests per minute. Exceeding this limit will suspend your access to THIS endpoint for 1 hour. If you have exceeded the limit and make another request you will receive a response with status code 429 ‘Too many requests’.
 
 ## Private Methods
 
@@ -691,55 +698,56 @@ Every [Endpoint Method](#endpoints) can return two different type of results, de
     $IGDB->game($options, false);
     ```
 
- The result object's properties will vary depending on the provided field list in the [``options``](#options-parameters) array. Let's see what is the result of the above example query:
-```
-array (size=5)
-  0 =>
-    object(stdClass)[2]
-      public 'id' => int 22117
-      public 'name' => string 'Oceanhorn' (length=9)
-      public 'cover' =>
-        object(stdClass)[3]
-          public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/dytkeomgzvjcech9q7ex.jpg' (length=68)
-          public 'cloudinary_id' => string 'dytkeomgzvjcech9q7ex' (length=20)
-          public 'width' => int 573
-          public 'height' => int 606
-  1 =>
-    object(stdClass)[4]
-      public 'id' => int 18975
-      public 'name' => string 'Oceanhorn: Monster of Uncharted Seas' (length=36)
-      public 'cover' =>
-        object(stdClass)[5]
-          public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/tevieaod1lnuuhwinnnw.jpg' (length=68)
-          public 'cloudinary_id' => string 'tevieaod1lnuuhwinnnw' (length=20)
-          public 'width' => int 688
-          public 'height' => int 789
-  2 =>
-    object(stdClass)[6]
-      public 'id' => int 9637
-      public 'name' => string 'Orcs Must Die! Unchained' (length=24)
-      public 'cover' =>
-        object(stdClass)[7]
-          public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/wsuw9rjpgbayrhl0ns59.jpg' (length=68)
-          public 'cloudinary_id' => string 'wsuw9rjpgbayrhl0ns59' (length=20)
-          public 'width' => int 1008
-          public 'height' => int 1422
-  3 =>
-    object(stdClass)[8]
-      public 'id' => int 52657
-      public 'name' => string 'Pinball Heroes: Uncharted Drake's Fortune' (length=41)
-  4 =>
-    object(stdClass)[9]
-      public 'id' => int 6906
-      public 'name' => string 'Unchained Blades' (length=16)
-      public 'cover' =>
-        object(stdClass)[10]
-          public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/khlmibn0bievi4kfecgw.jpg' (length=68)
-          public 'cloudinary_id' => string 'khlmibn0bievi4kfecgw' (length=20)
-          public 'width' => int 250
-          public 'height' => int 208
-```
-As you can see, the ``$result`` variable holds an array, containing 5 elements (the ``limit`` parameter is set to 5), and these elements are on the third page of the results. (``offset`` is set to 10) Every element of the ``$result`` array is an object, containing properties called like the fields from options ``fields`` parameter.
+ - The result object's properties will vary depending on the provided field list in the [``options``](#options-parameters) array. Let's see what is the result of the above example query:
+    ```
+    array (size=5)
+      0 =>
+        object(stdClass)[2]
+          public 'id' => int 22117
+          public 'name' => string 'Oceanhorn' (length=9)
+          public 'cover' =>
+            object(stdClass)[3]
+              public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/dytkeomgzvjcech9q7ex.jpg' (length=68)
+              public 'cloudinary_id' => string 'dytkeomgzvjcech9q7ex' (length=20)
+              public 'width' => int 573
+              public 'height' => int 606
+      1 =>
+        object(stdClass)[4]
+          public 'id' => int 18975
+          public 'name' => string 'Oceanhorn: Monster of Uncharted Seas' (length=36)
+          public 'cover' =>
+            object(stdClass)[5]
+              public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/tevieaod1lnuuhwinnnw.jpg' (length=68)
+              public 'cloudinary_id' => string 'tevieaod1lnuuhwinnnw' (length=20)
+              public 'width' => int 688
+              public 'height' => int 789
+      2 =>
+        object(stdClass)[6]
+          public 'id' => int 9637
+          public 'name' => string 'Orcs Must Die! Unchained' (length=24)
+          public 'cover' =>
+            object(stdClass)[7]
+              public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/wsuw9rjpgbayrhl0ns59.jpg' (length=68)
+              public 'cloudinary_id' => string 'wsuw9rjpgbayrhl0ns59' (length=20)
+              public 'width' => int 1008
+              public 'height' => int 1422
+      3 =>
+        object(stdClass)[8]
+          public 'id' => int 52657
+          public 'name' => string 'Pinball Heroes: Uncharted Drake's Fortune' (length=41)
+      4 =>
+        object(stdClass)[9]
+          public 'id' => int 6906
+          public 'name' => string 'Unchained Blades' (length=16)
+          public 'cover' =>
+            object(stdClass)[10]
+              public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/khlmibn0bievi4kfecgw.jpg' (length=68)
+              public 'cloudinary_id' => string 'khlmibn0bievi4kfecgw' (length=20)
+              public 'width' => int 250
+              public 'height' => int 208
+    ```
+
+    As you can see, the ``$result`` variable holds an array, containing 5 elements (the ``limit`` parameter is set to 5), and these elements are on the third page of the results. (``offset`` is set to 10) Every element of the ``$result`` array is an object, containing properties called like the fields from options ``fields`` parameter.
 
 > Please note, that sometimes there are records which are missing one or more fields.<br/>
 > Refer to the IGDB's endpoint documentation regarding the mandatory fields.<br/>
