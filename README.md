@@ -25,6 +25,7 @@
 - [Private Methods](#private-methods)
   * [Initialize CURL Session](#initialize-curl-session)
   * [Executing Query](#executing-query)
+  * [Constructing URL's](#constructing-urls)
 - [Endpoints](#endpoints)
   * [Achievement](#achievement)
   * [Achievement Icon](#achievement-icon)
@@ -86,7 +87,8 @@
   * [Website](#website)
 - [Example Query](#example-query)
 - [Return Values](#return-values)
-- [Changes](#changes)
+- [Change Log](#change-log)
+  * [v2.0.1 - January 27, 2020](#v201---january-27-2020)
   * [v2.0.0 - December 04, 2019](#v200---december-04-2019)
   * [v1.0.5 - March 11, 2019](#v105---march-11-2019)
   * [v1.0.4 - March 25, 2018](#v104---march-25-2018)
@@ -205,7 +207,7 @@ $options = array(
 > [IGDB Pagination Documentation](https://api-docs.igdb.com/#pagination)
 
 ### Where
-``filter ( string | array ) [ optional ]``: Filters are used to swift through results to get what you want. You can exclude and include results based on their properties. For example you could remove all Games where the rating was below 80 `(where rating >= 80)`.
+``where ( string | array ) [ optional ]``: Filters are used to swift through results to get what you want. You can exclude and include results based on their properties. For example you could remove all Games where the rating was below 80 `(where rating >= 80)`.
 
 > Note: in the old (v2) IGDB API this field was called `filter`.
 
@@ -339,21 +341,34 @@ This method creates the CURL session and sets a few additional configuration to 
  - ``$options ( array )`` : the options array
 
 <p>Return</p>
+
 The method returns the IGDB response as an array.
+
+### Constructing URL's
+``private IGDB::_construct_url( string $endpoint, boolean $count = false) : string`` - The method will construct the full URL for the request and will return the constructed URL as a string.
+
+<p>Parameters</p>
+
+- ``$endpoint ( string )`` : the endpoint to use
+- ``$count ( boolean )`` : whether the request should return the number of matches instead of the actual resultset
+
+<p>Return</p>
+
+This method will return the full constructed URL to the IGDB Endpoint as a string.
 
 ## Endpoints
 Every endpoint method takes an ``$options`` array as a parameter to set up the query (check the [Options Parameters](#options-parameters) Section for more details about the available parameters and values). As a second optional parameter you can pass a boolean ``$count``.
 
 These methods are returning an array with objects decoded from IGDB response JSON by default. If you provide boolean ``true`` as a second parameter, it will execute a count query against the selected endpoint which will return an object with a `count` property holding the sum of the found items. You can filter the results with the `$options` array.
 
-Exceptions are thrown in any case of errors.
+Exceptions are thrown in any case of error.
 
 Refer to the [Return Values](#return-values) Section for more details about the return values of these methods.
 
 <p>Parameters</p>
 
  - ``$options ( array )`` : The options array
- - ``$count (boolean) [optional]`` : Whether you want to get the found items or the sum of them. If this value is ``true`` then the result count will be returned.
+ - ``$count (boolean) [optional]`` : Whether you want to get the found items or the sum of them. If this value is ``true`` then the result count will be returned. By default this is `false`.
 
  <p>Return</p>
 
@@ -747,13 +762,18 @@ Every [Endpoint Method](#endpoints) can return two different type of results, de
               public 'height' => int 208
     ```
 
-    As you can see, the ``$result`` variable holds an array, containing 5 elements (the ``limit`` parameter is set to 5), and these elements are on the third page of the results. (``offset`` is set to 10) Every element of the ``$result`` array is an object, containing properties called like the fields from options ``fields`` parameter.
+    As you can see, the ``$result`` variable holds an array, containing 5 elements (the ``limit`` parameter is set to 5), and these elements are on the third page of the results (``offset`` is set to 10). Every element of the ``$result`` array is an object, containing properties called like the fields from options ``fields`` parameter.
 
 > Please note, that sometimes there are records which are missing one or more fields.<br/>
-> Refer to the IGDB's endpoint documentation regarding the mandatory fields.<br/>
+> Refer to the IGDB's respective endpoint documentation regarding the mandatory fields.<br/>
 > Working with non-mandatory fileds requires you to check for availability before accessing them.
 
-## Changes
+## Change Log
+
+### v2.0.1 - January 27, 2020
+ - Minor changes / fixes in the Readme
+ - Added method [`_construct_url`](#constructing-urls)
+ - Updated every endpoint method to construct the endpoint url's different
 
 ### v2.0.0 - December 04, 2019
  - **IGDB Api v3 compatibility update**
