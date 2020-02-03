@@ -88,6 +88,7 @@
 - [Example Query](#example-query)
 - [Return Values](#return-values)
 - [Change Log](#change-log)
+  * [v2.0.1 - February 03, 2020](#v201---february-03-2020)
   * [v2.0.1 - January 27, 2020](#v201---january-27-2020)
   * [v2.0.0 - December 04, 2019](#v200---december-04-2019)
   * [v1.0.5 - March 11, 2019](#v105---march-11-2019)
@@ -707,59 +708,40 @@ Every [Endpoint Method](#endpoints) can return two different type of results, de
     // This will return an array with the results
     $IGDB->game($options);
     ```
- - If you pass a boolean ``true`` as a second parameter, then you will get an object with a `count` property containing the item count from the selected endpoint.
+ - If you pass a boolean ``true`` as a second parameter, then you will get an object with a ``count`` property containing the item count from the selected endpoint.
     ```php
-    // This will return a string with the full URL.
-    $IGDB->game($options, false);
+    // This will return an object with a count public property
+    $IGDB->game($options, true);
     ```
 
  - The result object's properties will vary depending on the provided field list in the [``options``](#options-parameters) array. Let's see what is the result of the above example query:
-    ```
+    ```php
     array (size=5)
       0 =>
         object(stdClass)[2]
-          public 'id' => int 22117
-          public 'name' => string 'Oceanhorn' (length=9)
-          public 'cover' =>
-            object(stdClass)[3]
-              public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/dytkeomgzvjcech9q7ex.jpg' (length=68)
-              public 'cloudinary_id' => string 'dytkeomgzvjcech9q7ex' (length=20)
-              public 'width' => int 573
-              public 'height' => int 606
+          public 'id' => int 14441
+          public 'cover' => int 22383
+          public 'name' => string 'Uncharted Waters 2' (length=18)
       1 =>
-        object(stdClass)[4]
-          public 'id' => int 18975
-          public 'name' => string 'Oceanhorn: Monster of Uncharted Seas' (length=36)
-          public 'cover' =>
-            object(stdClass)[5]
-              public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/tevieaod1lnuuhwinnnw.jpg' (length=68)
-              public 'cloudinary_id' => string 'tevieaod1lnuuhwinnnw' (length=20)
-              public 'width' => int 688
-              public 'height' => int 789
+        object(stdClass)[3]
+          public 'id' => int 998
+          public 'cover' => int 86364
+          public 'name' => string 'Uncharted: Golden Abyss' (length=23)
       2 =>
-        object(stdClass)[6]
-          public 'id' => int 9637
-          public 'name' => string 'Orcs Must Die! Unchained' (length=24)
-          public 'cover' =>
-            object(stdClass)[7]
-              public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/wsuw9rjpgbayrhl0ns59.jpg' (length=68)
-              public 'cloudinary_id' => string 'wsuw9rjpgbayrhl0ns59' (length=20)
-              public 'width' => int 1008
-              public 'height' => int 1422
+        object(stdClass)[4]
+          public 'id' => int 125062
+          public 'cover' => int 83686
+          public 'name' => string 'Uncharted Ocean: Set Sail' (length=25)
       3 =>
-        object(stdClass)[8]
-          public 'id' => int 52657
-          public 'name' => string 'Pinball Heroes: Uncharted Drake's Fortune' (length=41)
+        object(stdClass)[5]
+          public 'id' => int 35788
+          public 'cover' => int 71621
+          public 'name' => string 'Abyss Raiders: Uncharted' (length=24)
       4 =>
-        object(stdClass)[9]
-          public 'id' => int 6906
-          public 'name' => string 'Unchained Blades' (length=16)
-          public 'cover' =>
-            object(stdClass)[10]
-              public 'url' => string '//images.igdb.com/igdb/image/upload/t_thumb/khlmibn0bievi4kfecgw.jpg' (length=68)
-              public 'cloudinary_id' => string 'khlmibn0bievi4kfecgw' (length=20)
-              public 'width' => int 250
-              public 'height' => int 208
+        object(stdClass)[6]
+          public 'id' => int 19583
+          public 'cover' => int 15883
+          public 'name' => string 'Uncharted: Fight for Fortune' (length=28)
     ```
 
     As you can see, the ``$result`` variable holds an array, containing 5 elements (the ``limit`` parameter is set to 5), and these elements are on the third page of the results (``offset`` is set to 10). Every element of the ``$result`` array is an object, containing properties called like the fields from options ``fields`` parameter.
@@ -768,7 +750,17 @@ Every [Endpoint Method](#endpoints) can return two different type of results, de
 > Refer to the IGDB's respective endpoint documentation regarding the mandatory fields.<br/>
 > Working with non-mandatory fileds requires you to check for availability before accessing them.
 
+ - When the `$count` property is set to `true`, the return value will be an object with a public `count` property:
+    ```php
+    object(stdClass)[2]
+      public 'count' => int 40
+    ```
+    This value will hold the number of matches in IGDB database filtered by the passed `$options`.
+
 ## Change Log
+
+### v2.0.1 - February 03, 2020
+ - Fixing inaccurate information in the Readme
 
 ### v2.0.1 - January 27, 2020
  - Minor changes / fixes in the Readme
