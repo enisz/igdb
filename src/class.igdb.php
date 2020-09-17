@@ -6,7 +6,7 @@
      * Fethching data from IGDB's database.
      * Compatible with IGDB Api v3 (3000)
      *
-     * @version 2.0.1
+     * @version 2.0.2
      * @author Enisz Abdalla <enisz87@gmail.com>
      */
 
@@ -193,7 +193,7 @@
                                     throw new Exception('invalid postfix "' . $filter['postfix'] . '" in where statement!');
                                 }
 
-                                array_push($items, $filter['field'] . ' ' . $filter['postfix'] . ' ' . $filter['value']);
+                                array_push($items, $filter['field'] . ' ' . $filter['postfix'] . ' ' . (gettype($filter['value']) != "integer" ? '"' : '') . $filter['value'] . (gettype($filter['value']) != "integer" ? '"' : ''));
                             }
 
                             $query .= 'where ' . implode(' & ', $items);

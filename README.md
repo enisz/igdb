@@ -759,6 +759,9 @@ Every [Endpoint Method](#endpoints) can return two different type of results, de
 
 ## Change Log
 
+### v1.0.6 - September 17, 2020
+ - Fixed a bug with the `where` filter ([#6 Issues with slug field](https://github.com/enisz/igdb/issues/6))
+
 ### v2.0.1 - February 03, 2020
  - Fixing inaccurate information in the Readme
 
