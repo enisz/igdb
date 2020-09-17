@@ -6,7 +6,7 @@
      * Fethching data from IGDB's database.
      * Compatible with IGDB Api v3 (3000)
      *
-     * @version 2.0.2
+     * @version 2.0.3
      * @author Enisz Abdalla <enisz87@gmail.com>
      */
 
