@@ -88,7 +88,8 @@
 - [Example Query](#example-query)
 - [Return Values](#return-values)
 - [Change Log](#change-log)
-  * [v2.0.1 - February 03, 2020](#v201---february-03-2020)
+  * [v2.0.3 - September 17, 2020](#v203---september-17-2020)
+  * [v2.0.2 - February 03, 2020](#v202---february-03-2020)
   * [v2.0.1 - January 27, 2020](#v201---january-27-2020)
   * [v2.0.0 - December 04, 2019](#v200---december-04-2019)
   * [v1.0.5 - March 11, 2019](#v105---march-11-2019)
@@ -759,7 +760,10 @@ Every [Endpoint Method](#endpoints) can return two different type of results, de
 
 ## Change Log
 
-### v2.0.1 - February 03, 2020
+### v2.0.3 - September 17, 2020
+ - Fixed a bug with the `where` filter ([#6 Issues with slug field](https://github.com/enisz/igdb/issues/6))
+
+### v2.0.2 - February 03, 2020
  - Fixing inaccurate information in the Readme
 
 ### v2.0.1 - January 27, 2020
