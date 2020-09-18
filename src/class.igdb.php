@@ -193,7 +193,16 @@
                                     throw new Exception('invalid postfix "' . $filter['postfix'] . '" in where statement!');
                                 }
 
-                                array_push($items, $filter['field'] . ' ' . $filter['postfix'] . ' ' . (gettype($filter['value']) != "integer" ? '"' : '') . $filter['value'] . (gettype($filter['value']) != "integer" ? '"' : ''));
+                                // is a number
+                                if(is_numeric($filter['value'])) {
+                                    $need_quote = false;
+                                } else if ($filter['value'] == "null") { // is null
+                                    $need_quote = false;
+                                } else { // is a string
+                                    $need_quote = true;
+                                }
+
+                                array_push($items, $filter['field'] . ' ' . $filter['postfix'] . ' ' . ($need_quote ? '"' : '') . $filter['value'] . ($need_quote ? '"' : ''));
                             }
 
                             $query .= 'where ' . implode(' & ', $items);
@@ -296,7 +305,15 @@
 
             // If there were errors
             if($request['http_code'] != 200) {
-                throw new Exception('Error ' . $request['http_code'] . ': ' . (property_exists($result[0], 'cause') ? $result[0]->cause : 'unknown error'));
+                if(property_exists($result[0], 'cause')) {
+                    $error_message = $result[0]->cause;
+                } else if (property_exists($result[0], "title")) {
+                    $error_message = $result[0]->title;
+                } else {
+                    $error_message = "unknown error";
+                }
+
+                throw new Exception('Error ' . $request['http_code'] . ': ' . $error_message);
             }
 
             return $result;
