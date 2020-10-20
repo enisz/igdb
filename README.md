@@ -1354,7 +1354,7 @@ Fields:
 Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
 
 ## MultiQuery
-`IGDB::multiquery($endpoint, $result_name, $query) : mixed`
+`IGDB::multiquery(string $endpoint, string $result_name, mixed | array $query = null) : mixed`
 
 Multi-Query is a new way to request a huge amount of information in one request! With Multi-Query you can request multiple endpoints at once, it also works with multiple requests to a single endpoint as well.
 
@@ -1369,8 +1369,12 @@ Example query:
 ```php
 /*
   A few things to note here:
-    - there is a /count after the endpoint name which tells the api to return the record count instead of the actual records
-    - the third parameter is missing, which has a default value NULL and the request will be sent without any filter parameters
+    - the endpoint name has to be the IGDB endpoint name, not the
+      wrapper class method names
+    - there is a /count after the endpoint name which tells the api
+      to return the record count instead of the actual records
+    - the third parameter is missing, which has a default value NULL
+      and the request will be sent without any filter parameters
 */
 
 $IGDB->mutliquery("platforms/count", "Count of Platforms");
