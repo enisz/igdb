@@ -1,12 +1,12 @@
 <?php
 
     /**
-     * Internet Game Database API Wrapper Class
+     * Internet Game Database API Wrapper Class - PHP
      *
      * Fethching data from IGDB's database.
      * Compatible with IGDB Api v4
      *
-     * @version 3.0.0
+     * @version 4.0.0
      * @author Enisz Abdalla <enisz87@gmail.com>
      * @link https://github.com/enisz/igdb
      */
