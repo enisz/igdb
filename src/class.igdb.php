@@ -961,15 +961,25 @@
         /**
          * Executing a multiquery
          *
+         * Multi-Query is a new way to request a huge amount of information in one request!
+         * With Multi-Query you can request multiple endpoints at once,
+         * it also works with multiple requests to a single endpoint as well.
+         *
          * @link https://api-docs.igdb.com/#multi-query
          *
-         * @param $endpoint
-         * @param $result_name
-         * @param $query
-         * @return $result
+         * @param $endpoint ( string ) The endpoint to send your query to
+         * @param $result_name ( string ) A name for the result given by you
+         * @param $query ( array | string ) Either an apicalypse string or a query array. If null provided, nothing will be parsed
+         * @return $result ( mixed ) The result of the query
          */
-        public function mutliquery($endpoint, $result_name, $query) {
-            return $this->_exec_query($this->_construct_url("multiquery", false), "query $endpoint \"$result_name\" {\n" . (is_array($query) ? $this->apicalypse($query) : $query) . "\n};");
+        public function mutliquery($endpoint, $result_name, $query = null) {
+            return $this->_exec_query(
+                $this->_construct_url(
+                    "multiquery",
+                    false
+                ),
+                "query $endpoint \"$result_name\" {\n" . (!is_null($query) ? (is_array($query) ? $this->apicalypse($query) : $query) : "") . "\n};"
+            );
         }
     }
 
