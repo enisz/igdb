@@ -1540,6 +1540,8 @@ The result object's properties will vary depending on the provided field list in
 ### v4.0.0 - October 20, 2020
  - **IGDB Api v4 compatibility update**
  - Updated Class constructor to accept the new tokens from Twitch
+ - Removed API KEY
+ - Removed `IGDB::api_status()` method
  - Removed Endpoint methods according to the [IGDB Changes](https://api-docs.igdb.com/#breaking-changes)
  - Renamed methods:
    - `_init_curl() => _curl_init()`
