@@ -1370,7 +1370,7 @@ Example query:
 /*
   A few things to note here:
     - the endpoint name has to be the IGDB endpoint name, not the
-      wrapper class method names
+      wrapper class method name
     - there is a /count after the endpoint name which tells the api
       to return the record count instead of the actual records
     - the third parameter is missing, which has a default value NULL
