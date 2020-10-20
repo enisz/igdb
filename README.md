@@ -69,6 +69,7 @@
 - [Example Query](#example-query)
 - [Return Values](#return-values)
 - [Change Log](#change-log)
+  * [v4.0.0 - October 20, 2020](#v400---october-20-2020)
   * [v2.0.3 - September 17, 2020](#v203---september-17-2020)
   * [v2.0.2 - February 03, 2020](#v202---february-03-2020)
   * [v2.0.1 - January 27, 2020](#v201---january-27-2020)
@@ -402,229 +403,763 @@ Refer to the [Return Values](#return-values) Section for more details about the 
 ### Age Rating Content Description
 `IGDB::age_rating_content_description(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Age Rating Content Description Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+The organisation behind a specific rating
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| category | Category Enum |  |
+| checksum | uuid | Hash of the object |
+| description | String |  |
+
 > [IGDB Age Rating Content Description Endpoint Documentation](https://api-docs.igdb.com/#age-rating-content-description)
 
 ### Age Rating
 `IGDB::age_rating(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Age Rating Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Age Rating according to various rating organisations
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| category | Category Enum | The organization that has issued a specific rating |
+| checksum | uuid | Hash of the object |
+| content_descriptions | Reference ID for  Age Rating Content Description |  |
+| rating | Rating Enum | The title of an age rating |
+| rating_cover_url | String | The url for  the image of a age rating |
+| synopsis | String | A free text motivating a rating |
+
 > [IGDB Age Rating Endpoint Documentation](https://api-docs.igdb.com/#age-rating)
 
 ### Alternative Name
 `IGDB::alternative_name(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Alternative Name Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Alternative and international game titles
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| comment | String | A description of what kind of alternative name it is (Acronym, Working title, Japanese title etc) |
+| game | Reference ID for Game | The game this alternative name is associated with |
+| name | String | An alternative name |
+
 > [IGDB Alternative Name Endpoint Documentation](https://api-docs.igdb.com/#alternative-name)
 
 ### Artwork
 `IGDB::artwork(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Artwork Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+official artworks (resolution and aspect ratio may vary)
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| alpha_channel | boolean |  |
+| animated | boolean |  |
+| checksum | uuid | Hash of the object |
+| game | Reference ID for Game | The game this artwork is associated with |
+| height | Integer | The height of the image in pixels |
+| image_id | String | The ID of the image used to construct an IGDB image link |
+| url | String | The website address (URL) of the item |
+| width | Integer | The width of the image in pixels |
+
 > [IGDB Artwork Endpoint Documentation](https://api-docs.igdb.com/#artwork)
 
 ### Character Mug Shot
 `IGDB::character_mug_shot(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Character Mug Shot Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Images depicting game characters
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| alpha_channel | boolean |  |
+| animated | boolean |  |
+| checksum | uuid | Hash of the object |
+| height | Integer | The height of the image in pixels |
+| image_id | String | The ID of the image used to construct an IGDB image link |
+| url | String | The website address (URL) of the item |
+| width | Integer | The width of the image in pixels |
+
 > [IGDB Character Mug Shot Endpoint Documentation](https://api-docs.igdb.com/#character-mug-shot)
 
 ### Character
 `IGDB::character(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Character Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Video game characters
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| akas | Array of Strings | Alternative names for a character |
+| checksum | uuid | Hash of the object |
+| country_name | String | A characters country of origin |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| description | String | A text describing a character |
+| games | Array of Game IDs |  |
+| gender | Gender Enum |  |
+| mug_shot | Reference ID for  Character Mug Shot | An image depicting a character |
+| name | String |  |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| species | Species Enum |  |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Character Endpoint Documentation](https://api-docs.igdb.com/#character)
 
 ### Collection
 `IGDB::collection(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Collection Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Collection, AKA Series
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| games | Array of Game IDs | The games that are associated with this collection |
+| name | String | Umbrella term for a collection of games |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Collection Endpoint Documentation](https://api-docs.igdb.com/#collection)
 
 ### Company Logo
 `IGDB::company_logo(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Company Logo Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+The logos of developers and publishers
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| alpha_channel | boolean |  |
+| animated | boolean |  |
+| checksum | uuid | Hash of the object |
+| height | Integer | The height of the image in pixels |
+| image_id | String | The ID of the image used to construct an IGDB image link |
+| url | String | The website address (URL) of the item |
+| width | Integer | The width of the image in pixels |
+
 > [IGDB Company Logo Endpoint Documentation](https://api-docs.igdb.com/#company-logo)
 
 ### Company Website
 `IGDB::company_website(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Company Website Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Company Website
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| category | Category Enum | The service this website links to |
+| checksum | uuid | Hash of the object |
+| trusted | boolean |  |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Company Website Endpoint Documentation](https://api-docs.igdb.com/#company-website)
 
 ### Company
 `IGDB::company(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Company Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Video game companies. Both publishers &amp;amp; developers
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| change_date | Unix Time Stamp | The data when a company got a new ID |
+| change_date_category | Change Date Category Enum |  |
+| changed_company_id | Reference ID for  Company | The new ID for a company that has gone through a merger or restructuring |
+| checksum | uuid | Hash of the object |
+| country | Integer | ISO 3166-1 country code |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| description | String | A free text description of a company |
+| developed | Reference ID for  Game | An array of games that a company has developed |
+| logo | Reference ID for  Company Logo | The company&amp;rsquo;s logo |
+| name | String |  |
+| parent | Reference ID for  Company | A company with a controlling interest in a specific company |
+| published | Reference ID for  Game | An array of games that a company has published |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| start_date | Unix Time Stamp | The date a company was founded |
+| start_date_category | Start Date Category Enum |  |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+| websites | Reference ID for  Company Website | The companies official websites |
+
 > [IGDB Company Endpoint Documentation](https://api-docs.igdb.com/#company)
 
 ### Cover
 `IGDB::cover(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Cover Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+The cover art of games
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| alpha_channel | boolean |  |
+| animated | boolean |  |
+| checksum | uuid | Hash of the object |
+| game | Reference ID for Game | The game this cover is associated with |
+| height | Integer | The height of the image in pixels |
+| image_id | String | The ID of the image used to construct an IGDB image link |
+| url | String | The website address (URL) of the item |
+| width | Integer | The width of the image in pixels |
+
 > [IGDB Cover Endpoint Documentation](https://api-docs.igdb.com/#cover)
 
 ### External Game
 `IGDB::external_game(array $query, boolean $count = false) : mixed`
 
-Fetch data using the External Game Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Game IDs on other services
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| category | Category Enum | The id of the other service |
+| checksum | uuid | Hash of the object |
+| countries | Array of Integers | The ISO country code of the external game product. |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| game | Reference ID for Game | The IGDB ID of the game |
+| media | Media Enum | The media of the external game. |
+| name | String | The name of the game according to the other service |
+| platform | Reference ID for Platform | The platform of the external game product. |
+| uid | String | The other services ID for this game |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+| year | Integer | The year in full (2018) |
+
 > [IGDB External Game Endpoint Documentation](https://api-docs.igdb.com/#external-game)
 
 ### Franchise
 `IGDB::franchise(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Franchise Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+A list of video game franchises such as Star Wars.
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| games | Array of Game IDs | The games that are associated with this franchise |
+| name | String | The name of the franchise |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Franchise Endpoint Documentation](https://api-docs.igdb.com/#franchise)
 
 ### Game Engine Logo
 `IGDB::game_engine_logo(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Game Engine Logo Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+The logos of game engines
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| alpha_channel | boolean |  |
+| animated | boolean |  |
+| checksum | uuid | Hash of the object |
+| height | Integer | The height of the image in pixels |
+| image_id | String | The ID of the image used to construct an IGDB image link |
+| url | String | The website address (URL) of the item |
+| width | Integer | The width of the image in pixels |
+
 > [IGDB Game Engine Logo Endpoint Documentation](https://api-docs.igdb.com/#game-engine-logo)
 
 ### Game Engine
 `IGDB::game_engine(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Game Engine Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Video game engines such as unreal engine.
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| companies | Array of Company IDs | Companies who used this game engine |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| description | String | Description of the game engine |
+| logo | Reference ID for  Game Engine Logo | Logo of the game engine |
+| name | String | Name of the game engine |
+| platforms | Array of Platform IDs | Platforms this game engine was deployed on |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Game Engine Endpoint Documentation](https://api-docs.igdb.com/#game-engine)
 
 ### Game Mode
 `IGDB::game_mode(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Game Mode Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Single player, Multiplayer etc
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| name | String | The name of the game mode |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Game Mode Endpoint Documentation](https://api-docs.igdb.com/#game-mode)
 
 ### Game Version Feature Value
 `IGDB::game_version_feature_value(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Game Version Feature Value Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+The bool&#x2F;text value of the feature
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| game | Reference ID for Game | The version&#x2F;edition this value refers to |
+| game_feature | Reference ID for  Game Version Feature | The id of the game feature |
+| included_feature | Included Feature Enum | The boole value of this feature |
+| note | String | The text value of this feature |
+
 > [IGDB Game Version Feature Value Endpoint Documentation](https://api-docs.igdb.com/#game-version-feature-value)
 
 ### Game Version Feature
 `IGDB::game_version_feature(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Game Version Feature Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Features and descriptions of what makes each version&#x2F;edition different from the main game
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| category | Category Enum | The category of the feature description |
+| checksum | uuid | Hash of the object |
+| description | String | The description of the feature |
+| position | Integer | Position of this feature in the list of features |
+| title | String | The title of the feature |
+| values | Reference ID for  Game Version Feature Value | The bool&#x2F;text value of the feature |
+
 > [IGDB Game Version Feature Endpoint Documentation](https://api-docs.igdb.com/#game-version-feature)
 
 ### Game Version
 `IGDB::game_version(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Game Version Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Details about game editions and versions.
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| features | Reference ID for  Game Version Feature | Features and descriptions of what makes each version&#x2F;edition different from the main game |
+| game | Reference ID for Game | The game these versions&#x2F;editions are of |
+| games | Array of Game IDs | Game Versions and Editions |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Game Version Endpoint Documentation](https://api-docs.igdb.com/#game-version)
 
 ### Game Video
 `IGDB::game_video(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Game Video Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+A video associated with a game
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| game | Reference ID for Game | The game this video is associated with |
+| name | String | The name of the video |
+| video_id | String | The external ID of the video (usually youtube) |
+
 > [IGDB Game Video Endpoint Documentation](https://api-docs.igdb.com/#game-video)
 
 ### Game
 `IGDB::game(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Game Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Video Games!
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| age_ratings | Reference ID for  Age Rating | The PEGI rating |
+| aggregated_rating | Double | Rating based on external critic scores |
+| aggregated_rating_count | Integer | Number of external critic scores |
+| alternative_names | Array of Alternative Name IDs | Alternative names for this game |
+| artworks | Array of Artwork IDs | Artworks of this game |
+| bundles | Reference ID for  Game | The bundles this game is a part of |
+| category | Category Enum | The category of this game |
+| checksum | uuid | Hash of the object |
+| collection | Reference ID for Collection | The series the game belongs to |
+| cover | Reference ID for Cover | The cover of this game |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| dlcs | Reference ID for  Game | DLCs for this game |
+| expansions | Reference ID for  Game | Expansions of this game |
+| external_games | Array of External Game IDs | External IDs this game has on other services |
+| first_release_date | Unix Time Stamp | The first release date for this game |
+| follows | Integer | Number of people following a game |
+| franchise | Reference ID for Franchise | The main franchise |
+| franchises | Array of Franchise IDs | Other franchises the game belongs to |
+| game_engines | Array of Game Engine IDs | The game engine used in this game |
+| game_modes | Array of Game Mode IDs | Modes of gameplay |
+| genres | Array of Genre IDs | Genres of the game |
+| hypes | Integer | Number of follows a game gets before release |
+| involved_companies | Array of Involved Company IDs | Companies who developed this game |
+| keywords | Array of Keyword IDs | Associated keywords |
+| multiplayer_modes | Array of Multiplayer Mode IDs | Multiplayer modes for this game |
+| name | String |  |
+| parent_game | Reference ID for  Game | If a DLC, expansion or part of a bundle, this is the main game or bundle |
+| platforms | Array of Platform IDs | Platforms this game was released on |
+| player_perspectives | Array of Player Perspective IDs | The main perspective of the player |
+| rating | Double | Average IGDB user rating |
+| rating_count | Integer | Total number of IGDB user ratings |
+| release_dates | Array of Release Date IDs | Release dates of this game |
+| screenshots | Array of Screenshot IDs | Screenshots of this game |
+| similar_games | Reference ID for  Game | Similar games |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| standalone_expansions | Reference ID for  Game | Standalone expansions of this game |
+| status | Status Enum | The status of the games release |
+| storyline | String | A short description of a games story |
+| summary | String | A description of the game |
+| tags | Array of Tag Numbers | Related entities in the IGDB API |
+| themes | Array of Theme IDs | Themes of the game |
+| total_rating | Double | Average rating based on both IGDB user and external critic scores |
+| total_rating_count | Integer | Total number of user and external critic scores |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+| version_parent | Reference ID for  Game | If a version, this is the main game |
+| version_title | String | Title of this version (i.e Gold edition) |
+| videos | Reference ID for  Game Video | Videos of this game |
+| websites | Reference ID for  Website | Websites associated with this game |
+
 > [IGDB Game Endpoint Documentation](https://api-docs.igdb.com/#game)
 
 ### Genre
 `IGDB::genre(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Genre Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Genres of video game
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| name | String |  |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Genre Endpoint Documentation](https://api-docs.igdb.com/#genre)
 
 ### Involved Company
 `IGDB::involved_company(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Involved Company Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+&lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;involved_companies&lt;&#x2F;code&gt;
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| company | Reference ID for Company |  |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| developer | boolean |  |
+| game | Reference ID for Game |  |
+| porting | boolean |  |
+| publisher | boolean |  |
+| supporting | boolean |  |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+
 > [IGDB Involved Company Endpoint Documentation](https://api-docs.igdb.com/#involved-company)
 
 ### Keyword
 `IGDB::keyword(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Keyword Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Keywords are words or phrases that get tagged to a game such as “world war 2” or “steampunk”.
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| name | String |  |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Keyword Endpoint Documentation](https://api-docs.igdb.com/#keyword)
 
 ### Multiplayer Mode
 `IGDB::multiplayer_mode(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Multiplayer Mode Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Data about the supported multiplayer types
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| campaigncoop | boolean | True if the game supports campaign coop |
+| checksum | uuid | Hash of the object |
+| dropin | boolean | True if the game supports drop in&#x2F;out multiplayer |
+| game | Reference ID for Game | The game this multiplayer mode is associated with |
+| lancoop | boolean | True if the game supports LAN coop |
+| offlinecoop | boolean | True if the game supports offline coop |
+| offlinecoopmax | Integer | Maximum number of offline players in offline coop |
+| offlinemax | Integer | Maximum number of players in offline multiplayer |
+| onlinecoop | boolean | True if the game supports online coop |
+| onlinecoopmax | Integer | Maximum number of online players in online coop |
+| onlinemax | Integer | Maximum number of players in online multiplayer |
+| platform | Reference ID for Platform | The platform this multiplayer mode refers to |
+| splitscreen | boolean | True if the game supports split screen, offline multiplayer |
+| splitscreenonline | boolean | True if the game supports split screen, online multiplayer |
+
 > [IGDB Multiplayer Mode Endpoint Documentation](https://api-docs.igdb.com/#multiplayer-mode)
 
 ### Platform Family
 `IGDB::platform_family(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Platform Family Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+A collection of closely related platforms
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| name | String | The name of the platform family |
+| slug | String | A url-safe, unique, lower-case version of the name |
+
 > [IGDB Platform Family Endpoint Documentation](https://api-docs.igdb.com/#platform-family)
 
 ### Platform Logo
 `IGDB::platform_logo(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Platform Logo Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Logo for a platform
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| alpha_channel | boolean |  |
+| animated | boolean |  |
+| checksum | uuid | Hash of the object |
+| height | Integer | The height of the image in pixels |
+| image_id | String | The ID of the image used to construct an IGDB image link |
+| url | String | The website address (URL) of the item |
+| width | Integer | The width of the image in pixels |
+
 > [IGDB Platform Logo Endpoint Documentation](https://api-docs.igdb.com/#platform-logo)
 
 ### Platform Version Company
 `IGDB::platform_version_company(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Platform Version Company Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+A platform developer
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| comment | String | Any notable comments about the developer |
+| company | Reference ID for Company | The company responsible for developing this platform version |
+| developer | boolean |  |
+| manufacturer | boolean |  |
+
 > [IGDB Platform Version Company Endpoint Documentation](https://api-docs.igdb.com/#platform-version-company)
 
 ### Platform Version Release Date
 `IGDB::platform_version_release_date(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Platform Version Release Date Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+A handy endpoint that extends platform release dates. Used to dig deeper into release dates, platforms and versions.
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| category | Category Enum | The format of the release date |
+| checksum | uuid | Hash of the object |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| date | Unix Time Stamp | The release date |
+| human | String | A human readable version of the release date |
+| m | Integer | The month as an integer starting at 1 (January) |
+| platform_version | Reference ID for Platform Version | The platform this release date is for |
+| region | Region Enum | The region of the release |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| y | Integer | The year in full (2018) |
+
 > [IGDB Platform Version Release Date Endpoint Documentation](https://api-docs.igdb.com/#platform-version-release-date)
 
 ### Platform Version
 `IGDB::platform_version(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Platform Version Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+&lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;platform_versions&lt;&#x2F;code&gt;
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| companies | Reference ID for  Platform Version Company | Who developed this platform version |
+| connectivity | String | The network capabilities |
+| cpu | String | The integrated control processing unit |
+| graphics | String | The graphics chipset |
+| main_manufacturer | Reference ID for  Platform Version Company | Who manufactured this version of the platform |
+| media | String | The type of media this version accepted |
+| memory | String | How much memory there is |
+| name | String | The name of the platform version |
+| os | String | The operating system installed on the platform version |
+| output | String | The output video rate |
+| platform_logo | Reference ID for Platform Logo | The logo of this platform version |
+| platform_version_release_dates | Array of Platform Version Release Date IDs | When this platform was released |
+| resolutions | String | The maximum resolution |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| sound | String | The sound chipset |
+| storage | String | How much storage there is |
+| summary | String | A short summary |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Platform Version Endpoint Documentation](https://api-docs.igdb.com/#platform-version)
 
 ### Platform Website
 `IGDB::platform_website(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Platform Website Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+The main website for the platform
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| category | Category Enum | The service this website links to |
+| checksum | uuid | Hash of the object |
+| trusted | boolean |  |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Platform Website Endpoint Documentation](https://api-docs.igdb.com/#platform-website)
 
 ### Platform
 `IGDB::platform(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Platform Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+The hardware used to run the game or game delivery network
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| abbreviation | String | An abbreviation of the platform name |
+| alternative_name | String | An alternative name for the platform |
+| category | Category Enum | A physical or virtual category of the platform |
+| checksum | uuid | Hash of the object |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| generation | Integer | The generation of the platform |
+| name | String | The name of the platform |
+| platform_family | Reference ID for Platform Family | The family of platforms this one belongs to |
+| platform_logo | Reference ID for Platform Logo | The logo of the first Version of this platform |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| summary | String | The summary of the first Version of this platform |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+| versions | Reference ID for  Platform Version | Associated versions of this platform |
+| websites | Reference ID for  Platform Website | The main website |
+
 > [IGDB Platform Endpoint Documentation](https://api-docs.igdb.com/#platform)
 
 ### Player Perspective
 `IGDB::player_perspective(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Player Perspective Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Player perspectives describe the view&#x2F;perspective of the player in a video game.
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| name | String |  |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Player Perspective Endpoint Documentation](https://api-docs.igdb.com/#player-perspective)
 
 ### Release Date
 `IGDB::release_date(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Release Date Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+A handy endpoint that extends game release dates. Used to dig deeper into release dates, platforms and versions.
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| category | Category Enum | The format category of the release date |
+| checksum | uuid | Hash of the object |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| date | Unix Time Stamp | The date of the release |
+| game | Reference ID for Game |  |
+| human | String | A human readable representation of the date |
+| m | Integer | The month as an integer starting at 1 (January) |
+| platform | Reference ID for Platform | The platform of the release |
+| region | Region Enum | The region of the release |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| y | Integer | The year in full (2018) |
+
 > [IGDB Release Date Endpoint Documentation](https://api-docs.igdb.com/#release-date)
 
 ### Screenshot
 `IGDB::screenshot(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Screenshot Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Screenshots of games
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| alpha_channel | boolean |  |
+| animated | boolean |  |
+| checksum | uuid | Hash of the object |
+| game | Reference ID for Game | The game this video is associated with |
+| height | Integer | The height of the image in pixels |
+| image_id | String | The ID of the image used to construct an IGDB image link |
+| url | String | The website address (URL) of the item |
+| width | Integer | The width of the image in pixels |
+
 > [IGDB Screenshot Endpoint Documentation](https://api-docs.igdb.com/#screenshot)
 
 ### Search
 `IGDB::search(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Search Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+&lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;search&lt;&#x2F;code&gt;
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| alternative_name | String |  |
+| character | Reference ID for Character |  |
+| checksum | uuid | Hash of the object |
+| collection | Reference ID for Collection |  |
+| company | Reference ID for Company |  |
+| description | String |  |
+| game | Reference ID for Game |  |
+| name | String |  |
+| platform | Reference ID for Platform |  |
+| published_at | Unix Time Stamp | The date this item was initially published by the third party |
+| test_dummy | Reference ID for Test Dummy |  |
+| theme | Reference ID for Theme |  |
+
 > [IGDB Search Endpoint Documentation](https://api-docs.igdb.com/#search)
 
 ### Theme
 `IGDB::theme(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Theme Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+Video game themes
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| checksum | uuid | Hash of the object |
+| created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
+| name | String |  |
+| slug | String | A url-safe, unique, lower-case version of the name |
+| updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Theme Endpoint Documentation](https://api-docs.igdb.com/#theme)
 
 ### Website
 `IGDB::website(array $query, boolean $count = false) : mixed`
 
-Fetch data using the Website Endpoint. For more details on the method parameters refer to the [Query Parameters Section](#query-parameters).
+A website url, usually associated with a game
+
+Fields the endpoint returns:
+| Field | Type | Description |
+|-------|------|-------------|
+| category | Category Enum | The service this website links to |
+| checksum | uuid | Hash of the object |
+| game | Reference ID for Game | The game this website is associated with |
+| trusted | boolean |  |
+| url | String | The website address (URL) of the item |
+
 > [IGDB Website Endpoint Documentation](https://api-docs.igdb.com/#website)
 
 ## Example Query
