@@ -66,6 +66,7 @@
   * [Search](#search-1)
   * [Theme](#theme)
   * [Website](#website)
+- [MultiQuery](#multiquery)
 - [Example Query](#example-query)
 - [Return Values](#return-values)
 - [Change Log](#change-log)
