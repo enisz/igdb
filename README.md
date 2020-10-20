@@ -383,7 +383,7 @@ The method will construct the full URL for the request and will return the const
 
 **Parameters**
  - `$endpoint ( string )` : the endpoint to use
- - ``$count ( boolean )`` : whether the request should return the number of matches instead of the actual resultset
+ - `$count ( boolean )` : whether the request should return the number of matches instead of the actual resultset
 
 Returns the full constructed URL to the IGDB Endpoint as a string.
 
@@ -1351,6 +1351,70 @@ Fields:
 | url | String | The website address (URL) of the item |
 
 Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+
+## MultiQuery
+`IGDB::multiquery($endpoint, $result_name, $query) : mixed`
+
+Multi-Query is a new way to request a huge amount of information in one request! With Multi-Query you can request multiple endpoints at once, it also works with multiple requests to a single endpoint as well.
+
+**Parameters**
+ - `$endpoint ( string )`: the endpoint to use (note: not the wrapper method name, but the IGDB endpoint name. Also accepts count. Refer to the IGDB documentation for details!)
+ - `$result_name ( string )`: A name, given by you.
+ - `$query ( string | array | null )`: Either an apicalypse string or a query array. The default value is null, in this case no filter will be applied.
+
+Returns either the records matching the filter criteria, or the count of these records. This depends on the `$endpoint` parameter.
+
+Example query:
+```php
+/*
+  A few things to note here:
+    - there is a /count after the endpoint name which tells the api to return the record count instead of the actual records
+    - the third parameter is missing, which has a default value NULL and the request will be sent without any filter parameters
+*/
+
+$IGDB->mutliquery("platforms/count", "Count of Platforms");
+```
+
+Result of the query:
+```php
+array (size=1)
+  0 =>
+    object(stdClass)[2]
+      public 'name' => string 'Count of Platforms' (length=18)
+      public 'count' => int 169
+```
+
+Example query with filters:
+```php
+$IGDB->mutliquery(
+  "games",                                                                        // Endpoint
+  "Playstation Games",                                                            // Result name
+  "fields name,platforms.name; where platforms !=n & platforms = {48}; limit 1;"  // Apicalypse formatted string (also could be a query array)
+);
+```
+
+Result of the query:
+```php
+// because of the limit parameter in the query, we have only 1 element in the result
+array (size=1)
+  0 =>
+    object(stdClass)[2]
+      public 'name' => string 'Playstation Games' (length=17)
+      public 'result' =>
+        array (size=1)
+          0 =>
+            object(stdClass)[3]
+              public 'id' => int 41058
+              public 'name' => string 'The Seven Deadly Sins: Knights of Britannia' (length=43)
+              public 'platforms' =>
+                array (size=1)
+                  0 =>
+                    object(stdClass)[4]
+                      public 'id' => int 48
+                      public 'name' => string 'PlayStation 4' (length=13)
+```
+
+> [IGDB Multi-Query Documentation](https://api-docs.igdb.com/#multi-query)
 
 ## Example Query
 Let's do a simple example. Get the third page of a game list, where the game we are looking for is LIKE "uncharted" (this example is available in _examples/\_basic_example.php_)
