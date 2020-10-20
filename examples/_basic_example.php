@@ -3,12 +3,12 @@
     require '../src/class.igdb.php';
 
     // Instantiate the class
-    $IGDB = new IGDB('<YOUR API KEY>');
+    $IGDB = new IGDB("client_id", "access_token");
 
     // Setting up the query parameters
-    $options = array(
+    $query = array(
         'search' => 'uncharted', // searching for games LIKE uncharted
-        'fields' => array(       // we want to see these values in the results
+        'fields' => array(       // we want to see these fields in the results
             'id',
             'name',
             'cover'
@@ -18,8 +18,8 @@
     );
 
     try {
-        // Running the query against IGDB; passing the options parameter
-        $result = $IGDB->game($options);
+        // Running the query against IGDB; passing the query
+        $result = $IGDB->game($query);
 
         // Showing the result
         var_dump($result);

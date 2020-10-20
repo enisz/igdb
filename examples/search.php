@@ -2,15 +2,17 @@
 
     include '../src/class.igdb.php';
 
-    $IGDB = new IGDB('<YOUR API KEY>');
+    $IGDB = new IGDB("client_id", "access_token");
 
-    // As search parameter you can pass any string you want to find
-    $options = array(
-        'search' => 'wolfenstein 2 new colossus',
-        'fields' => array('id', 'name')
+    $query = array(
+        'search' => 'wolfenstein 2 new colossus',   // As search parameter you can pass any string you want to find
+        'fields' => array(
+            'id',
+            'name'
+        )
     );
 
-    $result = $IGDB->game($options);
+    $result = $IGDB->game($query);
 
     var_dump($result);
 

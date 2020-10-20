@@ -2,9 +2,9 @@
 
     require '../src/class.igdb.php';
 
-    $IGDB = new IGDB('<YOUR API KEY>');
+    $IGDB = new IGDB("client_id", "access_token");
 
-    $options = array(
+    $query = array(
         'fields' => 'id, name, platforms, genres',   // we want to see these fields in the result
         'where' => array(
             array(
@@ -25,7 +25,7 @@
         )
     );
 
-    $result = $IGDB->game($options);
+    $result = $IGDB->game($query);
 
     var_dump($result);
 

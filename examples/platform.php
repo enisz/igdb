@@ -2,14 +2,18 @@
 
     include '../src/class.igdb.php';
 
-    $IGDB = new IGDB('<YOUR API KEY>');
+    $IGDB = new IGDB("client_id", "access_token");
 
-    $options = array(
-        'search' => 'xbox',                     // Searching the platforms for XBOX.
-        'fields' => array('id', 'name', 'slug') // Showing ID, NAME and SLUG fields in the results
+    $query = array(
+        'search' => 'xbox',     // Searching the platforms for XBOX.
+        'fields' => array(      // Showing ID, NAME and SLUG fields in the results
+            'id',
+            'name',
+            'slug'
+        )
     );
 
-    $result = $IGDB->platform($options);
+    $result = $IGDB->platform($query);
 
     var_dump($result);
 
