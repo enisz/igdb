@@ -2,20 +2,20 @@
 
     include '../src/class.igdb.php';
 
-    $IGDB = new IGDB('<YOUR API KEY>');
+    $IGDB = new IGDB("client_id", "access_token");
 
-    $options = array(
+    $query = array(
         'search' => 'wolfenstein',
         'fields' => 'id, name',
         'limit' => 2
     );
 
-    $result = $IGDB->game($options);
+    $result = $IGDB->game($query);
 
     var_dump($result);
 
     // Closing the CURL handler
-    $IGDB->close_handler();
+    $IGDB->curl_close();
 
     /*
 
@@ -25,9 +25,9 @@
 
     // If you want to run another query after closing the CURL handler
     // You have to reinitialize it in order to make it work
-    $IGDB->reinit_handler();
+    $IGDB->curl_reinit();
 
-    // You can define a new options parameter, or you can modify the previous one
+    // You can define a new query, or you can modify the previous one
     // Now I'm defining a new one to use a different endpoint with the same instance
     $second_options = array(
         'search' => 'xbox',

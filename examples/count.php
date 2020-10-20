@@ -2,9 +2,9 @@
 
     require '../src/class.igdb.php';
 
-    $IGDB = new IGDB('<YOUR API KEY>');
+    $IGDB = new IGDB("client_id", "access_token");
 
-    $options = array(
+    $query = array(
         'where' => array(
             'field' => 'rating', // rating
             'postfix' => '>',    // greater than
@@ -13,7 +13,8 @@
     );
 
     // Will return the number of all games with rating more than 75
-    $result = $IGDB->game($options, true);
+    // Note the second true parameter
+    $result = $IGDB->game($query, true);
 
     var_dump($result);
 

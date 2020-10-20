@@ -5,14 +5,19 @@
 
     include '../src/class.igdb.php';
 
-    $IGDB = new IGDB('<YOUR API KEY>');
+    $IGDB = new IGDB("client_id", "access_token");
 
-    $options = array(
-        'id' => array(1,2,3),                                                  // first three games by ID
-        'fields' => array('name', 'themes.url', 'themes.name', 'themes.slug'), // Fields can be expanded with a dot followed by the fields you want to access from a certain endpoint
+    $query = array(
+        'id' => array(1,2,3),   // first three games by ID
+        'fields' => array(
+            'name',
+            'themes.url',       // Fields can be expanded with a dot followed by the fields you want to access from a certain endpoint
+            'themes.name',
+            'themes.slug'
+        )
     );
 
-    $result = $IGDB->game($options);
+    $result = $IGDB->game($query);
 
     var_dump($result);
 

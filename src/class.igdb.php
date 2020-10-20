@@ -66,66 +66,70 @@
         }
 
         /**
-         * Parsing the Apicalypse query string from the options array
+         * Parsing the Apicalypse query string from the query
          *
          * @throws Exception In case of missing parameters
          * @throws Exception When invalid parameters passed
-         * @param $options The options array to parse
+         * @throws Exception If a non-array parameter is passed to the method
+         * @param $query A query to parse
          */
-        public function apicalypse($options) {
+        public function apicalypse($query) {
+            if(!is_array($query)) {
+                throw new Exception("The query is not an array!");
+            }
             $fields = array('search', 'fields', 'exclude', 'where', 'limit', 'offset', 'sort');
-            $query = '';
+            $apicalypse = '';
 
             // id provided; push it in the where statement
-            if(!array_key_exists('where', $options) && array_key_exists('id', $options)) {
-                if(!is_array($options['id'])) {
-                    $options['id'] = array_map( function ($item) { return trim($item); }, explode(',', $options['id']));
+            if(!array_key_exists('where', $query) && array_key_exists('id', $query)) {
+                if(!is_array($query['id'])) {
+                    $query['id'] = array_map( function ($item) { return trim($item); }, explode(',', $query['id']));
                 }
 
-                $options['where'] = array(
+                $query['where'] = array(
                     'field' => 'id',
                     'postfix' => '=',
-                    'value' => (count($options['id']) > 1 ? '(' : '') . implode(',', $options['id']) . (count($options['id']) > 1 ? ')' : '')
+                    'value' => (count($query['id']) > 1 ? '(' : '') . implode(',', $query['id']) . (count($query['id']) > 1 ? ')' : '')
                 );
 
-                unset($options['id']);
+                unset($query['id']);
             }
 
             foreach($fields as $parameter) {
-                if(array_key_exists($parameter, $options)) {
+                if(array_key_exists($parameter, $query)) {
                     switch($parameter) {
                         case 'search':
-                            $query .= 'search "' . $options[$parameter] . '"';
+                            $apicalypse .= 'search "' . $query[$parameter] . '"';
                         break;
 
                         case 'fields':
                         case 'exclude':
-                            if(!is_array($options[$parameter])) {
-                                $options[$parameter] = array_map( function($item) { return trim($item); }, explode(',', $options[$parameter]));
+                            if(!is_array($query[$parameter])) {
+                                $query[$parameter] = array_map( function($item) { return trim($item); }, explode(',', $query[$parameter]));
                             }
 
-                            $query .= $parameter . ' ' . implode(',', $options[$parameter]);
+                            $apicalypse .= $parameter . ' ' . implode(',', $query[$parameter]);
                         break;
 
                         case 'where':
-                            if(is_string($options[$parameter])) { // as string
-                                $params = explode(' ', $options[$parameter]);
+                            if(is_string($query[$parameter])) { // as string
+                                $params = explode(' ', $query[$parameter]);
 
                                 if(count($params) != 3) {
                                     throw new Exception('when "where" statement is passed as a string, it has to contain a field name, a postfix and a value separated by spaces!');
                                 }
 
-                                $options[$parameter] = array(
+                                $query[$parameter] = array(
                                     array(
                                         'field' => $params[0],
                                         'postfix' => $params[1],
                                         'value' => $params[2]
                                     )
                                 );
-                            } else if(is_array($options[$parameter]) && array_key_exists(0, $options[$parameter]) && is_string($options[$parameter][0]))  { // array of strings
+                            } else if(is_array($query[$parameter]) && array_key_exists(0, $query[$parameter]) && is_string($query[$parameter][0]))  { // array of strings
                                 $new_value = array();
 
-                                foreach($options[$parameter] as $param) {
+                                foreach($query[$parameter] as $param) {
                                     $params = explode(' ', $param);
 
                                     if(count($params) != 3) {
@@ -139,41 +143,41 @@
                                     ));
                                 }
 
-                                $options[$parameter] = $new_value;
-                            } else if(is_array($options[$parameter]) && array_key_exists('field', $options[$parameter])) { // filter array
-                                $options[$parameter] = array(
+                                $query[$parameter] = $new_value;
+                            } else if(is_array($query[$parameter]) && array_key_exists('field', $query[$parameter])) { // filter array
+                                $query[$parameter] = array(
                                     array(
-                                        'field' => $options[$parameter]['field'],
-                                        'postfix' => $options[$parameter]['postfix'],
-                                        'value' => $options[$parameter]['value']
+                                        'field' => $query[$parameter]['field'],
+                                        'postfix' => $query[$parameter]['postfix'],
+                                        'value' => $query[$parameter]['value']
                                     )
                                 );
-                            } else if(is_array($options[$parameter]) && array_key_exists(0, $options[$parameter]) && array_key_exists('field', $options[$parameter][0])) { // array of filter arrays
+                            } else if(is_array($query[$parameter]) && array_key_exists(0, $query[$parameter]) && array_key_exists('field', $query[$parameter][0])) { // array of filter arrays
                                 // data is in correct format, nothing to do here
                             } else {
-                                throw new Exception('"where" statement in the options array contains invalid data!');
+                                throw new Exception('"where" statement in the query contains invalid data!');
                             }
 
                             // id provided; push it in the where statement
-                            if(array_key_exists('id', $options)) {
-                                if(!is_array($options['id'])) {
-                                    $options['id'] = array_map( function ($item) { return trim($item); }, explode(',', $options['id']));
+                            if(array_key_exists('id', $query)) {
+                                if(!is_array($query['id'])) {
+                                    $query['id'] = array_map( function ($item) { return trim($item); }, explode(',', $query['id']));
                                 }
 
-                                if(!array_key_exists('where', $options)) {
-                                    $options['where'] = array();
+                                if(!array_key_exists('where', $query)) {
+                                    $query['where'] = array();
                                 }
 
-                                array_unshift($options['where'], array(
+                                array_unshift($query['where'], array(
                                     'field' => 'id',
                                     'postfix' => '=',
-                                    'value' => (count($options['id']) > 1 ? '(' : '') . implode(',', $options['id']) . (count($options['id']) > 1 ? ')' : '')
+                                    'value' => (count($query['id']) > 1 ? '(' : '') . implode(',', $query['id']) . (count($query['id']) > 1 ? ')' : '')
                                 ));
                             }
 
                             $items = array();
 
-                            foreach($options[$parameter] as $filter) {
+                            foreach($query[$parameter] as $filter) {
                                 if(!array_key_exists('field', $filter)) {
                                     throw new Exception('"field" parameter is missing from the where statement!');
                                 }
@@ -206,46 +210,46 @@
                                 array_push($items, $filter['field'] . ' ' . $filter['postfix'] . ' ' . ($need_quote ? '"' : '') . $filter['value'] . ($need_quote ? '"' : ''));
                             }
 
-                            $query .= 'where ' . implode(' & ', $items);
+                            $apicalypse .= 'where ' . implode(' & ', $items);
                         break;
 
                         case 'limit':
                         case 'offset':
-                            $value = $options[$parameter];
+                            $value = $query[$parameter];
 
-                            if($parameter == 'limit' && ($value < 1 || $value > 50)) {
-                                throw new Exception('Limit value must be between 1 and 50!');
+                            if($parameter == 'limit' && ($value < 1 || $value > 500)) {
+                                throw new Exception('Limit value must be between 1 and 500!');
                             }
 
                             if($parameter == 'offset' && ($value < 0)) {
                                 throw new Exception('Offset value must be 0 or above!');
                             }
 
-                            $query .= $parameter . ' ' . $value;
+                            $apicalypse .= $parameter . ' ' . $value;
                         break;
 
                         case 'sort':
                             $available_directions = array('asc', 'desc');
 
-                            if(is_array($options[$parameter])) {
+                            if(is_array($query[$parameter])) {
                                 // field parameter is missing
-                                if(!array_key_exists('field', $options[$parameter])) {
+                                if(!array_key_exists('field', $query[$parameter])) {
                                     throw new Exception('"field" parameter is missing from the sort statement!');
                                 }
 
                                 // order parameter is missing
-                                if(!array_key_exists('direction', $options[$parameter])) {
+                                if(!array_key_exists('direction', $query[$parameter])) {
                                     throw new Exception('"direction" parameter is missing from the sort statement!');
                                 }
 
                                 // order parameter is invalid
-                                if(!in_array($options[$parameter]['direction'], $available_directions)) {
-                                    throw new Exception('the value of the "direction" field is invalid (' . $options[$parameter] . ')! it has to be either asc or desc!');
+                                if(!in_array($query[$parameter]['direction'], $available_directions)) {
+                                    throw new Exception('the value of the "direction" field is invalid (' . $query[$parameter] . ')! it has to be either asc or desc!');
                                 }
 
-                                $query .= $parameter . ' ' . $options[$parameter]['field'] . ' ' . $options[$parameter]['direction'];
+                                $apicalypse .= $parameter . ' ' . $query[$parameter]['field'] . ' ' . $query[$parameter]['direction'];
                             } else {
-                                $params = explode(' ', $options[$parameter]);
+                                $params = explode(' ', $query[$parameter]);
 
                                 if(count($params) != 2) {
                                     throw new Exception('sort parameter must contain a field name and the sorting direction separated with a space!');
@@ -255,17 +259,17 @@
                                     throw new Exception('the direction of sorting must be either "asc" or "desc"!');
                                 }
 
-                                $query .= $parameter . ' ' . $params[0] . ' ' . $params[1];
+                                $apicalypse .= $parameter . ' ' . $params[0] . ' ' . $params[1];
                             }
 
                         break;
                     }
 
-                    $query .= ";\n";
+                    $apicalypse .= ";\n";
                 }
             }
 
-            return trim($query);
+            return trim($apicalypse);
         }
 
         /**
@@ -282,10 +286,10 @@
          * @throws Exception in case of closed CURL session
          * @throws Exception if the response code is any other than 200
          * @param $url ( string ) The url of the endpoint
-         * @param $options ( array | string ) Either the options array to convert to an apicalypse string, or an apicalypse string itself
+         * @param $query ( array | string ) The query to send
          * @return $result ( array ) The response objects from IGDB in an array.
          */
-        private function _exec_query($url, $options) {
+        private function _exec_query($url, $query) {
             // Throw Exception if CURL handler is null (closed)
             if(is_null($this->curl_handler)) {
                 throw new Exception('CURL session is closed!');
@@ -295,7 +299,7 @@
             curl_setopt($this->curl_handler, CURLOPT_URL, $url);
 
             // Set the body of the request
-            curl_setopt($this->curl_handler, CURLOPT_POSTFIELDS, is_array($options) ? $this->apicalypse($options) : $options);
+            curl_setopt($this->curl_handler, CURLOPT_POSTFIELDS, is_array($query) ? $this->apicalypse($query) : $query);
 
             // Executing the request
             $result = json_decode(curl_exec($this->curl_handler));
@@ -323,7 +327,7 @@
          * Closes the CURL handler.
          * After this method is called, the class cannot run any queries against IGDB unless you reinitialize it manually.
          */
-        public function close_handler() {
+        public function curl_close() {
             curl_close($this->curl_handler);
             $this->curl_handler = null;
         }
@@ -331,16 +335,16 @@
         /**
          * Reinitialize the CURL session. Simply calls the _init_curl private method.
          */
-        public function reinit_handler() {
+        public function curl_reinit() {
             if(is_null($this->curl_handler)) {
-                $this->_init_curl();
+                $this->_curl_init();
             }
         }
 
         /**
          * Constructing the endpoint url for the request
          * @param $endpoint (string ) the endpoint to execute the query against
-         * @param $count ( boolean ) whether a count requested or the results
+         * @param $count ( boolean ) whether a record count, or the records are requested
          */
         private function _construct_url($endpoint, $count) {
             return rtrim($this->api_url, '/') . '/' . $endpoint . ($count ? '/count' : '');
@@ -354,12 +358,12 @@
          *
          * @link https://api-docs.igdb.com/#age-rating-content-description
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function age_rating_content_description($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("age_rating_content_descriptions", $count), $options);
+        public function age_rating_content_description($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("age_rating_content_descriptions", $count), $query);
         }
 
         /**
@@ -370,12 +374,12 @@
          *
          * @link https://api-docs.igdb.com/#age-rating
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function age_rating($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("age_ratings", $count), $options);
+        public function age_rating($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("age_ratings", $count), $query);
         }
 
         /**
@@ -386,12 +390,12 @@
          *
          * @link https://api-docs.igdb.com/#alternative-name
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function alternative_name($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("alternative_names", $count), $options);
+        public function alternative_name($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("alternative_names", $count), $query);
         }
 
         /**
@@ -402,12 +406,12 @@
          *
          * @link https://api-docs.igdb.com/#artwork
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function artwork($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("artworks", $count), $options);
+        public function artwork($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("artworks", $count), $query);
         }
 
         /**
@@ -418,12 +422,12 @@
          *
          * @link https://api-docs.igdb.com/#character-mug-shot
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function character_mug_shot($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("character_mug_shots", $count), $options);
+        public function character_mug_shot($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("character_mug_shots", $count), $query);
         }
 
         /**
@@ -434,12 +438,12 @@
          *
          * @link https://api-docs.igdb.com/#character
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function character($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("characters", $count), $options);
+        public function character($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("characters", $count), $query);
         }
 
         /**
@@ -450,12 +454,12 @@
          *
          * @link https://api-docs.igdb.com/#collection
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function collection($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("collections", $count), $options);
+        public function collection($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("collections", $count), $query);
         }
 
         /**
@@ -466,12 +470,12 @@
          *
          * @link https://api-docs.igdb.com/#company-logo
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function company_logo($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("company_logos", $count), $options);
+        public function company_logo($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("company_logos", $count), $query);
         }
 
         /**
@@ -482,12 +486,12 @@
          *
          * @link https://api-docs.igdb.com/#company-website
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function company_website($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("company_websites", $count), $options);
+        public function company_website($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("company_websites", $count), $query);
         }
 
         /**
@@ -498,12 +502,12 @@
          *
          * @link https://api-docs.igdb.com/#company
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function company($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("companies", $count), $options);
+        public function company($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("companies", $count), $query);
         }
 
         /**
@@ -514,12 +518,12 @@
          *
          * @link https://api-docs.igdb.com/#cover
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function cover($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("covers", $count), $options);
+        public function cover($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("covers", $count), $query);
         }
 
         /**
@@ -530,12 +534,12 @@
          *
          * @link https://api-docs.igdb.com/#external-game
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function external_game($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("external_games", $count), $options);
+        public function external_game($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("external_games", $count), $query);
         }
 
         /**
@@ -546,12 +550,12 @@
          *
          * @link https://api-docs.igdb.com/#franchise
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function franchise($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("franchises", $count), $options);
+        public function franchise($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("franchises", $count), $query);
         }
 
         /**
@@ -562,12 +566,12 @@
          *
          * @link https://api-docs.igdb.com/#game-engine-logo
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function game_engine_logo($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("game_engine_logos", $count), $options);
+        public function game_engine_logo($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("game_engine_logos", $count), $query);
         }
 
         /**
@@ -578,12 +582,12 @@
          *
          * @link https://api-docs.igdb.com/#game-engine
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function game_engine($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("game_engines", $count), $options);
+        public function game_engine($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("game_engines", $count), $query);
         }
 
         /**
@@ -594,12 +598,12 @@
          *
          * @link https://api-docs.igdb.com/#game-mode
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function game_mode($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("game_modes", $count), $options);
+        public function game_mode($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("game_modes", $count), $query);
         }
 
         /**
@@ -610,12 +614,12 @@
          *
          * @link https://api-docs.igdb.com/#game-version-feature-value
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function game_version_feature_value($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("game_version_feature_values", $count), $options);
+        public function game_version_feature_value($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("game_version_feature_values", $count), $query);
         }
 
         /**
@@ -626,12 +630,12 @@
          *
          * @link https://api-docs.igdb.com/#game-version-feature
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function game_version_feature($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("game_version_features", $count), $options);
+        public function game_version_feature($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("game_version_features", $count), $query);
         }
 
         /**
@@ -642,12 +646,12 @@
          *
          * @link https://api-docs.igdb.com/#game-version
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function game_version($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("game_versions", $count), $options);
+        public function game_version($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("game_versions", $count), $query);
         }
 
         /**
@@ -658,12 +662,12 @@
          *
          * @link https://api-docs.igdb.com/#game-video
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function game_video($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("game_videos", $count), $options);
+        public function game_video($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("game_videos", $count), $query);
         }
 
         /**
@@ -674,12 +678,12 @@
          *
          * @link https://api-docs.igdb.com/#game
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function game($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("games", $count), $options);
+        public function game($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("games", $count), $query);
         }
 
         /**
@@ -690,12 +694,12 @@
          *
          * @link https://api-docs.igdb.com/#genre
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function genre($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("genres", $count), $options);
+        public function genre($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("genres", $count), $query);
         }
 
         /**
@@ -706,12 +710,12 @@
          *
          * @link https://api-docs.igdb.com/#involved-company
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function involved_company($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("involved_companies", $count), $options);
+        public function involved_company($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("involved_companies", $count), $query);
         }
 
         /**
@@ -722,12 +726,12 @@
          *
          * @link https://api-docs.igdb.com/#keyword
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function keyword($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("keywords", $count), $options);
+        public function keyword($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("keywords", $count), $query);
         }
 
         /**
@@ -738,12 +742,12 @@
          *
          * @link https://api-docs.igdb.com/#multiplayer-mode
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function multiplayer_mode($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("multiplayer_modes", $count), $options);
+        public function multiplayer_mode($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("multiplayer_modes", $count), $query);
         }
 
         /**
@@ -754,12 +758,12 @@
          *
          * @link https://api-docs.igdb.com/#platform-family
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function platform_family($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("platform_families", $count), $options);
+        public function platform_family($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("platform_families", $count), $query);
         }
 
         /**
@@ -770,12 +774,12 @@
          *
          * @link https://api-docs.igdb.com/#platform-logo
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function platform_logo($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("platform_logos", $count), $options);
+        public function platform_logo($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("platform_logos", $count), $query);
         }
 
         /**
@@ -786,12 +790,12 @@
          *
          * @link https://api-docs.igdb.com/#platform-version-company
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function platform_version_company($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("platform_version_companies", $count), $options);
+        public function platform_version_company($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("platform_version_companies", $count), $query);
         }
 
         /**
@@ -802,12 +806,12 @@
          *
          * @link https://api-docs.igdb.com/#platform-version-release-date
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function platform_version_release_date($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("platform_version_release_dates", $count), $options);
+        public function platform_version_release_date($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("platform_version_release_dates", $count), $query);
         }
 
         /**
@@ -818,12 +822,12 @@
          *
          * @link https://api-docs.igdb.com/#platform-version
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function platform_version($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("platform_versions", $count), $options);
+        public function platform_version($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("platform_versions", $count), $query);
         }
 
         /**
@@ -834,12 +838,12 @@
          *
          * @link https://api-docs.igdb.com/#platform-website
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function platform_website($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("platform_websites", $count), $options);
+        public function platform_website($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("platform_websites", $count), $query);
         }
 
         /**
@@ -850,12 +854,12 @@
          *
          * @link https://api-docs.igdb.com/#platform
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function platform($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("platforms", $count), $options);
+        public function platform($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("platforms", $count), $query);
         }
 
         /**
@@ -866,12 +870,12 @@
          *
          * @link https://api-docs.igdb.com/#player-perspective
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function player_perspective($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("player_perspectives", $count), $options);
+        public function player_perspective($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("player_perspectives", $count), $query);
         }
 
         /**
@@ -882,12 +886,12 @@
          *
          * @link https://api-docs.igdb.com/#release-date
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function release_date($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("release_dates", $count), $options);
+        public function release_date($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("release_dates", $count), $query);
         }
 
         /**
@@ -898,12 +902,12 @@
          *
          * @link https://api-docs.igdb.com/#screenshot
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function screenshot($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("screenshots", $count), $options);
+        public function screenshot($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("screenshots", $count), $query);
         }
 
         /**
@@ -914,12 +918,12 @@
          *
          * @link https://api-docs.igdb.com/#search
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function search($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("search", $count), $options);
+        public function search($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("search", $count), $query);
         }
 
         /**
@@ -930,12 +934,12 @@
          *
          * @link https://api-docs.igdb.com/#theme
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function theme($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("themes", $count), $options);
+        public function theme($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("themes", $count), $query);
         }
 
         /**
@@ -946,12 +950,12 @@
          *
          * @link https://api-docs.igdb.com/#website
          *
-         * @param $options ( array ) an options parameter setting up the details of the query.
+         * @param $query ( array ) a query setting up the details of the query.
          * @param $count ( boolean ) Whether the method should return the results or their count.
          * @return $result ( array | object ) response from IGDB
          */
-        public function website($options, $count = false) {
-            return $this->_exec_query($this->_construct_url("websites", $count), $options);
+        public function website($query, $count = false) {
+            return $this->_exec_query($this->_construct_url("websites", $count), $query);
         }
 
         /**
@@ -961,11 +965,11 @@
          *
          * @param $endpoint
          * @param $result_name
-         * @param $options
+         * @param $query
          * @return $result
          */
-        public function mutliquery($endpoint, $result_name, $options) {
-            return $this->_exec_query($this->_construct_url("multiquery", false), "query $endpoint \"$result_name\" {\n" . (is_array($options) ? $this->apicalypse($options) : $options) . "\n};");
+        public function mutliquery($endpoint, $result_name, $query) {
+            return $this->_exec_query($this->_construct_url("multiquery", false), "query $endpoint \"$result_name\" {\n" . (is_array($query) ? $this->apicalypse($query) : $query) . "\n};");
         }
     }
 

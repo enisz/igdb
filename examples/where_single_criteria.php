@@ -2,9 +2,9 @@
 
     require '../src/class.igdb.php';
 
-    $IGDB = new IGDB('<YOUR API KEY>');
+    $IGDB = new IGDB("client_id", "access_token");
 
-    $options = array(
+    $query = array(
         'fields' => 'id, name, platforms, genres', // we want to see these fields in the result
         'where' => array(
             'field' => 'release_dates.platform',   // filtering by the platform field
@@ -16,10 +16,10 @@
     /*
         You can also provide the filter parameter as a string with apicalypse syntax.
 
-        $options['where'] = 'release_dates.platform = 8';
+        $query['where'] = 'release_dates.platform = 8';
     */
 
-    $result = $IGDB->game($options);
+    $result = $IGDB->game($query);
 
     var_dump($result);
 
