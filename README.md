@@ -1542,6 +1542,7 @@ The result object's properties will vary depending on the provided field list in
    - `close_curl() => curl_close()`
    - `reinit_curl() => curl_reinit()`
  - Updated endpoint methods to accept apicalypse strings as well
+ - Implemented [Multiquery](#multiquery)
 
 ### v2.0.3 - September 17, 2020
  - Fixed a bug with the `where` filter ([#6 Issues with slug field](https://github.com/enisz/igdb/issues/6))
