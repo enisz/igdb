@@ -309,7 +309,9 @@
 
             // If there were errors
             if($this->request_info['http_code'] != 200) {
-                if(property_exists($result[0], 'cause')) {
+                if(!is_array($result) && property_exists($result, "Message")) {
+                    $error_message = $result->Message;
+                } else if(property_exists($result[0], 'cause')) {
                     $error_message = $result[0]->cause;
                 } else if (property_exists($result[0], "title")) {
                     $error_message = $result[0]->title;
