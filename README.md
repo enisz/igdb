@@ -380,7 +380,7 @@ This method will start the query against IGDB. Returns the decoded JSON response
 Returns the response from the IGDB database as an array of objects.
 
 ### Constructing URL's
-`private IGDB::_construct_url( string $endpoint, boolean $count = false) : string`
+`IGDB::_construct_url( string $endpoint, boolean $count = false) : string`
 
 The method will construct the full URL for the request and will return the constructed URL as a string.
 
