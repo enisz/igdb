@@ -408,47 +408,6 @@ Refer to the [Return Values](#return-values) Section for more details about the 
 ### Age Rating Content Description
 `IGDB::age_rating_content_description(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Age Rating Content Description Endpoint](https://api-docs.igdb.com/#age-rating-content-description). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
-
-**Endpoint Details:**
-
-The organisation behind a specific rating
-
-Fields:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| category | Category Enum |  |
-| checksum | uuid | Hash of the object |
-| description | String |  |
-
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
-
-### Age Rating
-`IGDB::age_rating(array $query, boolean $count = false) : mixed`
-
-Fetching data from IGDB database using [Age Rating Endpoint](https://api-docs.igdb.com/#age-rating). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
-
-**Endpoint Details:**
-
-Age Rating according to various rating organisations
-
-Fields:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| category | Category Enum | The organization that has issued a specific rating |
-| checksum | uuid | Hash of the object |
-| content_descriptions | Reference ID for  Age Rating Content Description |  |
-| rating | Rating Enum | The title of an age rating |
-| rating_cover_url | String | The url for  the image of a age rating |
-| synopsis | String | A free text motivating a rating |
-
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
-
-### Age Rating Content Description
-`IGDB::age_rating_content_description(array $query, boolean $count = false) : mixed`
-
 Fetching data from IGDB database using [Age Rating Content Description Endpoint](https://api-docs.igdb.com/#age-rating-content-description). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
