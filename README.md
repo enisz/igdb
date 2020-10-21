@@ -1,4 +1,4 @@
-# IGDB API v4 Wrapper - PHP
+# Internet Game Database API Wrapper (v4)
 
 <!-- toc -->
 
@@ -8,7 +8,7 @@
   * [Client ID](#client-id)
   * [Access Token](#access-token)
   * [Api Url](#api-url)
-  * [cURL Handler](#curl-handler)
+  * [CURL Handler](#curl-handler)
   * [Request Info](#request-info)
 - [Query Parameters](#query-parameters)
   * [ID](#id)
@@ -17,7 +17,7 @@
   * [Limit](#limit)
   * [Offset](#offset)
   * [Where](#where)
-  * [Sorting](#sorting)
+  * [Sort](#sort)
 - [Public Methods](#public-methods)
   * [Apicalypse](#apicalypse)
   * [Get Request Info](#get-request-info)
@@ -30,6 +30,8 @@
 - [Endpoints](#endpoints)
   * [Age Rating Content Description](#age-rating-content-description)
   * [Age Rating](#age-rating)
+  * [Age Rating Content Description](#age-rating-content-description-1)
+  * [Age Rating](#age-rating-1)
   * [Alternative Name](#alternative-name)
   * [Artwork](#artwork)
   * [Character Mug Shot](#character-mug-shot)
@@ -67,7 +69,6 @@
   * [Theme](#theme)
   * [Website](#website)
 - [MultiQuery](#multiquery)
-- [Example Query](#example-query)
 - [Return Values](#return-values)
 - [Change Log](#change-log)
   * [v4.0.0 - October 20, 2020](#v400---october-20-2020)
@@ -84,10 +85,13 @@
 <!-- tocstop -->
 
 ## Introduction
-The class's main purpose is to provide a simple solution to fetch data from IGDB's database using PHP.
+The wrapper's main purpose is to provide a simple solution to fetch data from IGDB's database using PHP.
 
-To use IGDB's database you have to register a Twitch Account and have your own `client_id` and `access_token`.
-> Refer to the [Account Creation](https://api-docs.igdb.com/#account-creation) and [Authentication](https://api-docs.igdb.com/#authentication) sections of the [IGDB API Documentation](https://api-docs.igdb.com/) for details.
+To have access to IGDB's database you have to register a Twitch Account and have your own `client_id` and `access_token`. Refer to the [Account Creation](https://api-docs.igdb.com/#account-creation) and [Authentication](https://api-docs.igdb.com/#authentication) sections of the [IGDB API Documentation](https://api-docs.igdb.com/) for details.
+
+The wrapper itself is located in the `src/class.igdb.php` file and after importing it into your project, you are ready to go.
+
+For a better understanding there are several example scripts in the `examples` folder.
 
 ## Initializing Class
 ``public IGDB::__construct ( string $client_id, string $access_token ) : void``<br/>
@@ -104,33 +108,33 @@ Using this instance, you can execute multiple requests against the database.
 ## Class Properties
 
 ### Client ID
-`private IGDB::$client_id ( string )`
+`IGDB::$client_id ( string )`
 
 The Client ID you can get from your Twitch Account.
 
 ### Access Token
-`private IGDB::$access_toke ( string )`
+`IGDB::$access_token ( string )`
 
 The Access Token you can get from your Twitch Account.
 
 ### Api Url
-`private IGDB::$api_url ( string )`
+`IGDB::$api_url ( string )`
 
 The URL of the IGDB API. Your queries will be sent to this URL.
 
-### cURL Handler
-`private IGDB::$curl_handler ( resource )`
+### CURL Handler
+`IGDB::$curl_handler ( resource )`
 
 The resource handler of the curl session. This property will hold the return value of [curl_init](http://php.net/curl_init) php function.
 
 ### Request Info
-`private IGDB::$request_info ( mixed )`
+`IGDB::$request_info ( mixed )`
 
 This object will hold the most recent query's request information. This property will hold the return value of the [curl_getinfo](https://www.php.net/manual/en/function.curl-getinfo.php) php function.
 
 ## Query Parameters
 
-For the new version of this wrapper class the `options` got renamed to `query` because from now on you will be able to use your own apicalypse queries as string.
+For the new version of this wrapper class the `options` got renamed to `query` because from now on you will be able to use your own apicalypse query strings.
 
 > For the apicalypse syntax refer to the [IGDB Apicalypse section](https://api-docs.igdb.com/#apicalypse-1)
 
@@ -200,7 +204,7 @@ $query = array(
 ### Limit
 `limit ( number ) [ optional ]`
 
-The maximum number of results in a single query. This value must be a number between 1 and 500.
+The maximum number of results in a single query. This value must be a number between `1` and `500`. The default value is `10`.
 
 ```php
 // Provide a limit parameter
@@ -214,7 +218,7 @@ $query = array(
 ### Offset
 `offset ( number ) [ optional ]`
 
-This will start the result list at the provided value and will give `limit` number of results. This value must be 0 or greater.
+This will start the result list at the provided value and will give `limit` number of results. This value must be `0` or greater. The default value is `0`.
 
 ```php
 // Provide an offset parameter
@@ -288,7 +292,7 @@ In this case make sure to separate the field name, the postfix and the value wit
 
 > [IGDB Apicalypse Documentation](https://api-docs.igdb.com/#apicalypse-1) and [IGDB Filters Documentation](https://api-docs.igdb.com/#filters)
 
-### Sorting
+### Sort
 ``sort ( string | array ) [ optional ]``: sorting (ordering) is used to order results by a specific field.
 
 > Note: in the old (v2) IGDB API wrapper this field was called `order`.
@@ -372,8 +376,8 @@ This method creates the CURL session and sets a few additional configuration to 
 This method will start the query against IGDB. Returns the decoded JSON response from IGDB as an array of objects.
 
 **Parameters**
- - `$endpoint ( string )` : url of the endpoint to execute the query against
- - `$query ( string | array )` : the query to send. It can be either an apicalypse string or a query array
+ - `$endpoint`: url of the endpoint to execute the query against
+ - `$query`: the query to send. It can be either an apicalypse string or a query array
 
 Returns the response from the IGDB database as an array of objects.
 
@@ -383,19 +387,19 @@ Returns the response from the IGDB database as an array of objects.
 The method will construct the full URL for the request and will return the constructed URL as a string.
 
 **Parameters**
- - `$endpoint ( string )` : the endpoint to use
- - `$count ( boolean )` : whether the request should return the number of matches instead of the actual resultset
+ - `$endpoint`: the endpoint to use
+ - `$count`: whether the request should return the number of matches instead of the actual resultset
 
 Returns the full constructed URL to the IGDB Endpoint as a string.
 
 ## Endpoints
 Every endpoint method takes two parameters:
- - `$query` string or array. This will set the required details of the query
- - `$count` boolean. This will tell whether to return the records or the count of the records
+ - `$query`: this will set the required details of the query
+ - `$count`: this will tell whether to return the records or the count of the records
 
 > For more details on the query parameters check the [Query Parameters Section](#query-parameters)
 
-These methods are returning an array with objects decoded from IGDB response JSON by default. If you provide boolean ``true`` as a second parameter, it will execute a count query against the selected endpoint which will return an object with a `count` property holding the sum of the found items. The count queries can be filtered with the `$query` filters.
+These methods are returning an array with objects decoded from IGDB response JSON by default. If you provide boolean `true` as a second parameter, it will execute a count query against the selected endpoint which will return an object with a `count` property holding the sum of the found items. The count queries can be filtered with the `$query` filters.
 
 Exceptions are thrown in any case of error.
 
@@ -442,10 +446,51 @@ Fields:
 
 Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
 
+### Age Rating Content Description
+`IGDB::age_rating_content_description(array $query, boolean $count = false) : mixed`
+
+Fetching data from IGDB database using [Age Rating Content Description Endpoint](https://api-docs.igdb.com/#age-rating-content-description). For more details on the method parameters check the [Endpoints Section](#endpoints).
+
+**Endpoint Details:**
+
+The organisation behind a specific rating
+
+Fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| category | Category Enum |  |
+| checksum | uuid | Hash of the object |
+| description | String |  |
+
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
+
+### Age Rating
+`IGDB::age_rating(array $query, boolean $count = false) : mixed`
+
+Fetching data from IGDB database using [Age Rating Endpoint](https://api-docs.igdb.com/#age-rating). For more details on the method parameters check the [Endpoints Section](#endpoints).
+
+**Endpoint Details:**
+
+Age Rating according to various rating organisations
+
+Fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| category | Category Enum | The organization that has issued a specific rating |
+| checksum | uuid | Hash of the object |
+| content_descriptions | Reference ID for  Age Rating Content Description |  |
+| rating | Rating Enum | The title of an age rating |
+| rating_cover_url | String | The url for  the image of a age rating |
+| synopsis | String | A free text motivating a rating |
+
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
+
 ### Alternative Name
 `IGDB::alternative_name(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Alternative Name Endpoint](https://api-docs.igdb.com/#alternative-name). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Alternative Name Endpoint](https://api-docs.igdb.com/#alternative-name). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -460,12 +505,12 @@ Fields:
 | game | Reference ID for Game | The game this alternative name is associated with |
 | name | String | An alternative name |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Artwork
 `IGDB::artwork(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Artwork Endpoint](https://api-docs.igdb.com/#artwork). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Artwork Endpoint](https://api-docs.igdb.com/#artwork). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -484,12 +529,12 @@ Fields:
 | url | String | The website address (URL) of the item |
 | width | Integer | The width of the image in pixels |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Character Mug Shot
 `IGDB::character_mug_shot(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Character Mug Shot Endpoint](https://api-docs.igdb.com/#character-mug-shot). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Character Mug Shot Endpoint](https://api-docs.igdb.com/#character-mug-shot). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -507,12 +552,12 @@ Fields:
 | url | String | The website address (URL) of the item |
 | width | Integer | The width of the image in pixels |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Character
 `IGDB::character(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Character Endpoint](https://api-docs.igdb.com/#character). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Character Endpoint](https://api-docs.igdb.com/#character). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -536,12 +581,12 @@ Fields:
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Collection
 `IGDB::collection(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Collection Endpoint](https://api-docs.igdb.com/#collection). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Collection Endpoint](https://api-docs.igdb.com/#collection). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -559,12 +604,12 @@ Fields:
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Company Logo
 `IGDB::company_logo(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Company Logo Endpoint](https://api-docs.igdb.com/#company-logo). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Company Logo Endpoint](https://api-docs.igdb.com/#company-logo). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -582,12 +627,12 @@ Fields:
 | url | String | The website address (URL) of the item |
 | width | Integer | The width of the image in pixels |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Company Website
 `IGDB::company_website(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Company Website Endpoint](https://api-docs.igdb.com/#company-website). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Company Website Endpoint](https://api-docs.igdb.com/#company-website). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -602,16 +647,16 @@ Fields:
 | trusted | boolean |  |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Company
 `IGDB::company(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Company Endpoint](https://api-docs.igdb.com/#company). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Company Endpoint](https://api-docs.igdb.com/#company). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
-Video game companies. Both publishers &amp;amp; developers
+Video game companies. Both publishers &amp; developers
 
 Fields:
 
@@ -625,7 +670,7 @@ Fields:
 | created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
 | description | String | A free text description of a company |
 | developed | Reference ID for  Game | An array of games that a company has developed |
-| logo | Reference ID for  Company Logo | The company&amp;rsquo;s logo |
+| logo | Reference ID for  Company Logo | The company&rsquo;s logo |
 | name | String |  |
 | parent | Reference ID for  Company | A company with a controlling interest in a specific company |
 | published | Reference ID for  Game | An array of games that a company has published |
@@ -636,12 +681,12 @@ Fields:
 | url | String | The website address (URL) of the item |
 | websites | Reference ID for  Company Website | The companies official websites |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Cover
 `IGDB::cover(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Cover Endpoint](https://api-docs.igdb.com/#cover). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Cover Endpoint](https://api-docs.igdb.com/#cover). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -660,12 +705,12 @@ Fields:
 | url | String | The website address (URL) of the item |
 | width | Integer | The width of the image in pixels |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### External Game
 `IGDB::external_game(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [External Game Endpoint](https://api-docs.igdb.com/#external-game). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [External Game Endpoint](https://api-docs.igdb.com/#external-game). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -688,12 +733,12 @@ Fields:
 | url | String | The website address (URL) of the item |
 | year | Integer | The year in full (2018) |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Franchise
 `IGDB::franchise(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Franchise Endpoint](https://api-docs.igdb.com/#franchise). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Franchise Endpoint](https://api-docs.igdb.com/#franchise). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -711,12 +756,12 @@ Fields:
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Game Engine Logo
 `IGDB::game_engine_logo(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Game Engine Logo Endpoint](https://api-docs.igdb.com/#game-engine-logo). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Game Engine Logo Endpoint](https://api-docs.igdb.com/#game-engine-logo). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -734,12 +779,12 @@ Fields:
 | url | String | The website address (URL) of the item |
 | width | Integer | The width of the image in pixels |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Game Engine
 `IGDB::game_engine(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Game Engine Endpoint](https://api-docs.igdb.com/#game-engine). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Game Engine Endpoint](https://api-docs.igdb.com/#game-engine). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -760,12 +805,12 @@ Fields:
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Game Mode
 `IGDB::game_mode(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Game Mode Endpoint](https://api-docs.igdb.com/#game-mode). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Game Mode Endpoint](https://api-docs.igdb.com/#game-mode). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -782,37 +827,37 @@ Fields:
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Game Version Feature Value
 `IGDB::game_version_feature_value(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Game Version Feature Value Endpoint](https://api-docs.igdb.com/#game-version-feature-value). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Game Version Feature Value Endpoint](https://api-docs.igdb.com/#game-version-feature-value). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
-The bool&#x2F;text value of the feature
+The bool/text value of the feature
 
 Fields:
 
 | Field | Type | Description |
 |-------|------|-------------|
 | checksum | uuid | Hash of the object |
-| game | Reference ID for Game | The version&#x2F;edition this value refers to |
+| game | Reference ID for Game | The version/edition this value refers to |
 | game_feature | Reference ID for  Game Version Feature | The id of the game feature |
 | included_feature | Included Feature Enum | The boole value of this feature |
 | note | String | The text value of this feature |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Game Version Feature
 `IGDB::game_version_feature(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Game Version Feature Endpoint](https://api-docs.igdb.com/#game-version-feature). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Game Version Feature Endpoint](https://api-docs.igdb.com/#game-version-feature). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
-Features and descriptions of what makes each version&#x2F;edition different from the main game
+Features and descriptions of what makes each version/edition different from the main game
 
 Fields:
 
@@ -823,14 +868,14 @@ Fields:
 | description | String | The description of the feature |
 | position | Integer | Position of this feature in the list of features |
 | title | String | The title of the feature |
-| values | Reference ID for  Game Version Feature Value | The bool&#x2F;text value of the feature |
+| values | Reference ID for  Game Version Feature Value | The bool/text value of the feature |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Game Version
 `IGDB::game_version(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Game Version Endpoint](https://api-docs.igdb.com/#game-version). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Game Version Endpoint](https://api-docs.igdb.com/#game-version). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -842,18 +887,18 @@ Fields:
 |-------|------|-------------|
 | checksum | uuid | Hash of the object |
 | created_at | Unix Time Stamp | Date this was initially added to the IGDB database |
-| features | Reference ID for  Game Version Feature | Features and descriptions of what makes each version&#x2F;edition different from the main game |
-| game | Reference ID for Game | The game these versions&#x2F;editions are of |
+| features | Reference ID for  Game Version Feature | Features and descriptions of what makes each version/edition different from the main game |
+| game | Reference ID for Game | The game these versions/editions are of |
 | games | Array of Game IDs | Game Versions and Editions |
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Game Video
 `IGDB::game_video(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Game Video Endpoint](https://api-docs.igdb.com/#game-video). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Game Video Endpoint](https://api-docs.igdb.com/#game-video). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -868,12 +913,12 @@ Fields:
 | name | String | The name of the video |
 | video_id | String | The external ID of the video (usually youtube) |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Game
 `IGDB::game(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Game Endpoint](https://api-docs.igdb.com/#game). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Game Endpoint](https://api-docs.igdb.com/#game). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -933,12 +978,12 @@ Fields:
 | videos | Reference ID for  Game Video | Videos of this game |
 | websites | Reference ID for  Website | Websites associated with this game |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Genre
 `IGDB::genre(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Genre Endpoint](https://api-docs.igdb.com/#genre). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Genre Endpoint](https://api-docs.igdb.com/#genre). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -955,16 +1000,16 @@ Fields:
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Involved Company
 `IGDB::involved_company(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Involved Company Endpoint](https://api-docs.igdb.com/#involved-company). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Involved Company Endpoint](https://api-docs.igdb.com/#involved-company). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
-&lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;involved_companies&lt;&#x2F;code&gt;
+<code>https://api.igdb.com/v4/involved_companies</code>
 
 Fields:
 
@@ -980,12 +1025,12 @@ Fields:
 | supporting | boolean |  |
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Keyword
 `IGDB::keyword(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Keyword Endpoint](https://api-docs.igdb.com/#keyword). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Keyword Endpoint](https://api-docs.igdb.com/#keyword). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -1002,12 +1047,12 @@ Fields:
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Multiplayer Mode
 `IGDB::multiplayer_mode(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Multiplayer Mode Endpoint](https://api-docs.igdb.com/#multiplayer-mode). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Multiplayer Mode Endpoint](https://api-docs.igdb.com/#multiplayer-mode). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -1019,7 +1064,7 @@ Fields:
 |-------|------|-------------|
 | campaigncoop | boolean | True if the game supports campaign coop |
 | checksum | uuid | Hash of the object |
-| dropin | boolean | True if the game supports drop in&#x2F;out multiplayer |
+| dropin | boolean | True if the game supports drop in/out multiplayer |
 | game | Reference ID for Game | The game this multiplayer mode is associated with |
 | lancoop | boolean | True if the game supports LAN coop |
 | offlinecoop | boolean | True if the game supports offline coop |
@@ -1032,12 +1077,12 @@ Fields:
 | splitscreen | boolean | True if the game supports split screen, offline multiplayer |
 | splitscreenonline | boolean | True if the game supports split screen, online multiplayer |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Platform Family
 `IGDB::platform_family(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Platform Family Endpoint](https://api-docs.igdb.com/#platform-family). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Platform Family Endpoint](https://api-docs.igdb.com/#platform-family). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -1051,12 +1096,12 @@ Fields:
 | name | String | The name of the platform family |
 | slug | String | A url-safe, unique, lower-case version of the name |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Platform Logo
 `IGDB::platform_logo(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Platform Logo Endpoint](https://api-docs.igdb.com/#platform-logo). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Platform Logo Endpoint](https://api-docs.igdb.com/#platform-logo). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -1074,12 +1119,12 @@ Fields:
 | url | String | The website address (URL) of the item |
 | width | Integer | The width of the image in pixels |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Platform Version Company
 `IGDB::platform_version_company(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Platform Version Company Endpoint](https://api-docs.igdb.com/#platform-version-company). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Platform Version Company Endpoint](https://api-docs.igdb.com/#platform-version-company). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -1095,12 +1140,12 @@ Fields:
 | developer | boolean |  |
 | manufacturer | boolean |  |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Platform Version Release Date
 `IGDB::platform_version_release_date(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Platform Version Release Date Endpoint](https://api-docs.igdb.com/#platform-version-release-date). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Platform Version Release Date Endpoint](https://api-docs.igdb.com/#platform-version-release-date). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -1121,16 +1166,16 @@ Fields:
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 | y | Integer | The year in full (2018) |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Platform Version
 `IGDB::platform_version(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Platform Version Endpoint](https://api-docs.igdb.com/#platform-version). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Platform Version Endpoint](https://api-docs.igdb.com/#platform-version). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
-&lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;platform_versions&lt;&#x2F;code&gt;
+<code>https://api.igdb.com/v4/platform_versions</code>
 
 Fields:
 
@@ -1156,12 +1201,12 @@ Fields:
 | summary | String | A short summary |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Platform Website
 `IGDB::platform_website(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Platform Website Endpoint](https://api-docs.igdb.com/#platform-website). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Platform Website Endpoint](https://api-docs.igdb.com/#platform-website). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -1176,12 +1221,12 @@ Fields:
 | trusted | boolean |  |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Platform
 `IGDB::platform(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Platform Endpoint](https://api-docs.igdb.com/#platform). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Platform Endpoint](https://api-docs.igdb.com/#platform). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -1207,16 +1252,16 @@ Fields:
 | versions | Reference ID for  Platform Version | Associated versions of this platform |
 | websites | Reference ID for  Platform Website | The main website |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Player Perspective
 `IGDB::player_perspective(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Player Perspective Endpoint](https://api-docs.igdb.com/#player-perspective). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Player Perspective Endpoint](https://api-docs.igdb.com/#player-perspective). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
-Player perspectives describe the view&#x2F;perspective of the player in a video game.
+Player perspectives describe the view/perspective of the player in a video game.
 
 Fields:
 
@@ -1229,12 +1274,12 @@ Fields:
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Release Date
 `IGDB::release_date(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Release Date Endpoint](https://api-docs.igdb.com/#release-date). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Release Date Endpoint](https://api-docs.igdb.com/#release-date). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -1256,12 +1301,12 @@ Fields:
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 | y | Integer | The year in full (2018) |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Screenshot
 `IGDB::screenshot(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Screenshot Endpoint](https://api-docs.igdb.com/#screenshot). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Screenshot Endpoint](https://api-docs.igdb.com/#screenshot). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -1280,16 +1325,16 @@ Fields:
 | url | String | The website address (URL) of the item |
 | width | Integer | The width of the image in pixels |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Search
 `IGDB::search(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Search Endpoint](https://api-docs.igdb.com/#search). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Search Endpoint](https://api-docs.igdb.com/#search). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
-&lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;search&lt;&#x2F;code&gt;
+<code>https://api.igdb.com/v4/search</code>
 
 Fields:
 
@@ -1308,12 +1353,12 @@ Fields:
 | test_dummy | Reference ID for Test Dummy |  |
 | theme | Reference ID for Theme |  |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Theme
 `IGDB::theme(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Theme Endpoint](https://api-docs.igdb.com/#theme). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Theme Endpoint](https://api-docs.igdb.com/#theme). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -1330,12 +1375,12 @@ Fields:
 | updated_at | Unix Time Stamp | The last date this entry was updated in the IGDB database |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ### Website
 `IGDB::website(array $query, boolean $count = false) : mixed`
 
-Fetching data from IGDB database using [Website Endpoint](https://api-docs.igdb.com/#website). For more details on the method parameters please refer to the [Query Parameters Section](#query-parameters).
+Fetching data from IGDB database using [Website Endpoint](https://api-docs.igdb.com/#website). For more details on the method parameters check the [Endpoints Section](#endpoints).
 
 **Endpoint Details:**
 
@@ -1351,7 +1396,7 @@ Fields:
 | trusted | boolean |  |
 | url | String | The website address (URL) of the item |
 
-Return value depends on the `$count` parameter. For more details on the return values please refer to the [Return Values Section](#return-values).
+Return value depends on the `$count` parameter. For more details on the return values check the [Return Values Section](#return-values).
 
 ## MultiQuery
 `IGDB::multiquery(string $endpoint, string $result_name, mixed | array $query = null) : mixed`
@@ -1420,72 +1465,6 @@ array (size=1)
 ```
 
 > [IGDB Multi-Query Documentation](https://api-docs.igdb.com/#multi-query)
-
-## Example Query
-Let's do a simple example. Get the third page of a game list, where the game we are looking for is LIKE "uncharted" (this example is available in _examples/\_basic_example.php_)
-``` php
-<?php
-
-    require '../src/class.igdb.php';
-
-    // Instantiate the class
-    $IGDB = new IGDB("client_id", "access_token");
-
-    // Setting up the query parameters
-    $query = array(
-        'search' => 'uncharted', // searching for games LIKE uncharted
-        'fields' => array(       // we want to see these fields in the results
-            'id',
-            'name',
-            'cover'
-        ),
-        'limit' => 5,            // we only need maximum 5 results per query (pagination)
-        'offset' => 10           // we would like to show the third page; fetch the results from the tenth element (pagination)
-    );
-
-    try {
-        // Running the query against IGDB; passing the query
-        $result = $IGDB->game($query);
-
-        // Showing the result
-        var_dump($result);
-    } catch (Exception $e) {
-        // Catching Exceptions, if there is any
-        echo $e->getMessage();
-    }
-
-?>
-```
-
-The result of the query above:
-
-```php
-array (size=5)
-  0 =>
-    object(stdClass)[2]
-      public 'id' => int 138704
-      public 'name' => string 'Uncharted Waters Origin' (length=23)
-  1 =>
-    object(stdClass)[3]
-      public 'id' => int 26193
-      public 'cover' => int 85149
-      public 'name' => string 'Uncharted: The Lost Legacy' (length=26)
-  2 =>
-    object(stdClass)[4]
-      public 'id' => int 19609
-      public 'cover' => int 85164
-      public 'name' => string 'Uncharted: Fortune Hunter' (length=25)
-  3 =>
-    object(stdClass)[5]
-      public 'id' => int 565
-      public 'cover' => int 85079
-      public 'name' => string 'Uncharted 2: Among Thieves' (length=26)
-  4 =>
-    object(stdClass)[6]
-      public 'id' => int 7331
-      public 'cover' => int 81917
-      public 'name' => string 'Uncharted 4: A Thief's End' (length=26)
-```
 
 ## Return Values
 Every [Endpoint Method](#endpoints) can return two different type of results, depending on the second parameter provided for them:
