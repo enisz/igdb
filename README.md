@@ -30,8 +30,6 @@
 - [Endpoints](#endpoints)
   * [Age Rating Content Description](#age-rating-content-description)
   * [Age Rating](#age-rating)
-  * [Age Rating Content Description](#age-rating-content-description-1)
-  * [Age Rating](#age-rating-1)
   * [Alternative Name](#alternative-name)
   * [Artwork](#artwork)
   * [Character Mug Shot](#character-mug-shot)
