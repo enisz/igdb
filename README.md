@@ -9,7 +9,6 @@
   * [Access Token](#access-token)
   * [Api Url](#api-url)
   * [CURL Handler](#curl-handler)
-  * [Request Info](#request-info)
 - [Query Parameters](#query-parameters)
   * [ID](#id)
   * [Search](#search)
@@ -69,6 +68,7 @@
 - [MultiQuery](#multiquery)
 - [Return Values](#return-values)
 - [Change Log](#change-log)
+  * [v4.0.1 - February 18, 2021](#v401---february-18-2021)
   * [v4.0.0 - October 20, 2020](#v400---october-20-2020)
   * [v2.0.3 - September 17, 2020](#v203---september-17-2020)
   * [v2.0.2 - February 03, 2020](#v202---february-03-2020)
@@ -89,7 +89,7 @@ To have access to IGDB's database you have to register a Twitch Account and have
 
 The wrapper itself is located in the `src/class.igdb.php` file and after importing it into your project, you are ready to go.
 
-For a better understanding there are several example scripts in the `examples` folder.
+For a better understanding there are several example scripts in the [examples](examples) folder.
 
 ## Initializing Class
 ``public IGDB::__construct ( string $client_id, string $access_token ) : void``<br/>
@@ -125,7 +125,7 @@ The URL of the IGDB API. Your queries will be sent to this URL.
 
 The resource handler of the curl session. This property will hold the return value of [curl_init](http://php.net/curl_init) php function.
 
-### Request Info
+-### Request Info
 `IGDB::$request_info ( mixed )`
 
 This object will hold the most recent query's request information. This property will hold the return value of the [curl_getinfo](https://www.php.net/manual/en/function.curl-getinfo.php) php function.
@@ -234,32 +234,36 @@ Filters are used to swift through results to get what you want. You can exclude 
 
 > Note: in the old (v2) IGDB API wrapper this field was called `filter`.
 
-If you provide the filter parameters as an array, you must have three values in it with the following indexes:
+If you provide the where parameters as an array, you must have three values in it with the following indexes:
  - `field`: The name of the field you want to apply the filter to
- - `postfix`: The postfix you want to use with the filter. Refer to the IGDB Filters Documentation for available postfixes.
+ - `postfix`: The postfix you want to use with the filter. Refer to the `Available Postfixes` section of the IGDB Filters Documentation for available postfixes.
  - `value`: The value of the filter.
 
 ```php
 // Provide a single filter rule as an array
 // In this case you must have field, postfix and value elements in the array
 $query = array(
-  'field' => 'release_dates.platform',
-  'postfix' => '=',
-  'value' => 8
-);
-
-// Provide multiple filter rules as an array
-// In this case you must have field, postfix and value elements in the arrays
-$query = array(
-  array(
+  'where' => array(
     'field' => 'release_dates.platform',
     'postfix' => '=',
     'value' => 8
-  ),
-  array(
-    'field' => 'total_rating',
-    'postfix' => '>=',
-    'value' => 70
+  )
+);
+
+// Provide multiple filter rules as an array of arrays
+// In this case you must have field, postfix and value elements in the arrays
+$query = array(
+  'where' => array(
+      array(
+          'field' => 'release_dates.platform',
+          'postfix' => '=',
+          'value' => 8
+      ),
+      array(
+          'field' => 'total_rating',
+          'postfix' => '>=',
+          'value' => 70
+      )
   )
 );
 ```
@@ -276,10 +280,10 @@ $query = array(
 Or you can provide multiple criteria as an array with apicalypse syntax:
 
 ```php
+// Multiple filter rule as an array of apicalypse string
 $query = array(
-    'fields' => 'id, name, platforms, genres',  // we want to see these fields in the result
-    'where' => array(                           // make sure to have each criteria as a separate element in the array
-        'release_dates.platform = 8',           // and separate field names, postfixes and values with space
+    'where' => array(
+        'release_dates.platform = 8',
         'total_rating >= 70',
         'genres = 4'
     )
@@ -291,16 +295,16 @@ In this case make sure to separate the field name, the postfix and the value wit
 > [IGDB Apicalypse Documentation](https://api-docs.igdb.com/#apicalypse-1) and [IGDB Filters Documentation](https://api-docs.igdb.com/#filters)
 
 ### Sort
-``sort ( string | array ) [ optional ]``: sorting (ordering) is used to order results by a specific field.
+`sort ( string | array ) [ optional ]`: sorting (ordering) is used to order results by a specific field.
 
 > Note: in the old (v2) IGDB API wrapper this field was called `order`.
 
 IF you provide the Order parameter as an array, you must have two values in it with the following indexes:
- - ``field``: The field you want to do the ordering by
- - ``direction``: The direction of the ordering. It must be either ``asc`` for ascending or ``desc`` for descending ordering.
+ - `field`: The field you want to do the ordering by
+ - `direction`: The direction of the ordering. It must be either `asc` for ascending or `desc` for descending ordering.
 
 ```php
-// Provide an sort parameter as an array
+// Provide a sort parameter as an array
 $query = array(
     'sort' => array(
         'field' => 'release_dates.date',
@@ -328,7 +332,7 @@ $query = array(
 You can convert the `$query` array to IGDB's query language called Apicalypse. This method will return a string with the parsed parameters.
 
 **Parameters**
- - `$query`: an array, containing specific fields the [Query Parameters](#query-parameters)
+ - `$query`: an array, containing [Query Parameters](#query-parameters)
 
 Returns a string formatted as an apicalypse string.
 
@@ -339,7 +343,7 @@ Returns a string formatted as an apicalypse string.
 
 After a query is executed, the request information will be stored in the [`IGDB::$request_info`](#request-info) property and can be retrieved using this method.
 
-The new version of the IGDB API (v4) will return a http response code `429` when you exceed the limit on the database of 4 requests per second. The response code of the requests can be fetched from the request info:
+> The new version of the IGDB API (v4) will return a http response code `429` when you exceed the limit on the database (4 requests per second at the time of writing this docs). The response code of the requests can be fetched from the request info:
 
 ```php
 $IGDB->game($query);
@@ -1372,7 +1376,7 @@ Example query:
 /*
   A few things to note here:
     - the endpoint name has to be the IGDB endpoint name, not the
-      wrapper class method name
+      wrapper class method name (platforms instead of the wrapper method name platform)
     - there is a /count after the endpoint name which tells the api
       to return the record count instead of the actual records
     - the third parameter is missing, which has a default value NULL
@@ -1472,6 +1476,9 @@ Every [Endpoint Method](#endpoints) can return two different type of results, de
 The result object's properties will vary depending on the provided field list in the `$query` array. From the example result above you can see, the result holds an array, containing two elements. Every element of the result array is an object, containing properties with name of the fields from the `fields` parameter.
 
 ## Change Log
+
+### v4.0.1 - February 18, 2021
+ - Minor updates to the Readme
 
 ### v4.0.0 - October 20, 2020
  - **IGDB Api v4 compatibility update**
