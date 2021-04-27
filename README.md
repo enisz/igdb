@@ -68,6 +68,7 @@
 - [MultiQuery](#multiquery)
 - [Return Values](#return-values)
 - [Change Log](#change-log)
+  * [v4.0.2 - April 28, 2021](#v402---april-28-2021)
   * [v4.0.1 - February 18, 2021](#v401---february-18-2021)
   * [v4.0.0 - October 20, 2020](#v400---october-20-2020)
   * [v2.0.3 - September 17, 2020](#v203---september-17-2020)
@@ -1476,6 +1477,9 @@ Every [Endpoint Method](#endpoints) can return two different type of results, de
 The result object's properties will vary depending on the provided field list in the `$query` array. From the example result above you can see, the result holds an array, containing two elements. Every element of the result array is an object, containing properties with name of the fields from the `fields` parameter.
 
 ## Change Log
+
+### v4.0.2 - April 28, 2021
+ - Updated error response handling from IGDB
 
 ### v4.0.1 - February 18, 2021
  - Minor updates to the Readme
