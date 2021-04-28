@@ -6,7 +6,7 @@
      * Fethching data from IGDB's database.
      * Compatible with IGDB Api v4
      *
-     * @version 4.0.1
+     * @version 4.0.2
      * @author Enisz Abdalla <enisz87@gmail.com>
      * @link https://github.com/enisz/igdb
      */
@@ -301,25 +301,24 @@
             // Set the body of the request
             curl_setopt($this->curl_handler, CURLOPT_POSTFIELDS, is_array($query) ? $this->apicalypse($query) : $query);
 
-            // Executing the request
+            // Executing and decoding the request
             $result = json_decode(curl_exec($this->curl_handler));
 
             // Getting request information
             $this->request_info = curl_getinfo($this->curl_handler);
 
+            // HTTP response code
+            $response_code = $this->request_info['http_code'];
+
             // If there were errors
-            if($this->request_info['http_code'] != 200) {
-                if(!is_array($result) && property_exists($result, "Message")) {
-                    $error_message = $result->Message;
-                } else if(property_exists($result[0], 'cause')) {
-                    $error_message = $result[0]->cause;
-                } else if (property_exists($result[0], "title")) {
-                    $error_message = $result[0]->title;
-                } else {
-                    $error_message = "unknown error";
+            if($response_code < 200 || $response_code > 299) {
+                $message = "Error " . $response_code;
+
+                if(property_exists($result, "message")) {
+                    $message .= ": " . $result->message;
                 }
 
-                throw new Exception('Error ' . $this->request_info['http_code'] . ': ' . $error_message);
+                throw new Exception($message);
             }
 
             return $result;
@@ -335,7 +334,7 @@
         }
 
         /**
-         * Reinitialize the CURL session. Simply calls the _init_curl private method.
+         * Reinitialize the CURL session. Simply calls the _curl_init private method.
          */
         public function curl_reinit() {
             if(is_null($this->curl_handler)) {
