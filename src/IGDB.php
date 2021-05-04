@@ -11,6 +11,8 @@
      * @link https://github.com/enisz/igdb
      */
 
+    require_once "IGDBEndpointException.php";
+
     class IGDB {
 
         /**
@@ -24,11 +26,6 @@
         private $access_token;
 
         /**
-         * API Url of IGDB
-         */
-        private $api_url = "https://api.igdb.com/v4";
-
-        /**
          * cUrl handler
          */
         private $curl_handler;
@@ -37,6 +34,11 @@
          * Most recent request's details
          */
         private $request_info;
+
+        /**
+         * IGDB API Url
+         */
+        private $api_url = "https://api.igdb.com/v4";
 
         /**
          * Instantiates the IGDB object
@@ -73,19 +75,28 @@
         }
 
         /**
+         * Constructing an endpoint url using the name of the endpoint and the optional count parameter.
+         * @param $endpoint - the name of the endpoint. Make sure to use the name of the endpoint
+         * @param $count - whether the number of results is required or the result set itself
+         * @throws InvalidArgumentException if passed endpoint name is invalid
+         * @return string - the constructed URL using the provided parameters
+         */
+        public function construct_url($endpoint, $count = false) {
+            return rtrim($this->api_url, "/") . "/" . $endpoint . ($count ? "/count" : "");
+        }
+
+        /**
          * Executes the query against IGDB API.
          * Returns an array of objects decoded from IGDB JSON response or throws Exception in case of error
          *
-         * @throws Exception in case of closed CURL session
-         * @throws Exception if the response code is any other than 200
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @param $url ( string ) The url of the endpoint
          * @param $query ( string ) The apicalypse query string to send
          * @return $result ( array ) The response objects from IGDB in an array.
          */
         private function _exec_query($url, $query) {
-            // Throw Exception if CURL handler is null (closed)
             if(is_null($this->curl_handler)) {
-                throw new Exception('CURL session is closed!');
+                $this->curl_reinit();
             }
 
             // Set the request URL
@@ -111,7 +122,7 @@
                     $message .= ": " . $result->message;
                 }
 
-                throw new Exception($message);
+                throw new IGDBEndpointException($message, $response_code);
             }
 
             return $result;
@@ -145,10 +156,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function age_rating_content_description($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("age_rating_content_descriptions", $count), $query);
         }
 
         /**
@@ -161,10 +173,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function age_rating($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("age_ratings", $count), $query);
         }
 
         /**
@@ -177,10 +190,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function alternative_name($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("alternative_names", $count), $query);
         }
 
         /**
@@ -193,10 +207,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function artwork($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("artworks", $count), $query);
         }
 
         /**
@@ -209,10 +224,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function character_mug_shot($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("character_mug_shots", $count), $query);
         }
 
         /**
@@ -225,10 +241,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function character($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("characters", $count), $query);
         }
 
         /**
@@ -241,10 +258,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function collection($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("collections", $count), $query);
         }
 
         /**
@@ -257,10 +275,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function company_logo($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("company_logos", $count), $query);
         }
 
         /**
@@ -273,10 +292,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function company_website($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("company_websites", $count), $query);
         }
 
         /**
@@ -289,10 +309,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function company($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("companies", $count), $query);
         }
 
         /**
@@ -305,10 +326,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function cover($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("covers", $count), $query);
         }
 
         /**
@@ -321,10 +343,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function external_game($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("external_games", $count), $query);
         }
 
         /**
@@ -337,10 +360,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function franchise($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("franchises", $count), $query);
         }
 
         /**
@@ -353,10 +377,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function game_engine_logo($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("game_engine_logos", $count), $query);
         }
 
         /**
@@ -369,10 +394,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function game_engine($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("game_engines", $count), $query);
         }
 
         /**
@@ -385,10 +411,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function game_mode($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("game_modes", $count), $query);
         }
 
         /**
@@ -401,10 +428,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function game_version_feature_value($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("game_version_feature_values", $count), $query);
         }
 
         /**
@@ -417,10 +445,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function game_version_feature($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("game_version_features", $count), $query);
         }
 
         /**
@@ -433,10 +462,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function game_version($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("game_versions", $count), $query);
         }
 
         /**
@@ -449,10 +479,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function game_video($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("game_videos", $count), $query);
         }
 
         /**
@@ -465,10 +496,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function game($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("games", $count), $query);
         }
 
         /**
@@ -481,10 +513,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function genre($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("genres", $count), $query);
         }
 
         /**
@@ -497,10 +530,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function involved_company($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("involved_companies", $count), $query);
         }
 
         /**
@@ -513,10 +547,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function keyword($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("keywords", $count), $query);
         }
 
         /**
@@ -529,10 +564,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function multiplayer_mode($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("multiplayer_modes", $count), $query);
         }
 
         /**
@@ -545,10 +581,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function platform_family($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("platform_families", $count), $query);
         }
 
         /**
@@ -561,10 +598,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function platform_logo($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("platform_logos", $count), $query);
         }
 
         /**
@@ -577,10 +615,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function platform_version_company($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("platform_version_companies", $count), $query);
         }
 
         /**
@@ -593,10 +632,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function platform_version_release_date($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("platform_version_release_dates", $count), $query);
         }
 
         /**
@@ -609,10 +649,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function platform_version($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("platform_versions", $count), $query);
         }
 
         /**
@@ -625,10 +666,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function platform_website($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("platform_websites", $count), $query);
         }
 
         /**
@@ -641,10 +683,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function platform($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("platforms", $count), $query);
         }
 
         /**
@@ -657,10 +700,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function player_perspective($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("player_perspectives", $count), $query);
         }
 
         /**
@@ -673,10 +717,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function release_date($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("release_dates", $count), $query);
         }
 
         /**
@@ -689,10 +734,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function screenshot($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("screenshots", $count), $query);
         }
 
         /**
@@ -705,10 +751,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function search($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("search", $count), $query);
         }
 
         /**
@@ -721,10 +768,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function theme($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("themes", $count), $query);
         }
 
         /**
@@ -737,10 +785,11 @@
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @return $result ( array | object ) response from IGDB
          */
         public function website($query, $count = false) {
-            return $this->_exec_query(IGDBUtil::construct_url(__FUNCTION__, $count), $query);
+            return $this->_exec_query($this->construct_url("websites", $count), $query);
         }
 
     }

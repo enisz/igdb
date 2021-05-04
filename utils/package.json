@@ -1,0 +1,16 @@
+{
+  "name": "igdb-wrapper-gulp",
+  "version": "1.0.0",
+  "description": "IGDB Wrapper Gulp Tasks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fancy-log": "^1.3.3",
+    "gulp": "^4.0.2"
+  }
+}

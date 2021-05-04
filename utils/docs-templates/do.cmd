@@ -1,0 +1,1 @@
+node export && copy /Y "database.json" "../docs-app/src/assets/datasource/database.json"

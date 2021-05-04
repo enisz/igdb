@@ -1,0 +1,8 @@
+# npm packages
+node_modules
+
+# generated database file
+database.json
+
+# tester file
+index.php
