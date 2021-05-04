@@ -1,10 +1,16 @@
 name: deploy-documentation
 on: [push]
+  #push:
+  #  branches:
+  #    - master
+  #  paths:
+  #    - utils/**
 jobs:
   check-bats-version:
-    runs-on: ubuntu-latest
+    runs-on: alpine
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-      - run: npm install -g bats
-      - run: bats -v
+      - run: apk update
+      - run: apk upgrade
+      - run: apk add npm nodejs
+      - run: echo pwd
+      - run: ls -lrth
