@@ -9,7 +9,7 @@ function App() {
   return (
     <>
         <div className="page-wrapper">
-            <BrowserRouter>
+            <BrowserRouter basename="/igdb">
                 <Switch>
                     <Redirect from="/" to="/home" exact />
                     <Route path="/home" component={HomePage} exact />
