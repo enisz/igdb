@@ -1,10 +1,6 @@
 name: Update Documentation
 on:
   push:
-    paths:
-      - "src/**"
-      - "dbexport.js"
-      - ".github/workflows/update-documentation.yml"
     branches:
       - "documentation"
 
