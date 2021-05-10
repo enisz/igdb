@@ -9,7 +9,7 @@ on:
       - "documentation"
 
 jobs:
-  exporting:
+  export:
     name: Exporting Database
     runs-on: ubuntu-latest
     steps:
@@ -31,6 +31,7 @@ jobs:
   build:
     name: Building Application
     runs-on: ubuntu-latest
+    needs: export
     steps:
       - uses: docker://node:14-alpine
       - uses: actions/checkout@v2
