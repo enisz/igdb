@@ -28,51 +28,51 @@ jobs:
           name: database
           path: ./public/database.json
 
-  build:
-    name: Building Application
-    runs-on: ubuntu-latest
-    steps:
-      - uses: docker://node:14-alpine
-      - uses: actions/checkout@v2
+  #build:
+  #  name: Building Application
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: docker://node:14-alpine
+  #    - uses: actions/checkout@v2
 
-      - name: Installing Modules
-        run: npm ci
+  #    - name: Installing Modules
+  #      run: npm ci
 
-      - name: Downloading Database Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: database
-          path: ./public/database.json
+  #    - name: Downloading Database Artifact
+  #      uses: actions/download-artifact@v2
+  #      with:
+  #        name: database
+  #        path: ./public/database.json
 
-      - name: Building the Application
-        run: npm run build
+  #    - name: Building the Application
+  #      run: npm run build
 
-      - name: Archiving Application
-        uses: actions/upload-artifact@v2
-        with:
-          name: application
-          path: ./build/*
+  #    - name: Archiving Application
+  #      uses: actions/upload-artifact@v2
+  #      with:
+  #        name: application
+  #        path: ./build/*
 
-  deploy:
-    name: "Deploying"
-    runs-on: ubuntu-latest
-    needs: build
+  #deploy:
+  #  name: "Deploying"
+  #  runs-on: ubuntu-latest
+  #  needs: build
 
-    steps:
-      - uses: actions/checkout@v2
+  #  steps:
+  #    - uses: actions/checkout@v2
 
-      - name: List pwd
-        run: ls -lrth
+  #    - name: List pwd
+  #      run: ls -lrth
 
-      - name: Downloading Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: application
-          path: application
+  #    - name: Downloading Artifact
+  #      uses: actions/download-artifact@v2
+  #      with:
+  #        name: application
+  #        path: application
 
-      - name: Deploying Application to Github Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.1
-        with:
-          branch: documentation
-          folder: ./application
-          target-folder: ./docs
+  #    - name: Deploying Application to Github Pages
+  #      uses: JamesIves/github-pages-deploy-action@4.1.1
+  #      with:
+  #        branch: documentation
+  #        folder: ./application
+  #        target-folder: ./docs
