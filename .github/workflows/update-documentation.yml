@@ -23,7 +23,10 @@ jobs:
 
       - name: Building Application
         working-directory: ./docs/app
-        run: npm run build
+        run: |
+          pwd
+          ls -lrth
+          npm run build
 
       - name: Archiving Application
         uses: actions/upload-artifact@v2
