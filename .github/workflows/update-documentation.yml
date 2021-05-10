@@ -26,7 +26,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: database
-          path: ./public/database.json
+          path: |
+            ./public/database.json
+            ./public/images/**
 
   build:
     name: Building Application
@@ -35,11 +37,6 @@ jobs:
     steps:
       - uses: docker://node:14-alpine
       - uses: actions/checkout@v2
-
-      - name: Listing...
-        run: |
-          pwd
-          ls -lrth
 
       - name: Installing Modules
         run: npm ci
@@ -66,9 +63,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: List pwd
-        run: ls -lrth
 
       - name: Downloading Artifact
         uses: actions/download-artifact@v2
