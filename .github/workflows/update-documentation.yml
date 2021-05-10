@@ -58,26 +58,26 @@ jobs:
           name: application
           path: ./build/*
 
-  #deploy:
-  #  name: "Deploying"
-  #  runs-on: ubuntu-latest
-  #  needs: build
+  deploy:
+    name: "Deploying Application"
+    runs-on: ubuntu-latest
+    needs: build
 
-  #  steps:
-  #    - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #    - name: List pwd
-  #      run: ls -lrth
+      - name: List pwd
+        run: ls -lrth
 
-  #    - name: Downloading Artifact
-  #      uses: actions/download-artifact@v2
-  #      with:
-  #        name: application
-  #        path: application
+      - name: Downloading Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: application
+          path: application
 
-  #    - name: Deploying Application to Github Pages
-  #      uses: JamesIves/github-pages-deploy-action@4.1.1
-  #      with:
-  #        branch: documentation
-  #        folder: ./application
-  #        target-folder: ./docs
+      - name: Deploying Application to Github Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: documentation
+          folder: ./application
+          target-folder: ./docs
