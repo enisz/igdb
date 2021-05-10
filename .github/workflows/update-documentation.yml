@@ -9,49 +9,49 @@ on:
       - "documentation"
 
 jobs:
-  export:
-    name: Exporting Database
-    runs-on: ubuntu-latest
-    steps:
-      - uses: docker://node:14-alpine
-      - uses: actions/checkout@v2
-
-      - name: Installing Modules
-      - run: npm ci
-
-      - name: Exporting Database
-      - run: npm run export:templates
-
-      - name: Archiving Database File
-        uses: actions/upload-artifact@v2
-        with:
-          name: database
-          path: ./public/database.json
-
-  #build:
-  #  name: Building Application
+  #export:
+  #  name: Exporting Database
   #  runs-on: ubuntu-latest
   #  steps:
   #    - uses: docker://node:14-alpine
   #    - uses: actions/checkout@v2
 
   #    - name: Installing Modules
-  #      run: npm ci
+  #    - run: npm ci
 
-  #    - name: Downloading Database Artifact
-  #      uses: actions/download-artifact@v2
+  #    - name: Exporting Database
+  #    - run: npm run export:templates
+
+  #    - name: Archiving Database File
+  #      uses: actions/upload-artifact@v2
   #      with:
   #        name: database
   #        path: ./public/database.json
 
-  #    - name: Building the Application
-  #      run: npm run build
+  build:
+    name: Building Application
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker://node:14-alpine
+      - uses: actions/checkout@v2
 
-  #    - name: Archiving Application
-  #      uses: actions/upload-artifact@v2
-  #      with:
-  #        name: application
-  #        path: ./build/*
+      - name: Installing Modules
+        run: npm ci
+
+      - name: Downloading Database Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: database
+          path: ./public/database.json
+
+      - name: Building the Application
+        run: npm run build
+
+      - name: Archiving Application
+        uses: actions/upload-artifact@v2
+        with:
+          name: application
+          path: ./build/*
 
   #deploy:
   #  name: "Deploying"
