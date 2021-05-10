@@ -37,12 +37,6 @@ jobs:
       - name: Installing Modules
         run: npm ci
 
-      - name: Downloading Database Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: database
-          path: ./public/
-
       - name: Building the Application
         run: npm run build
 
@@ -60,11 +54,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Downloading Artifact
+      - name: Downloading Application Artifact
         uses: actions/download-artifact@v2
         with:
           name: application
           path: application
+
+      - name: Downloading Database Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: database
+          path: ./application/public/
 
       - name: Deploying Application to Github Pages
         uses: JamesIves/github-pages-deploy-action@4.1.1
