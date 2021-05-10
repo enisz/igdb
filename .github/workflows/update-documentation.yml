@@ -12,7 +12,7 @@ jobs:
       - uses: docker://node:14-alpine
       - uses: actions/checkout@v2
         with:
-          - fetch-depth: 0
+          fetch-depth: 0
 
       - name: Installing Modules
         run: npm ci
