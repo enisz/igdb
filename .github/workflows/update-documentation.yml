@@ -16,17 +16,17 @@ jobs:
       - uses: docker://node:14-alpine
       - uses: actions/checkout@v2
 
-      #- name: Installing Modules
-      #- run: npm ci
+      - name: Installing Modules
+        run: npm ci
 
-      #- name: Exporting Database
-      #- run: npm run export:templates
+      - name: Exporting Database
+        run: npm run export:templates
 
-      #- name: Archiving Database File
-      #  uses: actions/upload-artifact@v2
-      #  with:
-      #    name: database
-      #    path: ./public/database.json
+      - name: Archiving Database File
+        uses: actions/upload-artifact@v2
+        with:
+          name: database
+          path: ./public/database.json
 
   build:
     name: Building Application
@@ -34,6 +34,11 @@ jobs:
     steps:
       - uses: docker://node:14-alpine
       - uses: actions/checkout@v2
+
+      - name: Listing...
+        run: |
+          pwd
+          ls -lrth
 
       - name: Installing Modules
         run: npm ci
