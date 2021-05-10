@@ -4,6 +4,7 @@ on:
     paths:
       - "src/**"
       - "dbexport.js"
+      - ".github/workflows/update-documentation.yml"
     branches:
       - "documentation"
 
@@ -16,17 +17,13 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Installing Modules
-        run: npm ci
+        run: npm i
 
       - name: Building Application Database
         run: npm run export:templates
 
       - name: Building Application
-        working-directory: ./docs/app
-        run: |
-          pwd
-          ls -lrth
-          npm run build
+        run: npm run build
 
       - name: Archiving Application
         uses: actions/upload-artifact@v2
