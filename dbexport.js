@@ -121,9 +121,6 @@ const exportDb = () => {
             }
 
             if(level == 1) {
-                console.log("level 1 heading");
-                console.log(`git log --format="%cD|%ct" "${path.join(TEMPLATE_PATH, basename + ".md")}"`);
-                execSync(`git log --format="%cD|%ct" "${path.join(TEMPLATE_PATH, basename + ".md")}"`).toString().split("\n").forEach( line => console.log(line));
                 const time = execSync(`git log --format="%cD|%ct" "${path.join(TEMPLATE_PATH, basename + ".md")}"`).toString().split("\n")[0].trim();
                 toPush.icon = icon;
                 toPush.overview = overview;
