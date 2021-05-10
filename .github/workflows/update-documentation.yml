@@ -16,8 +16,8 @@ jobs:
       - uses: docker://node:14-alpine
       - uses: actions/checkout@v2
 
-      - name: Installing Modules
-      - run: npm ci
+      #- name: Installing Modules
+      #- run: npm ci
 
       #- name: Exporting Database
       #- run: npm run export:templates
