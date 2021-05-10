@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: docker://node:14-alpine
       - uses: actions/checkout@v2
+        fetch-depth: 0
 
       - name: Installing Modules
         run: npm ci
@@ -47,7 +48,7 @@ jobs:
           path: ./build/*
 
   deploy:
-    name: "Deploying to Github Pages"
+    name: "Deploying"
     runs-on: ubuntu-latest
     needs: build
 
