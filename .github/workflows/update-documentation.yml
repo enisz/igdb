@@ -9,20 +9,42 @@ on:
       - "documentation"
 
 jobs:
-  build:
-    name: Building
+  export:
+    name: Exporting Database
     runs-on: ubuntu-latest
     steps:
       - uses: docker://node:14-alpine
       - uses: actions/checkout@v2
 
       - name: Installing Modules
-        run: npm i
+      - run: npm ci
 
-      - name: Building Application Database
-        run: npm run export:templates
+      - name: Exporting Database
+      - run: npm run export:templates
 
-      - name: Building Application
+      - name: Archiving Database File
+        uses: actions/upload-artifact@v2
+        with:
+          name: database
+          path: ./public/database.json
+
+  build:
+    name: Building Application
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker://node:14-alpine
+      - uses: actions/checkout@v2
+
+      - name: Installing Modules
+        run: npm ci
+
+      - name: Downloading Database Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: database
+          path: ./public/database.json
+
+      - name: Building the Application
         run: npm run build
 
       - name: Archiving Application
