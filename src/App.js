@@ -1,5 +1,5 @@
 import jQuery from 'jquery';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import DocumentationPage from './pages/DocumentationPage';
 import SearchPage from './pages/SearchPage';
