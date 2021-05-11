@@ -8,13 +8,11 @@ window.jQuery = jQuery;
 
 export default function App() {
   return (
-    <BrowserRouter basename="/igdb">
-      <Switch>
-        <Redirect from="/" to="/home" exact />
-        <Route path="/home" component={HomePage} />
-        <Route path="/documentation" component={DocumentationPage} exact />
-        <Route path="/search" component={SearchPage} exact />
-      </Switch>
-    </BrowserRouter>
+    <Switch>
+      <Redirect from="/" to="/home" exact />
+      <Route path="/home" component={HomePage} />
+      <Route path="/documentation" component={DocumentationPage} exact />
+      <Route path="/search" component={SearchPage} exact />
+    </Switch>
   );
 }
