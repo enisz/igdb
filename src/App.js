@@ -13,7 +13,6 @@ export default function App() {
         <Route path="/" component={HomePage} />
         <Route path="/documentation" component={DocumentationPage} exact />
         <Route path="/search" component={SearchPage} exact />
-        <Redirect to="/" />
       </Switch>
     </BrowserRouter>
   );
