@@ -11,6 +11,7 @@ const remarkHtml = require("remark-html");
 const remarkStrip = require("strip-markdown");
 const dateParser = require("node-date-parser");
 const execSync = require("child_process").execSync;
+const remarkGfm = require("remark-gfm");
 
 const TEMPLATE_PATH = path.join(__dirname, "src", "assets", "templates");
 const PUBLIC_PATH = path.join(__dirname, "public");
@@ -40,7 +41,7 @@ const exportDb = () => {
         deleteFiles(path.join(PUBLIC_PATH, "images"));
     }
     console.log("Exporting database...");
-    const database = new lokijs("DocumentationDB", { env : "BROWSER", persistenceMethod : "memory", serializationMethod : "normal" });
+    const database = new lokijs("DocumentationDB", { env : "BROWSER", persistenceMethod : "memory", serializationMethod : process.argv[2] == "--watch" ? "pretty" : "normal" });
     const templates = database.addCollection("templates");
 
     let documents = [];
@@ -72,7 +73,7 @@ const exportDb = () => {
             let counter = 1;
 
             do {
-                slug = (title + (counter > 1 ? `-${romanize(counter)}` : "")).trim()  .toLowerCase().replace(new RegExp("( |,|\\.|'|!|\\?)", "g"), "-");
+                slug = (title + (counter > 1 ? `-${romanize(counter)}` : "")).trim()  .toLowerCase().replace(new RegExp("( |,|\\.|'|!|\\?|\\)|\\(|\\]|\\[|\\}|\\{)", "g"), "-");
                 counter++;
             } while(documents.find( paragraph => paragraph.slug == slug) != undefined)
 
@@ -88,7 +89,7 @@ const exportDb = () => {
                 body : {
                     stripped : remark().use(remarkStrip).processSync(paragraph.body.trim()).contents.trim(),
                     markdown : paragraph.body.trim(),
-                    html : remark().use(remarkExternalLinks, {target : "_blank", rel : "nofollow"}).use(remarkHtml).processSync(paragraph.body.trim()).contents.trim()
+                    html : remark().use(remarkExternalLinks, {target : "_blank", rel : "nofollow"}).use(remarkHtml).use(remarkGfm).processSync(paragraph.body.trim()).contents.trim()
                 }
             }
 

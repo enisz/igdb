@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { getParagraphs } from '../utils/Database';
 import SidebarMainLink from './SidebarMainLink';
 import SidebarSubLink from './SidebarSubLink';
+import useSearch from '../hooks/useSearch';
 
 export default function Sidebar() {
 	const [paragraphs] = useState(getParagraphs({}));
+	const {searchTerm, setSearchTerm, handleSearch} = useSearch("");
 
 	useEffect(() => {
 		window.jQuery(window).on('resize', function() {
@@ -21,7 +23,7 @@ export default function Sidebar() {
 		}).resize();
 
 		/* ===== Smooth scrolling ====== */
-		window.jQuery('#docs-sidebar a.scrollto').on('click', function(e){
+		window.jQuery('a.scrollto').on('click', function(e){
 			const target = this.hash;
 			//e.preventDefault();
 			window.jQuery('body').scrollTo(target, 800, {offset: -69, 'axis':'y'});
@@ -39,8 +41,8 @@ export default function Sidebar() {
     return (
         <div id="docs-sidebar" className="docs-sidebar">
 		    <div className="top-search-box d-lg-none p-3">
-                <form className="search-form">
-		            <input type="text" placeholder="Search the docs..." name="search" className="form-control search-input" />
+                <form className="search-form" onSubmit={handleSearch}>
+		            <input type="text" placeholder="Search the docs..." name="search" className="form-control search-input" value={searchTerm} onChange={event => setSearchTerm(event.target.value)} />
 		            <button type="submit" className="btn search-btn" value="Search"><i className="fas fa-search"></i></button>
 		        </form>
             </div>

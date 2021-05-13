@@ -22,7 +22,7 @@ export default function DocumentationPage() {
                     var urlhash = window.location.hash;
                     window.jQuery('body').scrollTo(urlhash, 800, {offset: -69, 'axis':'y'});
                 }
-            }, 100
+            }, 200
         )
     }, []);
 
@@ -76,15 +76,3 @@ export default function DocumentationPage() {
         </>
     );
 }
-
-//const sections = () => {
-//    return (
-    //        {{ ByParent(topic.id).length > 0 && ByParent(topic.id).map( paragraph => (
-    //            <section className="docs-section" id={paragraph.id} key={paragraph.id}>
-    //                <h2 className="section-heading">{paragraph.title}</h2>
-
-    //                {new HtmlToReactParser().parseWithInstructions(paragraph.body.html, () => true, processingInstructions)}
-    //            </section>
-    //        )) }}
-//    );
-//}

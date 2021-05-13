@@ -11,8 +11,7 @@ export default function DocumentSections({parentId}) {
             { paragraphs.length > 0 && paragraphs.map( paragraph => (
                 <Fragment key={paragraph.id}>
                     <section className="docs-section" id={paragraph.slug}>
-                        { React.createElement(`h${paragraph.level}`, {}, paragraph.title ) }
-                        {/*<h2 className="section-heading">{paragraph.title}</h2>*/}
+                        { React.createElement(`h${paragraph.level}`, {className: "section-heading"}, paragraph.title ) }
                         <HtmlParser content={paragraph.body.html} />
                     </section>
 
