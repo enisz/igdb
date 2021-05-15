@@ -1,4 +1,4 @@
-# Internet Game Database API Wrapper (v4)
+# Internet Game Database API Wrapper
 
 <!-- toc -->
 
