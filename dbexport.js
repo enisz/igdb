@@ -68,7 +68,7 @@ const exportDb = () => {
 
         deleteFiles(path.join(PUBLIC_PATH, "images"));
     }
-    console.log("Exporting database...");
+    console.log(`Exporting ${commander.opts().production ? "production " : " "}database...`);
     const database = new lokijs("DocumentationDB", { env : "BROWSER", persistenceMethod : "memory", serializationMethod : commander.opts().production ? "normal" : "pretty" });
     const templates = database.addCollection("templates");
 

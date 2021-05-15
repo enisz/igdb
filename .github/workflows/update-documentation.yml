@@ -18,7 +18,7 @@ jobs:
         run: npm ci
 
       - name: Exporting Database
-        run: npm run export:templates
+        run: npm run export:templates:production
 
       - name: Archiving Database File
         uses: actions/upload-artifact@v2
