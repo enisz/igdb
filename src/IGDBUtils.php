@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * IGDB Util
+     * IGDB Utils
      *
      * A utility class for useful methods
      *
@@ -10,7 +10,9 @@
      * @link https://github.com/enisz/igdb
      */
 
-    class IGDBUtil {
+    require_once "IGDBInvalidParameterException.php";
+
+    class IGDBUtils {
 
         /**
          * Helper method to authenticate your application via Twitch
@@ -44,7 +46,7 @@
          * @param $size - The requested size of the image. Refer to the documentation for possible values.
          * @see https://api-docs.igdb.com/#images
          * @return string The constructed URL for the image
-         * @throws InvalidArgumentException If the size parameter is not valid.
+         * @throws IGDBInvalidParameterException If the size parameter is not valid.
          */
         public static function image_url($image_id, $size) {
             $possible_sizes = array(
@@ -71,7 +73,7 @@
             );
 
             if(array_search($size, $possible_sizes) === false) {
-                throw new InvalidArgumentException("Invalid size parameter " . $size . " for image_url!");
+                throw new IGDBInvalidParameterException("Invalid size parameter " . $size . " for image_url!");
             }
 
             return "https://images.igdb.com/igdb/image/upload/t_$size/$image_id.jpg";

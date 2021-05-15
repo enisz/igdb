@@ -12,6 +12,7 @@
      */
 
     require_once "IGDBEndpointException.php";
+    require_once "IGDBInvalidParameterException.php";
 
     class IGDB {
 
@@ -76,13 +77,59 @@
 
         /**
          * Constructing an endpoint url using the name of the endpoint and the optional count parameter.
-         * @param $endpoint - the name of the endpoint. Make sure to use the name of the endpoint
+         * @param $endpoint - the name of the endpoint. Make sure to use the name of the endpoint with "snake casing"
          * @param $count - whether the number of results is required or the result set itself
-         * @throws InvalidArgumentException if passed endpoint name is invalid
+         * @throws IGDBInvalidParameterException if passed endpoint name is invalid
          * @return string - the constructed URL using the provided parameters
          */
         public function construct_url($endpoint, $count = false) {
-            return rtrim($this->api_url, "/") . "/" . $endpoint . ($count ? "/count" : "");
+            $endpoints = array(
+                "age_rating_content_description" => "age_rating_content_descriptions",
+                "age_rating" => "age_ratings",
+                "alternative_name" => "alternative_names",
+                "artwork" => "artworks",
+                "character_mug_shot" => "character_mug_shots",
+                "character" => "characters",
+                "collection" => "collections",
+                "company_logo" => "company_logos",
+                "company_website" => "company_websites",
+                "company" => "companies",
+                "cover" => "covers",
+                "external_game" => "external_games",
+                "franchise" => "franchises",
+                "game_engine_logo" => "game_engine_logos",
+                "game_engine" => "game_engines",
+                "game_mode" => "game_modes",
+                "game_version_feature_value" => "game_version_feature_values",
+                "game_version_feature" => "game_version_features",
+                "game_version" => "game_versions",
+                "game_video" => "game_videos",
+                "game" => "games",
+                "genre" => "genres",
+                "involved_company" => "involved_companies",
+                "keyword" => "keywords",
+                "multiplayer_mode" => "multiplayer_modes",
+                "multiquery" => "multiquery",
+                "platform_family" => "platform_families",
+                "platform_logo" => "platform_logos",
+                "platform_version_company" => "platform_version_companies",
+                "platform_version_release_date" => "platform_version_release_dates",
+                "platform_version" => "platform_versions",
+                "platform_website" => "platform_websites",
+                "platform" => "platforms",
+                "player_perspective" => "player_perspectives",
+                "release_date" => "release_dates",
+                "screenshot" => "screenshots",
+                "search" => "search",
+                "theme" => "themes",
+                "website" => "websites"
+            );
+
+            if(array_key_exists($endpoint, $endpoints)) {
+                return rtrim($this->api_url, "/") . "/" . $endpoints[$endpoint] . ($count ? "/count" : "");
+            } else {
+                throw new IGDBInvalidParameterException("Invalid Endpoint name " . $endpoint . "!");
+            }
         }
 
         /**
@@ -99,11 +146,13 @@
                 $this->curl_reinit();
             }
 
+            var_dump($url);
+
             // Set the request URL
             curl_setopt($this->curl_handler, CURLOPT_URL, $url);
 
             // Set the body of the request
-            curl_setopt($this->curl_handler, CURLOPT_POSTFIELDS, is_array($query) ? $this->apicalypse($query) : $query);
+            curl_setopt($this->curl_handler, CURLOPT_POSTFIELDS, $query);
 
             // Executing and decoding the request
             $result = json_decode(curl_exec($this->curl_handler));
@@ -118,7 +167,11 @@
             if($response_code < 200 || $response_code > 299) {
                 $message = "Error " . $response_code;
 
-                if(property_exists($result, "message")) {
+                if(is_array($result) && is_object($result[0]) && property_exists($result[0], "cause")) {
+                    $message .= ": " . $result[0]->cause;
+                }
+
+                if(is_object($result) && property_exists($result, "message")) {
                     $message .= ": " . $result->message;
                 }
 
@@ -160,7 +213,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function age_rating_content_description($query, $count = false) {
-            return $this->_exec_query($this->construct_url("age_rating_content_descriptions", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -177,7 +230,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function age_rating($query, $count = false) {
-            return $this->_exec_query($this->construct_url("age_ratings", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -194,7 +247,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function alternative_name($query, $count = false) {
-            return $this->_exec_query($this->construct_url("alternative_names", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -211,7 +264,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function artwork($query, $count = false) {
-            return $this->_exec_query($this->construct_url("artworks", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -228,7 +281,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function character_mug_shot($query, $count = false) {
-            return $this->_exec_query($this->construct_url("character_mug_shots", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -245,7 +298,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function character($query, $count = false) {
-            return $this->_exec_query($this->construct_url("characters", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -262,7 +315,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function collection($query, $count = false) {
-            return $this->_exec_query($this->construct_url("collections", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -279,7 +332,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function company_logo($query, $count = false) {
-            return $this->_exec_query($this->construct_url("company_logos", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -296,7 +349,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function company_website($query, $count = false) {
-            return $this->_exec_query($this->construct_url("company_websites", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -313,7 +366,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function company($query, $count = false) {
-            return $this->_exec_query($this->construct_url("companies", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -330,7 +383,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function cover($query, $count = false) {
-            return $this->_exec_query($this->construct_url("covers", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -347,7 +400,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function external_game($query, $count = false) {
-            return $this->_exec_query($this->construct_url("external_games", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -364,7 +417,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function franchise($query, $count = false) {
-            return $this->_exec_query($this->construct_url("franchises", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -381,7 +434,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function game_engine_logo($query, $count = false) {
-            return $this->_exec_query($this->construct_url("game_engine_logos", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -398,7 +451,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function game_engine($query, $count = false) {
-            return $this->_exec_query($this->construct_url("game_engines", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -415,7 +468,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function game_mode($query, $count = false) {
-            return $this->_exec_query($this->construct_url("game_modes", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -432,7 +485,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function game_version_feature_value($query, $count = false) {
-            return $this->_exec_query($this->construct_url("game_version_feature_values", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -449,7 +502,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function game_version_feature($query, $count = false) {
-            return $this->_exec_query($this->construct_url("game_version_features", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -466,7 +519,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function game_version($query, $count = false) {
-            return $this->_exec_query($this->construct_url("game_versions", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -483,7 +536,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function game_video($query, $count = false) {
-            return $this->_exec_query($this->construct_url("game_videos", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -500,7 +553,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function game($query, $count = false) {
-            return $this->_exec_query($this->construct_url("games", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -517,7 +570,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function genre($query, $count = false) {
-            return $this->_exec_query($this->construct_url("genres", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -534,7 +587,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function involved_company($query, $count = false) {
-            return $this->_exec_query($this->construct_url("involved_companies", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -551,7 +604,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function keyword($query, $count = false) {
-            return $this->_exec_query($this->construct_url("keywords", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -568,7 +621,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function multiplayer_mode($query, $count = false) {
-            return $this->_exec_query($this->construct_url("multiplayer_modes", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -585,7 +638,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function platform_family($query, $count = false) {
-            return $this->_exec_query($this->construct_url("platform_families", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -602,7 +655,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function platform_logo($query, $count = false) {
-            return $this->_exec_query($this->construct_url("platform_logos", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -619,7 +672,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function platform_version_company($query, $count = false) {
-            return $this->_exec_query($this->construct_url("platform_version_companies", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -636,7 +689,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function platform_version_release_date($query, $count = false) {
-            return $this->_exec_query($this->construct_url("platform_version_release_dates", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -653,7 +706,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function platform_version($query, $count = false) {
-            return $this->_exec_query($this->construct_url("platform_versions", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -670,7 +723,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function platform_website($query, $count = false) {
-            return $this->_exec_query($this->construct_url("platform_websites", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -687,7 +740,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function platform($query, $count = false) {
-            return $this->_exec_query($this->construct_url("platforms", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -704,7 +757,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function player_perspective($query, $count = false) {
-            return $this->_exec_query($this->construct_url("player_perspectives", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -721,7 +774,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function release_date($query, $count = false) {
-            return $this->_exec_query($this->construct_url("release_dates", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -738,7 +791,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function screenshot($query, $count = false) {
-            return $this->_exec_query($this->construct_url("screenshots", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -755,7 +808,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function search($query, $count = false) {
-            return $this->_exec_query($this->construct_url("search", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -772,7 +825,7 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function theme($query, $count = false) {
-            return $this->_exec_query($this->construct_url("themes", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
         }
 
         /**
@@ -789,7 +842,32 @@
          * @return $result ( array | object ) response from IGDB
          */
         public function website($query, $count = false) {
-            return $this->_exec_query($this->construct_url("websites", $count), $query);
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Executing a multiquery
+         *
+         * Multi-Query is a new way to request a huge amount of information in one request!
+         * With Multi-Query you can request multiple endpoints at once,
+         * it also works with multiple requests to a single endpoint as well.
+         *
+         * @link https://api-docs.igdb.com/#multi-query
+         *
+         * @param $endpoint ( string ) The endpoint to send your query to
+         * @param $result_name ( string ) A name for the result given by you
+         * @param $query ( string ) An apicalypse query string or null, if no filtering required
+         * @return $result ( mixed ) The result of the query
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         */
+        public function mutliquery($endpoint, $result_name, $query = null) {
+            return $this->_exec_query(
+                $this->construct_url(
+                    "multiquery",
+                    false
+                ),
+                "query $endpoint \"$result_name\" {\n" . (is_null($query) ? "" : $query) . "\n};"
+            );
         }
 
     }
