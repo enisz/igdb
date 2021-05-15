@@ -32,7 +32,7 @@ For a better understanding of the wrapper, there are several example scripts in 
 
 ## Documentation
 
-The documentation is now on a different branch and it is published to github pages. You can find it here:
+The documentation is now published to github pages. You can find it here:
 
 [http://enisz.github.io/igdb](http://enisz.github.io/igdb)
 
