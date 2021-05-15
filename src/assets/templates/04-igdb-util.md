@@ -1,5 +1,5 @@
 ---
-overview: Utility Class
+overview: Utility class with helper methods.
 icon: fa-tools
 ---
 
