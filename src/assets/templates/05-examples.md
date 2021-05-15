@@ -15,6 +15,8 @@ The examples in this section will try to cover most of the use cases of the wrap
 
 A basic example to send your apicalypse query to the IGDB API.
 
+> Make sure to place your endpoint methods calls in a try...catch block to be able to catch errors!
+
 **Code**
 
 ```php
@@ -74,11 +76,11 @@ array (size=5)
       public 'name' => string 'Uncharted 4: A Thief's End' (length=26)
 ```
 
-> Make sure to place your query builder and endpoint methods in a try...catch block to be able to catch errors!
-
 ## Using the Query Builder
 
 An example to see how to use the [IGDB Query Builder](#igdb-query-builder) to build the query strings.
+
+> Make sure to place your query builder and endpoint methods in a try...catch block to be able to catch errors!
 
 **Code**
 
@@ -159,6 +161,8 @@ array (size=5)
 
 An example to count the matched records.
 
+> When `true` is passed as the second parameter, the return value will be a simple object with only one property called `count`. For more details on the return values of the endpoint methods please refer to the [return values section](#return-values).
+
 **Code**
 
 ```php
@@ -210,8 +214,6 @@ An example to count the matched records.
 object(stdClass)[3]
   public 'count' => int 8081
 ```
-
-> When `true` is passed as the second parameter, the return value will be a simple object with only one property called `count`. For more details on the return values of the endpoint methods please refer to the [return values section](#return-values);
 
 ## Expander
 

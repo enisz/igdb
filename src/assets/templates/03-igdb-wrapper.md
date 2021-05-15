@@ -38,7 +38,7 @@ public function get_request_info()
 
 After a query is executed, the request information will be stored and can be retrieved using this method.
 
-The new version of the IGDB API (v4) will return a http response code `429` when you exceed the limit of requests on the database (4 requests per second at the time of writing this docs).
+> The new version of the IGDB API (v4) will return a http response code `429` when you exceed the limit of requests on the database (4 requests per second at the time of writing this docs).
 
 ```php
 <?php
@@ -50,7 +50,11 @@ The new version of the IGDB API (v4) will return a http response code `429` when
     try {
         $igdb->game('fields id,name; search "uncharted 4"; limit 1;');
 
-        var_dump($igdb->get_request_info());
+        // getting the details of the latest query
+        $request_info = $igdb->get_request_info();
+
+        // showing the details
+        var_dump($request_info);
     } catch (IGDBEndpointException $e) {
         echo $e->getMessage();
     }
@@ -105,16 +109,85 @@ array (size=37)
 
 ### Construct URL
 ```php
-public function construct_url(string $endpoint, boolean $count = false): string
+public function construct_url(string $endpoint, boolean $count = false) throws IGDBInvalidParameterException: string
 ```
 
-The method will construct the full URL for the request and will return the constructed URL as a string.
+The method will construct the full URL for the request and will return the constructed URL as a string. If an invalid endpoint name passed to `$endpoint` and `IGDBInvalidParameterException` will be thrown.
 
 **Parameters**:
- - `$endpoint`: the endpoint to use (the name of the endpoint, not the path to it!)
+ - `$endpoint`: the endpoint to use (the name of the endpoint, not the path to it!). Possible values:
+   - age_rating
+   - alternative_name
+   - artwork
+   - character_mug_shot
+   - character
+   - collection
+   - company_logo
+   - company_website
+   - company
+   - cover
+   - external_game
+   - franchise
+   - game_engine_logo
+   - game_engine
+   - game_mode
+   - game_version_feature_value
+   - game_version_feature
+   - game_version
+   - game_video
+   - game
+   - genre
+   - involved_company
+   - keyword
+   - multiplayer_mode
+   - multiquery
+   - platform_family
+   - platform_logo
+   - platform_version_company
+   - platform_version_release_date
+   - platform_version
+   - platform_website
+   - platform
+   - player_perspective
+   - release_date
+   - screenshot
+   - search
+   - theme
+   - website
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
 **Returns**: the full constructed URL to the IGDB Endpoint as a string.
+
+```php
+<?php
+
+    // instantiating the wrapper
+    $igdb = new IGDB("{client_id}", "{access_token}");
+
+    try {
+        // constructing an url
+        $url = $igdb->construct_url("game");
+
+        // constructing an url to get counts
+        $count_url = $igdb->construct_url("game", true);
+
+        // showing the results
+        echo "url: " . $url;
+        echo "count url: " . $count_url;
+    } catch (IGDBInvalidParameterException $e) {
+        // an invalid parameter passed to the construct_url method
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+Output:
+
+```text
+url: https://api.igdb.com/v4/gamescount
+count url: https://api.igdb.com/v4/games/count
+```
 
 ### Close CURL Session
 ```php
@@ -152,7 +225,7 @@ Every endpoint method is named after the IGDB API endpoints using snake-casing n
 
 > To build your queries, give [IGDB Query Builder](#igdb-query-builder) a try!
 
-These methods will return **an array with objects** decoded from IGDB response JSON by when the `$count` parameter is false. Otherwise, it will execute a count query against the selected endpoint which will return an object with a `count` property holding the sum of the found items. The count queries can be filtered with [where](#where) filters.
+These methods will return **an array of objects** decoded from IGDB response JSON by when the `$count` parameter is false. Otherwise, it will execute a count query against the selected endpoint which will return an object with a `count` property holding the sum of the found items. The count queries can be filtered with [where](#where) filters.
 
 `IGDBEndpointException` is thrown in any case of error.
 
@@ -166,11 +239,6 @@ public function age_rating_content_description(string $query, boolean $count = f
 Fetching data from IGDB API using the [Age Rating Content Description](https://api-docs.igdb.com/age-rating-content-description) endpoint.
 
 **Endpoint Description**: The organisation behind a specific rating
-
-**Fields in response**
- - `category` ([Category Enum](https://api-docs.igdb.com/#age-rating-content-description-enums))
- - `checksum` (uuid): Hash of the object
- - `description` (String)
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -187,6 +255,11 @@ Fetching data from IGDB API using the [Age Rating Content Description](https://a
 ?>
 ```
 
+**Fields in response**
+ - `category` ([Category Enum](https://api-docs.igdb.com/#age-rating-content-description-enums))
+ - `checksum` (uuid): Hash of the object
+ - `description` (String)
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Age Rating
@@ -197,14 +270,6 @@ public function age_rating(string $query, boolean $count = false) throws IGDBEnd
 Fetching data from IGDB API using the [Age Rating](https://api-docs.igdb.com/age-rating) endpoint.
 
 **Endpoint Description**: Age Rating according to various rating organisations
-
-**Fields in response**
- - `category` ([Category Enum](https://api-docs.igdb.com/#age-rating-enums)): The organization that has issued a specific rating
- - `checksum` (uuid): Hash of the object
- - `content_descriptions` (Reference ID for [ Age Rating Content Description](https://api-docs.igdb.com/#age-rating-content-description))
- - `rating` ([Rating Enum](https://api-docs.igdb.com/#age-rating-enums)): The title of an age rating
- - `rating_cover_url` (String): The url for  the image of a age rating
- - `synopsis` (String): A free text motivating a rating
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -221,6 +286,14 @@ Fetching data from IGDB API using the [Age Rating](https://api-docs.igdb.com/age
 ?>
 ```
 
+**Fields in response**
+ - `category` ([Category Enum](https://api-docs.igdb.com/#age-rating-enums)): The organization that has issued a specific rating
+ - `checksum` (uuid): Hash of the object
+ - `content_descriptions` (Reference ID for [ Age Rating Content Description](https://api-docs.igdb.com/#age-rating-content-description))
+ - `rating` ([Rating Enum](https://api-docs.igdb.com/#age-rating-enums)): The title of an age rating
+ - `rating_cover_url` (String): The url for  the image of a age rating
+ - `synopsis` (String): A free text motivating a rating
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Alternative Name
@@ -231,12 +304,6 @@ public function alternative_name(string $query, boolean $count = false) throws I
 Fetching data from IGDB API using the [Alternative Name](https://api-docs.igdb.com/alternative-name) endpoint.
 
 **Endpoint Description**: Alternative and international game titles
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `comment` (String): A description of what kind of alternative name it is (Acronym, Working title, Japanese title etc)
- - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this alternative name is associated with
- - `name` (String): An alternative name
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -253,6 +320,12 @@ Fetching data from IGDB API using the [Alternative Name](https://api-docs.igdb.c
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `comment` (String): A description of what kind of alternative name it is (Acronym, Working title, Japanese title etc)
+ - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this alternative name is associated with
+ - `name` (String): An alternative name
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Artwork
@@ -263,16 +336,6 @@ public function artwork(string $query, boolean $count = false) throws IGDBEndpoi
 Fetching data from IGDB API using the [Artwork](https://api-docs.igdb.com/artwork) endpoint.
 
 **Endpoint Description**: official artworks (resolution and aspect ratio may vary)
-
-**Fields in response**
- - `alpha_channel` (boolean)
- - `animated` (boolean)
- - `checksum` (uuid): Hash of the object
- - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this artwork is associated with
- - `height` (Integer): The height of the image in pixels
- - `image_id` (String): The ID of the image used to construct an IGDB image link
- - `url` (String): The website address (URL) of the item
- - `width` (Integer): The width of the image in pixels
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -289,6 +352,16 @@ Fetching data from IGDB API using the [Artwork](https://api-docs.igdb.com/artwor
 ?>
 ```
 
+**Fields in response**
+ - `alpha_channel` (boolean)
+ - `animated` (boolean)
+ - `checksum` (uuid): Hash of the object
+ - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this artwork is associated with
+ - `height` (Integer): The height of the image in pixels
+ - `image_id` (String): The ID of the image used to construct an IGDB image link
+ - `url` (String): The website address (URL) of the item
+ - `width` (Integer): The width of the image in pixels
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Character Mug Shot
@@ -299,15 +372,6 @@ public function character_mug_shot(string $query, boolean $count = false) throws
 Fetching data from IGDB API using the [Character Mug Shot](https://api-docs.igdb.com/character-mug-shot) endpoint.
 
 **Endpoint Description**: Images depicting game characters
-
-**Fields in response**
- - `alpha_channel` (boolean)
- - `animated` (boolean)
- - `checksum` (uuid): Hash of the object
- - `height` (Integer): The height of the image in pixels
- - `image_id` (String): The ID of the image used to construct an IGDB image link
- - `url` (String): The website address (URL) of the item
- - `width` (Integer): The width of the image in pixels
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -324,6 +388,15 @@ Fetching data from IGDB API using the [Character Mug Shot](https://api-docs.igdb
 ?>
 ```
 
+**Fields in response**
+ - `alpha_channel` (boolean)
+ - `animated` (boolean)
+ - `checksum` (uuid): Hash of the object
+ - `height` (Integer): The height of the image in pixels
+ - `image_id` (String): The ID of the image used to construct an IGDB image link
+ - `url` (String): The website address (URL) of the item
+ - `width` (Integer): The width of the image in pixels
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Character
@@ -334,21 +407,6 @@ public function character(string $query, boolean $count = false) throws IGDBEndp
 Fetching data from IGDB API using the [Character](https://api-docs.igdb.com/character) endpoint.
 
 **Endpoint Description**: Video game characters
-
-**Fields in response**
- - `akas` (Array of Strings): Alternative names for a character
- - `checksum` (uuid): Hash of the object
- - `country_name` (String): A characters country of origin
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `description` (String): A text describing a character
- - `games` (Array of [Game](https://api-docs.igdb.com/#game) IDs)
- - `gender` ([Gender Enum](https://api-docs.igdb.com/#character-enums))
- - `mug_shot` (Reference ID for [ Character Mug Shot](https://api-docs.igdb.com/#character-mug-shot)): An image depicting a character
- - `name` (String)
- - `slug` (String): A url-safe, unique, lower-case version of the name
- - `species` ([Species Enum](https://api-docs.igdb.com/#character-enums))
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -365,6 +423,21 @@ Fetching data from IGDB API using the [Character](https://api-docs.igdb.com/char
 ?>
 ```
 
+**Fields in response**
+ - `akas` (Array of Strings): Alternative names for a character
+ - `checksum` (uuid): Hash of the object
+ - `country_name` (String): A characters country of origin
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `description` (String): A text describing a character
+ - `games` (Array of [Game](https://api-docs.igdb.com/#game) IDs)
+ - `gender` ([Gender Enum](https://api-docs.igdb.com/#character-enums))
+ - `mug_shot` (Reference ID for [ Character Mug Shot](https://api-docs.igdb.com/#character-mug-shot)): An image depicting a character
+ - `name` (String)
+ - `slug` (String): A url-safe, unique, lower-case version of the name
+ - `species` ([Species Enum](https://api-docs.igdb.com/#character-enums))
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `url` (String): The website address (URL) of the item
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Collection
@@ -375,15 +448,6 @@ public function collection(string $query, boolean $count = false) throws IGDBEnd
 Fetching data from IGDB API using the [Collection](https://api-docs.igdb.com/collection) endpoint.
 
 **Endpoint Description**: Collection, AKA Series
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `games` (Array of [Game](https://api-docs.igdb.com/#game) IDs): The games that are associated with this collection
- - `name` (String): Umbrella term for a collection of games
- - `slug` (String): A url-safe, unique, lower-case version of the name
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -400,6 +464,15 @@ Fetching data from IGDB API using the [Collection](https://api-docs.igdb.com/col
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `games` (Array of [Game](https://api-docs.igdb.com/#game) IDs): The games that are associated with this collection
+ - `name` (String): Umbrella term for a collection of games
+ - `slug` (String): A url-safe, unique, lower-case version of the name
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `url` (String): The website address (URL) of the item
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Company Logo
@@ -410,15 +483,6 @@ public function company_logo(string $query, boolean $count = false) throws IGDBE
 Fetching data from IGDB API using the [Company Logo](https://api-docs.igdb.com/company-logo) endpoint.
 
 **Endpoint Description**: The logos of developers and publishers
-
-**Fields in response**
- - `alpha_channel` (boolean)
- - `animated` (boolean)
- - `checksum` (uuid): Hash of the object
- - `height` (Integer): The height of the image in pixels
- - `image_id` (String): The ID of the image used to construct an IGDB image link
- - `url` (String): The website address (URL) of the item
- - `width` (Integer): The width of the image in pixels
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -435,6 +499,15 @@ Fetching data from IGDB API using the [Company Logo](https://api-docs.igdb.com/c
 ?>
 ```
 
+**Fields in response**
+ - `alpha_channel` (boolean)
+ - `animated` (boolean)
+ - `checksum` (uuid): Hash of the object
+ - `height` (Integer): The height of the image in pixels
+ - `image_id` (String): The ID of the image used to construct an IGDB image link
+ - `url` (String): The website address (URL) of the item
+ - `width` (Integer): The width of the image in pixels
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Company Website
@@ -445,12 +518,6 @@ public function company_website(string $query, boolean $count = false) throws IG
 Fetching data from IGDB API using the [Company Website](https://api-docs.igdb.com/company-website) endpoint.
 
 **Endpoint Description**: Company Website
-
-**Fields in response**
- - `category` ([Category Enum](https://api-docs.igdb.com/#company-website-enums)): The service this website links to
- - `checksum` (uuid): Hash of the object
- - `trusted` (boolean)
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -467,6 +534,12 @@ Fetching data from IGDB API using the [Company Website](https://api-docs.igdb.co
 ?>
 ```
 
+**Fields in response**
+ - `category` ([Category Enum](https://api-docs.igdb.com/#company-website-enums)): The service this website links to
+ - `checksum` (uuid): Hash of the object
+ - `trusted` (boolean)
+ - `url` (String): The website address (URL) of the item
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Company
@@ -477,6 +550,21 @@ public function company(string $query, boolean $count = false) throws IGDBEndpoi
 Fetching data from IGDB API using the [Company](https://api-docs.igdb.com/company) endpoint.
 
 **Endpoint Description**: Video game companies. Both publishers &amp;amp; developers
+
+**Parameters**:
+ - `$query`: an apicalypse formatted query String
+ - `$count`: whether the request should return the number of matches instead of the actual resultset
+
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+
+```php
+<?php
+
+    // Company endpoint method
+    $igdb->company($query, $count);
+
+?>
+```
 
 **Fields in response**
  - `change_date` (Unix Time Stamp): The data when a company got a new ID
@@ -498,21 +586,6 @@ Fetching data from IGDB API using the [Company](https://api-docs.igdb.com/compan
  - `url` (String): The website address (URL) of the item
  - `websites` (Reference ID for [ Company Website](https://api-docs.igdb.com/#company-website)): The companies official websites
 
-**Parameters**:
- - `$query`: an apicalypse formatted query String
- - `$count`: whether the request should return the number of matches instead of the actual resultset
-
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
-
-```php
-<?php
-
-    // Company endpoint method
-    $igdb->company($query, $count);
-
-?>
-```
-
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Cover
@@ -523,16 +596,6 @@ public function cover(string $query, boolean $count = false) throws IGDBEndpoint
 Fetching data from IGDB API using the [Cover](https://api-docs.igdb.com/cover) endpoint.
 
 **Endpoint Description**: The cover art of games
-
-**Fields in response**
- - `alpha_channel` (boolean)
- - `animated` (boolean)
- - `checksum` (uuid): Hash of the object
- - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this cover is associated with
- - `height` (Integer): The height of the image in pixels
- - `image_id` (String): The ID of the image used to construct an IGDB image link
- - `url` (String): The website address (URL) of the item
- - `width` (Integer): The width of the image in pixels
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -549,6 +612,16 @@ Fetching data from IGDB API using the [Cover](https://api-docs.igdb.com/cover) e
 ?>
 ```
 
+**Fields in response**
+ - `alpha_channel` (boolean)
+ - `animated` (boolean)
+ - `checksum` (uuid): Hash of the object
+ - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this cover is associated with
+ - `height` (Integer): The height of the image in pixels
+ - `image_id` (String): The ID of the image used to construct an IGDB image link
+ - `url` (String): The website address (URL) of the item
+ - `width` (Integer): The width of the image in pixels
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### External Game
@@ -559,20 +632,6 @@ public function external_game(string $query, boolean $count = false) throws IGDB
 Fetching data from IGDB API using the [External Game](https://api-docs.igdb.com/external-game) endpoint.
 
 **Endpoint Description**: Game IDs on other services
-
-**Fields in response**
- - `category` ([Category Enum](https://api-docs.igdb.com/#external-game-enums)): The id of the other service
- - `checksum` (uuid): Hash of the object
- - `countries` (Array of Integers): The ISO country code of the external game product.
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The IGDB ID of the game
- - `media` ([Media Enum](https://api-docs.igdb.com/#external-game-enums)): The media of the external game.
- - `name` (String): The name of the game according to the other service
- - `platform` (Reference ID for [Platform](https://api-docs.igdb.com/#platform)): The platform of the external game product.
- - `uid` (String): The other services ID for this game
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `url` (String): The website address (URL) of the item
- - `year` (Integer): The year in full (2018)
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -589,6 +648,20 @@ Fetching data from IGDB API using the [External Game](https://api-docs.igdb.com/
 ?>
 ```
 
+**Fields in response**
+ - `category` ([Category Enum](https://api-docs.igdb.com/#external-game-enums)): The id of the other service
+ - `checksum` (uuid): Hash of the object
+ - `countries` (Array of Integers): The ISO country code of the external game product.
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The IGDB ID of the game
+ - `media` ([Media Enum](https://api-docs.igdb.com/#external-game-enums)): The media of the external game.
+ - `name` (String): The name of the game according to the other service
+ - `platform` (Reference ID for [Platform](https://api-docs.igdb.com/#platform)): The platform of the external game product.
+ - `uid` (String): The other services ID for this game
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `url` (String): The website address (URL) of the item
+ - `year` (Integer): The year in full (2018)
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Franchise
@@ -599,15 +672,6 @@ public function franchise(string $query, boolean $count = false) throws IGDBEndp
 Fetching data from IGDB API using the [Franchise](https://api-docs.igdb.com/franchise) endpoint.
 
 **Endpoint Description**: A list of video game franchises such as Star Wars.
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `games` (Array of [Game](https://api-docs.igdb.com/#game) IDs): The games that are associated with this franchise
- - `name` (String): The name of the franchise
- - `slug` (String): A url-safe, unique, lower-case version of the name
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -624,6 +688,15 @@ Fetching data from IGDB API using the [Franchise](https://api-docs.igdb.com/fran
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `games` (Array of [Game](https://api-docs.igdb.com/#game) IDs): The games that are associated with this franchise
+ - `name` (String): The name of the franchise
+ - `slug` (String): A url-safe, unique, lower-case version of the name
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `url` (String): The website address (URL) of the item
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Game Engine Logo
@@ -634,15 +707,6 @@ public function game_engine_logo(string $query, boolean $count = false) throws I
 Fetching data from IGDB API using the [Game Engine Logo](https://api-docs.igdb.com/game-engine-logo) endpoint.
 
 **Endpoint Description**: The logos of game engines
-
-**Fields in response**
- - `alpha_channel` (boolean)
- - `animated` (boolean)
- - `checksum` (uuid): Hash of the object
- - `height` (Integer): The height of the image in pixels
- - `image_id` (String): The ID of the image used to construct an IGDB image link
- - `url` (String): The website address (URL) of the item
- - `width` (Integer): The width of the image in pixels
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -659,6 +723,15 @@ Fetching data from IGDB API using the [Game Engine Logo](https://api-docs.igdb.c
 ?>
 ```
 
+**Fields in response**
+ - `alpha_channel` (boolean)
+ - `animated` (boolean)
+ - `checksum` (uuid): Hash of the object
+ - `height` (Integer): The height of the image in pixels
+ - `image_id` (String): The ID of the image used to construct an IGDB image link
+ - `url` (String): The website address (URL) of the item
+ - `width` (Integer): The width of the image in pixels
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Game Engine
@@ -669,18 +742,6 @@ public function game_engine(string $query, boolean $count = false) throws IGDBEn
 Fetching data from IGDB API using the [Game Engine](https://api-docs.igdb.com/game-engine) endpoint.
 
 **Endpoint Description**: Video game engines such as unreal engine.
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `companies` (Array of [Company](https://api-docs.igdb.com/#company) IDs): Companies who used this game engine
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `description` (String): Description of the game engine
- - `logo` (Reference ID for [ Game Engine Logo](https://api-docs.igdb.com/#game-engine-logo)): Logo of the game engine
- - `name` (String): Name of the game engine
- - `platforms` (Array of [Platform](https://api-docs.igdb.com/#platform) IDs): Platforms this game engine was deployed on
- - `slug` (String): A url-safe, unique, lower-case version of the name
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -697,6 +758,18 @@ Fetching data from IGDB API using the [Game Engine](https://api-docs.igdb.com/ga
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `companies` (Array of [Company](https://api-docs.igdb.com/#company) IDs): Companies who used this game engine
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `description` (String): Description of the game engine
+ - `logo` (Reference ID for [ Game Engine Logo](https://api-docs.igdb.com/#game-engine-logo)): Logo of the game engine
+ - `name` (String): Name of the game engine
+ - `platforms` (Array of [Platform](https://api-docs.igdb.com/#platform) IDs): Platforms this game engine was deployed on
+ - `slug` (String): A url-safe, unique, lower-case version of the name
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `url` (String): The website address (URL) of the item
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Game Mode
@@ -707,14 +780,6 @@ public function game_mode(string $query, boolean $count = false) throws IGDBEndp
 Fetching data from IGDB API using the [Game Mode](https://api-docs.igdb.com/game-mode) endpoint.
 
 **Endpoint Description**: Single player, Multiplayer etc
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `name` (String): The name of the game mode
- - `slug` (String): A url-safe, unique, lower-case version of the name
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -731,6 +796,14 @@ Fetching data from IGDB API using the [Game Mode](https://api-docs.igdb.com/game
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `name` (String): The name of the game mode
+ - `slug` (String): A url-safe, unique, lower-case version of the name
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `url` (String): The website address (URL) of the item
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Game Version Feature Value
@@ -741,13 +814,6 @@ public function game_version_feature_value(string $query, boolean $count = false
 Fetching data from IGDB API using the [Game Version Feature Value](https://api-docs.igdb.com/game-version-feature-value) endpoint.
 
 **Endpoint Description**: The bool&#x2F;text value of the feature
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The version&#x2F;edition this value refers to
- - `game_feature` (Reference ID for [ Game Version Feature](https://api-docs.igdb.com/#game-version-feature)): The id of the game feature
- - `included_feature` ([Included Feature Enum](https://api-docs.igdb.com/#game-version-feature-value-enums)): The boole value of this feature
- - `note` (String): The text value of this feature
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -764,6 +830,13 @@ Fetching data from IGDB API using the [Game Version Feature Value](https://api-d
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The version&#x2F;edition this value refers to
+ - `game_feature` (Reference ID for [ Game Version Feature](https://api-docs.igdb.com/#game-version-feature)): The id of the game feature
+ - `included_feature` ([Included Feature Enum](https://api-docs.igdb.com/#game-version-feature-value-enums)): The boole value of this feature
+ - `note` (String): The text value of this feature
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Game Version Feature
@@ -774,14 +847,6 @@ public function game_version_feature(string $query, boolean $count = false) thro
 Fetching data from IGDB API using the [Game Version Feature](https://api-docs.igdb.com/game-version-feature) endpoint.
 
 **Endpoint Description**: Features and descriptions of what makes each version&#x2F;edition different from the main game
-
-**Fields in response**
- - `category` ([Category Enum](https://api-docs.igdb.com/#game-version-feature-enums)): The category of the feature description
- - `checksum` (uuid): Hash of the object
- - `description` (String): The description of the feature
- - `position` (Integer): Position of this feature in the list of features
- - `title` (String): The title of the feature
- - `values` (Reference ID for [ Game Version Feature Value](https://api-docs.igdb.com/#game-version-feature-value)): The bool&#x2F;text value of the feature
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -798,6 +863,14 @@ Fetching data from IGDB API using the [Game Version Feature](https://api-docs.ig
 ?>
 ```
 
+**Fields in response**
+ - `category` ([Category Enum](https://api-docs.igdb.com/#game-version-feature-enums)): The category of the feature description
+ - `checksum` (uuid): Hash of the object
+ - `description` (String): The description of the feature
+ - `position` (Integer): Position of this feature in the list of features
+ - `title` (String): The title of the feature
+ - `values` (Reference ID for [ Game Version Feature Value](https://api-docs.igdb.com/#game-version-feature-value)): The bool&#x2F;text value of the feature
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Game Version
@@ -808,15 +881,6 @@ public function game_version(string $query, boolean $count = false) throws IGDBE
 Fetching data from IGDB API using the [Game Version](https://api-docs.igdb.com/game-version) endpoint.
 
 **Endpoint Description**: Details about game editions and versions.
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `features` (Reference ID for [ Game Version Feature](https://api-docs.igdb.com/#game-version-feature)): Features and descriptions of what makes each version&#x2F;edition different from the main game
- - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game these versions&#x2F;editions are of
- - `games` (Array of [Game](https://api-docs.igdb.com/#game) IDs): Game Versions and Editions
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -833,6 +897,15 @@ Fetching data from IGDB API using the [Game Version](https://api-docs.igdb.com/g
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `features` (Reference ID for [ Game Version Feature](https://api-docs.igdb.com/#game-version-feature)): Features and descriptions of what makes each version&#x2F;edition different from the main game
+ - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game these versions&#x2F;editions are of
+ - `games` (Array of [Game](https://api-docs.igdb.com/#game) IDs): Game Versions and Editions
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `url` (String): The website address (URL) of the item
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Game Video
@@ -843,12 +916,6 @@ public function game_video(string $query, boolean $count = false) throws IGDBEnd
 Fetching data from IGDB API using the [Game Video](https://api-docs.igdb.com/game-video) endpoint.
 
 **Endpoint Description**: A video associated with a game
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this video is associated with
- - `name` (String): The name of the video
- - `video_id` (String): The external ID of the video (usually youtube)
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -865,6 +932,12 @@ Fetching data from IGDB API using the [Game Video](https://api-docs.igdb.com/gam
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this video is associated with
+ - `name` (String): The name of the video
+ - `video_id` (String): The external ID of the video (usually youtube)
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Game
@@ -875,6 +948,21 @@ public function game(string $query, boolean $count = false) throws IGDBEndpointE
 Fetching data from IGDB API using the [Game](https://api-docs.igdb.com/game) endpoint.
 
 **Endpoint Description**: Video Games!
+
+**Parameters**:
+ - `$query`: an apicalypse formatted query String
+ - `$count`: whether the request should return the number of matches instead of the actual resultset
+
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+
+```php
+<?php
+
+    // Game endpoint method
+    $igdb->game($query, $count);
+
+?>
+```
 
 **Fields in response**
  - `age_ratings` (Reference ID for [ Age Rating](https://api-docs.igdb.com/#age-rating)): The PEGI rating
@@ -927,21 +1015,6 @@ Fetching data from IGDB API using the [Game](https://api-docs.igdb.com/game) end
  - `videos` (Reference ID for [ Game Video](https://api-docs.igdb.com/#game-video)): Videos of this game
  - `websites` (Reference ID for [ Website](https://api-docs.igdb.com/#website)): Websites associated with this game
 
-**Parameters**:
- - `$query`: an apicalypse formatted query String
- - `$count`: whether the request should return the number of matches instead of the actual resultset
-
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
-
-```php
-<?php
-
-    // Game endpoint method
-    $igdb->game($query, $count);
-
-?>
-```
-
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Genre
@@ -952,14 +1025,6 @@ public function genre(string $query, boolean $count = false) throws IGDBEndpoint
 Fetching data from IGDB API using the [Genre](https://api-docs.igdb.com/genre) endpoint.
 
 **Endpoint Description**: Genres of video game
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `name` (String)
- - `slug` (String): A url-safe, unique, lower-case version of the name
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -976,6 +1041,14 @@ Fetching data from IGDB API using the [Genre](https://api-docs.igdb.com/genre) e
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `name` (String)
+ - `slug` (String): A url-safe, unique, lower-case version of the name
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `url` (String): The website address (URL) of the item
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Involved Company
@@ -986,17 +1059,6 @@ public function involved_company(string $query, boolean $count = false) throws I
 Fetching data from IGDB API using the [Involved Company](https://api-docs.igdb.com/involved-company) endpoint.
 
 **Endpoint Description**: &lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;involved_companies&lt;&#x2F;code&gt;
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `company` (Reference ID for [Company](https://api-docs.igdb.com/#company))
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `developer` (boolean)
- - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game))
- - `porting` (boolean)
- - `publisher` (boolean)
- - `supporting` (boolean)
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1013,6 +1075,17 @@ Fetching data from IGDB API using the [Involved Company](https://api-docs.igdb.c
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `company` (Reference ID for [Company](https://api-docs.igdb.com/#company))
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `developer` (boolean)
+ - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game))
+ - `porting` (boolean)
+ - `publisher` (boolean)
+ - `supporting` (boolean)
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Keyword
@@ -1023,14 +1096,6 @@ public function keyword(string $query, boolean $count = false) throws IGDBEndpoi
 Fetching data from IGDB API using the [Keyword](https://api-docs.igdb.com/keyword) endpoint.
 
 **Endpoint Description**: Keywords are words or phrases that get tagged to a game such as “world war 2” or “steampunk”.
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `name` (String)
- - `slug` (String): A url-safe, unique, lower-case version of the name
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1047,6 +1112,14 @@ Fetching data from IGDB API using the [Keyword](https://api-docs.igdb.com/keywor
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `name` (String)
+ - `slug` (String): A url-safe, unique, lower-case version of the name
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `url` (String): The website address (URL) of the item
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Multiplayer Mode
@@ -1057,6 +1130,21 @@ public function multiplayer_mode(string $query, boolean $count = false) throws I
 Fetching data from IGDB API using the [Multiplayer Mode](https://api-docs.igdb.com/multiplayer-mode) endpoint.
 
 **Endpoint Description**: Data about the supported multiplayer types
+
+**Parameters**:
+ - `$query`: an apicalypse formatted query String
+ - `$count`: whether the request should return the number of matches instead of the actual resultset
+
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+
+```php
+<?php
+
+    // Multiplayer Mode endpoint method
+    $igdb->multiplayer_mode($query, $count);
+
+?>
+```
 
 **Fields in response**
  - `campaigncoop` (boolean): True if the game supports campaign coop
@@ -1074,21 +1162,6 @@ Fetching data from IGDB API using the [Multiplayer Mode](https://api-docs.igdb.c
  - `splitscreen` (boolean): True if the game supports split screen, offline multiplayer
  - `splitscreenonline` (boolean): True if the game supports split screen, online multiplayer
 
-**Parameters**:
- - `$query`: an apicalypse formatted query String
- - `$count`: whether the request should return the number of matches instead of the actual resultset
-
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
-
-```php
-<?php
-
-    // Multiplayer Mode endpoint method
-    $igdb->multiplayer_mode($query, $count);
-
-?>
-```
-
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Platform Family
@@ -1099,11 +1172,6 @@ public function platform_family(string $query, boolean $count = false) throws IG
 Fetching data from IGDB API using the [Platform Family](https://api-docs.igdb.com/platform-family) endpoint.
 
 **Endpoint Description**: A collection of closely related platforms
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `name` (String): The name of the platform family
- - `slug` (String): A url-safe, unique, lower-case version of the name
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1120,6 +1188,11 @@ Fetching data from IGDB API using the [Platform Family](https://api-docs.igdb.co
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `name` (String): The name of the platform family
+ - `slug` (String): A url-safe, unique, lower-case version of the name
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Platform Logo
@@ -1130,15 +1203,6 @@ public function platform_logo(string $query, boolean $count = false) throws IGDB
 Fetching data from IGDB API using the [Platform Logo](https://api-docs.igdb.com/platform-logo) endpoint.
 
 **Endpoint Description**: Logo for a platform
-
-**Fields in response**
- - `alpha_channel` (boolean)
- - `animated` (boolean)
- - `checksum` (uuid): Hash of the object
- - `height` (Integer): The height of the image in pixels
- - `image_id` (String): The ID of the image used to construct an IGDB image link
- - `url` (String): The website address (URL) of the item
- - `width` (Integer): The width of the image in pixels
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1155,6 +1219,15 @@ Fetching data from IGDB API using the [Platform Logo](https://api-docs.igdb.com/
 ?>
 ```
 
+**Fields in response**
+ - `alpha_channel` (boolean)
+ - `animated` (boolean)
+ - `checksum` (uuid): Hash of the object
+ - `height` (Integer): The height of the image in pixels
+ - `image_id` (String): The ID of the image used to construct an IGDB image link
+ - `url` (String): The website address (URL) of the item
+ - `width` (Integer): The width of the image in pixels
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Platform Version Company
@@ -1165,13 +1238,6 @@ public function platform_version_company(string $query, boolean $count = false) 
 Fetching data from IGDB API using the [Platform Version Company](https://api-docs.igdb.com/platform-version-company) endpoint.
 
 **Endpoint Description**: A platform developer
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `comment` (String): Any notable comments about the developer
- - `company` (Reference ID for [Company](https://api-docs.igdb.com/#company)): The company responsible for developing this platform version
- - `developer` (boolean)
- - `manufacturer` (boolean)
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1188,6 +1254,13 @@ Fetching data from IGDB API using the [Platform Version Company](https://api-doc
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `comment` (String): Any notable comments about the developer
+ - `company` (Reference ID for [Company](https://api-docs.igdb.com/#company)): The company responsible for developing this platform version
+ - `developer` (boolean)
+ - `manufacturer` (boolean)
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Platform Version Release Date
@@ -1198,18 +1271,6 @@ public function platform_version_release_date(string $query, boolean $count = fa
 Fetching data from IGDB API using the [Platform Version Release Date](https://api-docs.igdb.com/platform-version-release-date) endpoint.
 
 **Endpoint Description**: A handy endpoint that extends platform release dates. Used to dig deeper into release dates, platforms and versions.
-
-**Fields in response**
- - `category` ([Category Enum](https://api-docs.igdb.com/#platform-version-release-date-enums)): The format of the release date
- - `checksum` (uuid): Hash of the object
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `date` (Unix Time Stamp): The release date
- - `human` (String): A human readable version of the release date
- - `m` (Integer): The month as an integer starting at 1 (January)
- - `platform_version` (Reference ID for [Platform Version](https://api-docs.igdb.com/#platform-version)): The platform this release date is for
- - `region` ([Region Enum](https://api-docs.igdb.com/#platform-version-release-date-enums)): The region of the release
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `y` (Integer): The year in full (2018)
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1226,6 +1287,18 @@ Fetching data from IGDB API using the [Platform Version Release Date](https://ap
 ?>
 ```
 
+**Fields in response**
+ - `category` ([Category Enum](https://api-docs.igdb.com/#platform-version-release-date-enums)): The format of the release date
+ - `checksum` (uuid): Hash of the object
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `date` (Unix Time Stamp): The release date
+ - `human` (String): A human readable version of the release date
+ - `m` (Integer): The month as an integer starting at 1 (January)
+ - `platform_version` (Reference ID for [Platform Version](https://api-docs.igdb.com/#platform-version)): The platform this release date is for
+ - `region` ([Region Enum](https://api-docs.igdb.com/#platform-version-release-date-enums)): The region of the release
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `y` (Integer): The year in full (2018)
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Platform Version
@@ -1236,6 +1309,21 @@ public function platform_version(string $query, boolean $count = false) throws I
 Fetching data from IGDB API using the [Platform Version](https://api-docs.igdb.com/platform-version) endpoint.
 
 **Endpoint Description**: &lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;platform_versions&lt;&#x2F;code&gt;
+
+**Parameters**:
+ - `$query`: an apicalypse formatted query String
+ - `$count`: whether the request should return the number of matches instead of the actual resultset
+
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+
+```php
+<?php
+
+    // Platform Version endpoint method
+    $igdb->platform_version($query, $count);
+
+?>
+```
 
 **Fields in response**
  - `checksum` (uuid): Hash of the object
@@ -1258,21 +1346,6 @@ Fetching data from IGDB API using the [Platform Version](https://api-docs.igdb.c
  - `summary` (String): A short summary
  - `url` (String): The website address (URL) of the item
 
-**Parameters**:
- - `$query`: an apicalypse formatted query String
- - `$count`: whether the request should return the number of matches instead of the actual resultset
-
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
-
-```php
-<?php
-
-    // Platform Version endpoint method
-    $igdb->platform_version($query, $count);
-
-?>
-```
-
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Platform Website
@@ -1283,12 +1356,6 @@ public function platform_website(string $query, boolean $count = false) throws I
 Fetching data from IGDB API using the [Platform Website](https://api-docs.igdb.com/platform-website) endpoint.
 
 **Endpoint Description**: The main website for the platform
-
-**Fields in response**
- - `category` ([Category Enum](https://api-docs.igdb.com/#platform-website-enums)): The service this website links to
- - `checksum` (uuid): Hash of the object
- - `trusted` (boolean)
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1305,6 +1372,12 @@ Fetching data from IGDB API using the [Platform Website](https://api-docs.igdb.c
 ?>
 ```
 
+**Fields in response**
+ - `category` ([Category Enum](https://api-docs.igdb.com/#platform-website-enums)): The service this website links to
+ - `checksum` (uuid): Hash of the object
+ - `trusted` (boolean)
+ - `url` (String): The website address (URL) of the item
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Platform
@@ -1315,6 +1388,21 @@ public function platform(string $query, boolean $count = false) throws IGDBEndpo
 Fetching data from IGDB API using the [Platform](https://api-docs.igdb.com/platform) endpoint.
 
 **Endpoint Description**: The hardware used to run the game or game delivery network
+
+**Parameters**:
+ - `$query`: an apicalypse formatted query String
+ - `$count`: whether the request should return the number of matches instead of the actual resultset
+
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+
+```php
+<?php
+
+    // Platform endpoint method
+    $igdb->platform($query, $count);
+
+?>
+```
 
 **Fields in response**
  - `abbreviation` (String): An abbreviation of the platform name
@@ -1333,21 +1421,6 @@ Fetching data from IGDB API using the [Platform](https://api-docs.igdb.com/platf
  - `versions` (Reference ID for [ Platform Version](https://api-docs.igdb.com/#platform-version)): Associated versions of this platform
  - `websites` (Reference ID for [ Platform Website](https://api-docs.igdb.com/#platform-website)): The main website
 
-**Parameters**:
- - `$query`: an apicalypse formatted query String
- - `$count`: whether the request should return the number of matches instead of the actual resultset
-
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
-
-```php
-<?php
-
-    // Platform endpoint method
-    $igdb->platform($query, $count);
-
-?>
-```
-
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Player Perspective
@@ -1358,14 +1431,6 @@ public function player_perspective(string $query, boolean $count = false) throws
 Fetching data from IGDB API using the [Player Perspective](https://api-docs.igdb.com/player-perspective) endpoint.
 
 **Endpoint Description**: Player perspectives describe the view&#x2F;perspective of the player in a video game.
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `name` (String)
- - `slug` (String): A url-safe, unique, lower-case version of the name
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1382,6 +1447,14 @@ Fetching data from IGDB API using the [Player Perspective](https://api-docs.igdb
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `name` (String)
+ - `slug` (String): A url-safe, unique, lower-case version of the name
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `url` (String): The website address (URL) of the item
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Release Date
@@ -1392,19 +1465,6 @@ public function release_date(string $query, boolean $count = false) throws IGDBE
 Fetching data from IGDB API using the [Release Date](https://api-docs.igdb.com/release-date) endpoint.
 
 **Endpoint Description**: A handy endpoint that extends game release dates. Used to dig deeper into release dates, platforms and versions.
-
-**Fields in response**
- - `category` ([Category Enum](https://api-docs.igdb.com/#release-date-enums)): The format category of the release date
- - `checksum` (uuid): Hash of the object
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `date` (Unix Time Stamp): The date of the release
- - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game))
- - `human` (String): A human readable representation of the date
- - `m` (Integer): The month as an integer starting at 1 (January)
- - `platform` (Reference ID for [Platform](https://api-docs.igdb.com/#platform)): The platform of the release
- - `region` ([Region Enum](https://api-docs.igdb.com/#release-date-enums)): The region of the release
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `y` (Integer): The year in full (2018)
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1421,6 +1481,19 @@ Fetching data from IGDB API using the [Release Date](https://api-docs.igdb.com/r
 ?>
 ```
 
+**Fields in response**
+ - `category` ([Category Enum](https://api-docs.igdb.com/#release-date-enums)): The format category of the release date
+ - `checksum` (uuid): Hash of the object
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `date` (Unix Time Stamp): The date of the release
+ - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game))
+ - `human` (String): A human readable representation of the date
+ - `m` (Integer): The month as an integer starting at 1 (January)
+ - `platform` (Reference ID for [Platform](https://api-docs.igdb.com/#platform)): The platform of the release
+ - `region` ([Region Enum](https://api-docs.igdb.com/#release-date-enums)): The region of the release
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `y` (Integer): The year in full (2018)
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Screenshot
@@ -1431,16 +1504,6 @@ public function screenshot(string $query, boolean $count = false) throws IGDBEnd
 Fetching data from IGDB API using the [Screenshot](https://api-docs.igdb.com/screenshot) endpoint.
 
 **Endpoint Description**: Screenshots of games
-
-**Fields in response**
- - `alpha_channel` (boolean)
- - `animated` (boolean)
- - `checksum` (uuid): Hash of the object
- - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this video is associated with
- - `height` (Integer): The height of the image in pixels
- - `image_id` (String): The ID of the image used to construct an IGDB image link
- - `url` (String): The website address (URL) of the item
- - `width` (Integer): The width of the image in pixels
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1457,6 +1520,16 @@ Fetching data from IGDB API using the [Screenshot](https://api-docs.igdb.com/scr
 ?>
 ```
 
+**Fields in response**
+ - `alpha_channel` (boolean)
+ - `animated` (boolean)
+ - `checksum` (uuid): Hash of the object
+ - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this video is associated with
+ - `height` (Integer): The height of the image in pixels
+ - `image_id` (String): The ID of the image used to construct an IGDB image link
+ - `url` (String): The website address (URL) of the item
+ - `width` (Integer): The width of the image in pixels
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Search
@@ -1467,20 +1540,6 @@ public function search(string $query, boolean $count = false) throws IGDBEndpoin
 Fetching data from IGDB API using the [Search](https://api-docs.igdb.com/search) endpoint.
 
 **Endpoint Description**: &lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;search&lt;&#x2F;code&gt;
-
-**Fields in response**
- - `alternative_name` (String)
- - `character` (Reference ID for [Character](https://api-docs.igdb.com/#character))
- - `checksum` (uuid): Hash of the object
- - `collection` (Reference ID for [Collection](https://api-docs.igdb.com/#collection))
- - `company` (Reference ID for [Company](https://api-docs.igdb.com/#company))
- - `description` (String)
- - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game))
- - `name` (String)
- - `platform` (Reference ID for [Platform](https://api-docs.igdb.com/#platform))
- - `published_at` (Unix Time Stamp): The date this item was initially published by the third party
- - `test_dummy` (Reference ID for [Test Dummy](https://api-docs.igdb.com/#test-dummy))
- - `theme` (Reference ID for [Theme](https://api-docs.igdb.com/#theme))
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1497,6 +1556,20 @@ Fetching data from IGDB API using the [Search](https://api-docs.igdb.com/search)
 ?>
 ```
 
+**Fields in response**
+ - `alternative_name` (String)
+ - `character` (Reference ID for [Character](https://api-docs.igdb.com/#character))
+ - `checksum` (uuid): Hash of the object
+ - `collection` (Reference ID for [Collection](https://api-docs.igdb.com/#collection))
+ - `company` (Reference ID for [Company](https://api-docs.igdb.com/#company))
+ - `description` (String)
+ - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game))
+ - `name` (String)
+ - `platform` (Reference ID for [Platform](https://api-docs.igdb.com/#platform))
+ - `published_at` (Unix Time Stamp): The date this item was initially published by the third party
+ - `test_dummy` (Reference ID for [Test Dummy](https://api-docs.igdb.com/#test-dummy))
+ - `theme` (Reference ID for [Theme](https://api-docs.igdb.com/#theme))
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Theme
@@ -1507,14 +1580,6 @@ public function theme(string $query, boolean $count = false) throws IGDBEndpoint
 Fetching data from IGDB API using the [Theme](https://api-docs.igdb.com/theme) endpoint.
 
 **Endpoint Description**: Video game themes
-
-**Fields in response**
- - `checksum` (uuid): Hash of the object
- - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
- - `name` (String)
- - `slug` (String): A url-safe, unique, lower-case version of the name
- - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1531,6 +1596,14 @@ Fetching data from IGDB API using the [Theme](https://api-docs.igdb.com/theme) e
 ?>
 ```
 
+**Fields in response**
+ - `checksum` (uuid): Hash of the object
+ - `created_at` (Unix Time Stamp): Date this was initially added to the IGDB database
+ - `name` (String)
+ - `slug` (String): A url-safe, unique, lower-case version of the name
+ - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
+ - `url` (String): The website address (URL) of the item
+
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
 ### Website
@@ -1541,13 +1614,6 @@ public function website(string $query, boolean $count = false) throws IGDBEndpoi
 Fetching data from IGDB API using the [Website](https://api-docs.igdb.com/website) endpoint.
 
 **Endpoint Description**: A website url, usually associated with a game
-
-**Fields in response**
- - `category` ([Category Enum](https://api-docs.igdb.com/#website-enums)): The service this website links to
- - `checksum` (uuid): Hash of the object
- - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this website is associated with
- - `trusted` (boolean)
- - `url` (String): The website address (URL) of the item
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1563,6 +1629,13 @@ Fetching data from IGDB API using the [Website](https://api-docs.igdb.com/websit
 
 ?>
 ```
+
+**Fields in response**
+ - `category` ([Category Enum](https://api-docs.igdb.com/#website-enums)): The service this website links to
+ - `checksum` (uuid): Hash of the object
+ - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this website is associated with
+ - `trusted` (boolean)
+ - `url` (String): The website address (URL) of the item
 
 > For more information on return values, refer to the [Return Values](#return-values) section!
 
@@ -1642,45 +1715,48 @@ array (size=1)
 
 ## Return Values
 
-Every endpoint method can return two different type of results, depending on the second parameter passed to them:
- - By default the second `$count` parameter is a boolean `false`. this means, that the query will be executed against the IGDB, returning a `$result` **array of objects**.
-    ```php
-    <?php
+Every endpoint method can return two different type of results, depending on the second parameter passed to them.
 
-        // a query against the game endpoint without a $count parameter
-        $igdb->game("fields id,name; where id = (1,2);");
+By default the second `$count` parameter is a boolean `false`. this means, that the query will be executed against the IGDB, returning a `$result` **array of objects**.
 
-    ?>
-    ```
+```php
+<?php
 
-    The result of the query above:
+    // a query against the game endpoint without a $count parameter
+    $igdb->game("fields id,name; where id = (1,2);");
 
-    ```text
-    array (size=2)
-    0 =>
-      object(stdClass)[2]
-        public 'id' => int 1
-        public 'name' => string 'Thief II: The Metal Age' (length=23)
-    1 =>
-      object(stdClass)[3]
-        public 'id' => int 2
-        public 'name' => string 'Thief: The Dark Project' (length=23)
-    ```
+?>
+```
 
- - If you pass a boolean `true` as a second parameter, then you will get an object with a `count` property containing the item count from the selected endpoint filtered by the `$query` filters.
-    ```php
-    <?php
-        // a query against the game endpoint with a second true parameter
-        // note the second boolean true parameter
-        $igdb->game( "fields id,name; where id = (1,2);", true);
+The result of the query above:
 
-    ?>
-    ```
-
-    The result of the query above:
-    ```text
+```text
+array (size=2)
+0 =>
+    object(stdClass)[2]
+    public 'id' => int 1
+    public 'name' => string 'Thief II: The Metal Age' (length=23)
+1 =>
     object(stdClass)[3]
-      public 'count' => int 2
-    ```
+    public 'id' => int 2
+    public 'name' => string 'Thief: The Dark Project' (length=23)
+```
+
+If you pass a boolean `true` as a second parameter, then you will get an object with a `count` property containing the item count from the selected endpoint filtered by the `$query` filters.
+
+```php
+<?php
+    // a query against the game endpoint with a second true parameter
+    // note the second boolean true parameter
+    $igdb->game( "fields id,name; where id = (1,2);", true);
+
+?>
+```
+
+The result of the query above:
+```text
+object(stdClass)[3]
+    public 'count' => int 2
+```
 
 The result object's properties will vary depending on the provided field list in the `$query`. From the example result above you can see, the result holds an array, containing two elements. Every element of the result array is an object, containing properties with name of the fields from the `fields` parameter.

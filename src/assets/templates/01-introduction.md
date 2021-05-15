@@ -48,11 +48,11 @@ The wrapper will need your `client_id` and [generated](https://api-docs.igdb.com
 ?>
 ```
 
-> The wrapper itself does not validate your tokens. If your credentials are invalid you will get an error response from the endpoint methods.
+> The wrapper itself does not validate your tokens. If your credentials are invalid you will get an `IGDBEndpointException` from the [endpoint methods](#endpoints) when you are sending your queries.
 
 ## Sending Queries to IGDB
 
-When your `$igdb` object is ready you can send your queries to the IGDB database right away. There are multiple endpoint methods which will allow you to fetch data from the respective [IGDB Endpoint](https://api-docs.igdb.com/#endpoints). These endpoint methods in the wrapper will accept [apicalypse](https://api-docs.igdb.com/#apicalypse-1) formatted query strings.
+When your `$igdb` object is ready you can send your queries to the IGDB database right away. There are multiple [endpoint methods](#endpoints) which will allow you to fetch data from the respective [IGDB Endpoint](https://api-docs.igdb.com/#endpoints). These endpoint methods in the wrapper will accept [apicalypse](https://api-docs.igdb.com/#apicalypse-1) formatted query strings.
 
 ```php
 <?php
@@ -81,11 +81,11 @@ array (size=1)
       public 'name' => string 'Uncharted 4: A Thief's End' (length=26)
 ```
 
-> Refer to the [IGDB Wrapper Class Section](#x) of this documentation.
+> For more details on the IGDB Wrapper refer to the [IGDB Wrapper section](#igdb-wrapper) of this documentation.
 
 ## Building Queries
 
-There is a helper class to build apicalypse queries called `IGDBQueryBuilder`. With this class you can easily build parameterized queries.
+There is a helper class to build apicalypse queries called [`IGDBQueryBuilder`](#igdb-query-builder). With this class you can easily build parameterized queries.
 
 ```php
 <?php

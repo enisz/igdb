@@ -29,7 +29,11 @@ To support the traditional way of configuring the queries - the `$options` array
     );
 
     try {
+        // pass the options array to the constructor in a try...catch block
         $builder = new IGDBQueryBuilder($options);
+
+        // you still have to call the build method to return the query
+        $query = $builder->build();
     } catch (IGDBInvaliParameterException $e) {
         // invalid key found in the $options array
         echo $e->getMessage();
@@ -38,11 +42,11 @@ To support the traditional way of configuring the queries - the `$options` array
 ?>
 ```
 
-> Using the Builder this way is not recommended and this functionality may be removed in future versions.
+> Using the Builder this way is not recommended as this functionality may be removed in future versions.
 
 ### Builder way
 
-The Builder is using a builder pattern to configure itself before parsing the properties to a query string. When every parameter is set, calling the `build` method will start processing the parameters and will return the query string itself.
+The Builder is using a builder pattern to configure itself before parsing the properties to a query string. When every parameter is set, calling the [`build()`](#building-the-query) method will start processing the parameters and will return the query string itself.
 
 ```php
 <?php
@@ -270,6 +274,8 @@ The where parameter can be either an apicalypse formatted string or an array wit
  - `postfix`: The postfix you want to use with the filter. Refer to the [Available Postfixes](https://api-docs.igdb.com/#filters) section of the IGDB Filters Documentation for available postfixes.
  - `value`: The value of the filter.
 
+The where filters will be concatenated with **AND** operators (`&`).
+
 > Multiple filter parameters can be applied to the same query. Check the examples below.
 
 **Parameters**:
@@ -373,11 +379,11 @@ This method will add a where statement to your query, but will not validate your
 
     // traditional way
     $options = array(
-        "custom_where" => "where (platforms = [6,48] & genres = 13) | (platforms = [130,48] & genres = 12)"
+        "custom_where" => "(platforms = [6,48] & genres = 13) | (platforms = [130,48] & genres = 12)"
     );
 
     // method way
-    $builder->custom_where("where (platforms = [6,48] & genres = 13) | (platforms = [130,48] & genres = 12)");
+    $builder->custom_where("(platforms = [6,48] & genres = 13) | (platforms = [130,48] & genres = 12)");
 
 ?>
 ```
@@ -387,7 +393,7 @@ This method will add a where statement to your query, but will not validate your
 public function sort(string | array $sort) throws IGDBInvalidArgumentException: IGDBQueryBuilder
 ```
 
-Sorting (ordering) is used to order results by a specific field. The parameter can be either an apicalypse formatted sort string or an array with specific key-value pairs. If you provide the Order parameter as an array, you must have two values in it with the following indexes:
+Sorting (ordering) is used to order results by a specific field. The parameter can be either an apicalypse formatted sort string or an array with specific key-value pairs. If you provide the Order parameter as an array, you must have two values in it with the following keys:
  - `field`: The field you want to do the ordering by
  - `direction`: The direction of the ordering. It must be either `asc` for ascending or `desc` for descending ordering.
 
@@ -398,6 +404,7 @@ Sorting (ordering) is used to order results by a specific field. The parameter c
 
 ```php
 <?php
+
     // traditional way as a string
     $options = array(
         "sort" => "release_dates.date desc",

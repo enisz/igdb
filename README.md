@@ -29,6 +29,18 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+### `npm run watch:templates`
+
+Building the non-production database from the templates and will watch for further changes in the files. If a change is detected, the whole database is built again.
+
+### `npm run export:templates`
+
+Exporting a non-production database from the templates one time. The json file will be indented.
+
+### `npm run export:templates:production`
+
+Exporting the production database from the templates one time. The json file will be compressed, the whitespaces will be removed.
+
 ### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**

@@ -6,7 +6,11 @@ icon: fa-clipboard-list
 # Change Log
 
 ## v4.1.0 - May 15, 2021
- - new readme!
+ - The wrapper got a brand new documentation!
+ - Introduced the [IGDBQueryBuilder](#igdb-query-builder) class
+ - Introduced the [IGDB Utils](#igdb-utils) class
+ - Introduced `IGDBEndpointException` and `IGDBInvalidParameterException` classes
+ - The wrapper [endpoint methods](#endpoints) no longer accepts `$options`, only [apicalypse query strings](https://api-docs.igdb.com/#apicalypse-1)
 
 ## v4.0.2 - April 28, 2021
  - Updated error response handling from IGDB

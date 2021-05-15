@@ -55,7 +55,7 @@ public static function image_url(string $image_id, string $size) throws IGDBInva
 Get the URL of a specific sized image for a record.
 
 **Parameters**:
- - `$image_id`: the `image_id` of the image. Each image in the database has it's own `id` and `image_id` fields. You **must** always use the `image_id` field!
+ - `$image_id`: the `image_id` of the image. Each image in the database has it's own `id` and `image_id` fields. You **must** use the `image_id` field!
  - `$size`: the required size. Possible sizes:
    - cover_small
    - cover_small_2x
@@ -99,8 +99,8 @@ If an invalid second parameter is passed, an `IGDBInvalidParameterException` wil
 
         var_dump($result);
 
+        // processing the first result's first artwork
         echo "720p version: " . IGDBUtils::image_url($result[0]->artworks[0]->image_id, "720p");
-
     } catch (IGDBInvalidParameterException $e) {
         // invalid parameter passed to the builder
         echo $e->getMessage();
