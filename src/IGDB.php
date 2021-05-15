@@ -4,7 +4,7 @@
      * Internet Game Database API Wrapper
      *
      * Fethching data from IGDB's database.
-     * Compatible with IGDB Api v4
+     * Compatible with IGDB API v4
      *
      * @version 4.1.0
      * @author Enisz Abdalla <enisz87@gmail.com>
