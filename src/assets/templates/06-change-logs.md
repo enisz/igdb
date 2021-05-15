@@ -1,9 +1,12 @@
 ---
-overview: Changes, updates, most important notes
+overview: Changes, updates, important notes.
 icon: fa-clipboard-list
 ---
 
 # Change Log
+
+## v4.1.0 - May 15, 2021
+ - new readme!
 
 ## v4.0.2 - April 28, 2021
  - Updated error response handling from IGDB

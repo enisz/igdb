@@ -12,11 +12,39 @@ const remarkStrip = require("strip-markdown");
 const dateParser = require("node-date-parser");
 const execSync = require("child_process").execSync;
 const remarkGfm = require("remark-gfm");
+const commander = require("commander");
 
+// Command Line Arguments
+commander
+    .option("-p, --production", "Build production database (without any whitespaces")
+    .option("-w, --watch", "Watching file changes in the template folder")
+    .parse(process.argv);
+
+// Variables
 const TEMPLATE_PATH = path.join(__dirname, "src", "assets", "templates");
 const PUBLIC_PATH = path.join(__dirname, "public");
-const WATCH = process.argv[2] == "--watch" ? true : false;
 
+// Calculating file size
+const calculateFileSize = size => {
+    const units = ["kilobyte", "megabyte", "gigabyte"];
+
+    if(size < 1024) {
+        return `${size} byte${size > 1 ? "s" : ""}`;
+    } else {
+        for(let i=0; i<units.length; i++) {
+            const result = size / (1024**(i+1));
+
+            if(result < 1) {
+                const actualSize = size / (1024**i);
+                return `${parseFloat(actualSize).toFixed(2)} ${units[i-1]}${actualSize > 1 ? "s" : ""}`;
+            }
+        }
+    }
+
+    return `${size} byte${size > 1 ? "s" : ""}`;
+}
+
+// Exporting the database
 const exportDb = () => {
     if(fs.existsSync(path.join(PUBLIC_PATH, "images"))) {
         console.log("Clearing existing images in public folder...");
@@ -41,7 +69,7 @@ const exportDb = () => {
         deleteFiles(path.join(PUBLIC_PATH, "images"));
     }
     console.log("Exporting database...");
-    const database = new lokijs("DocumentationDB", { env : "BROWSER", persistenceMethod : "memory", serializationMethod : process.argv[2] == "--watch" ? "pretty" : "normal" });
+    const database = new lokijs("DocumentationDB", { env : "BROWSER", persistenceMethod : "memory", serializationMethod : commander.opts().production ? "normal" : "pretty" });
     const templates = database.addCollection("templates");
 
     let documents = [];
@@ -89,7 +117,15 @@ const exportDb = () => {
                 body : {
                     stripped : remark().use(remarkStrip).processSync(paragraph.body.trim()).contents.trim(),
                     markdown : paragraph.body.trim(),
-                    html : remark().use(remarkExternalLinks, {target : "_blank", rel : "nofollow"}).use(remarkHtml).use(remarkGfm).processSync(paragraph.body.trim()).contents.trim()
+                    html : remark()
+                        .use(remarkExternalLinks, {target : "_blank", rel : "nofollow"})
+                        .use(remarkHtml)
+                        .use(remarkGfm) // processing tables
+                        .processSync(paragraph.body.trim())
+                        .contents
+                        .trim()
+                        .replace(new RegExp("<(\/|)t(r|d|h|head|body|able)>\\n<(\/|)t(r|d|h|head|body|able)>", "gm"), "<$1t$2><$3t$4>") // removing newlines from tables for react
+                        .replace(new RegExp("<(\/|)t(r|d|h|head|body|able)>\\n<(\/|)t(r|d|h|head|body|able)>", "gm"), "<$1t$2><$3t$4>")
                 }
             }
 
@@ -170,10 +206,19 @@ const exportDb = () => {
     console.log("Saving database...");
     fs.writeFileSync(path.join(PUBLIC_PATH, "database.json"), database.serialize(), { encoding : "utf-8"});
 
-    console.log(`Database saved: ${path.join(PUBLIC_PATH, "database.json")}`);
+    console.log(`${commander.opts().production ? "Production " : ""}Database saved: ${path.join(PUBLIC_PATH, "database.json")}`);
+    const stats = fs.lstatSync(path.join(PUBLIC_PATH, "database.json"));
+
+    console.log("\nDetails:");
+    console.log("  File: " + path.join(PUBLIC_PATH, "database.json"));
+    console.log("  Size: " + calculateFileSize(stats.size) + "\n");
 }
 
-if(WATCH) {
+// Exporting the database
+exportDb();
+
+// Watching for changes if -w or --watch is passed
+if(commander.opts().watch) {
     console.log(`Watching changes in ${TEMPLATE_PATH}...`);
     let fsWait = false;
     fs.watch(TEMPLATE_PATH, (event, filename) => {
@@ -186,6 +231,4 @@ if(WATCH) {
             exportDb();
         }
     });
-} else {
-    exportDb();
 }

@@ -54,11 +54,11 @@ export default function HtmlParser({content}) {
             }
         },
         {
-            shouldProcessNode: node => node.name && node.name == "table",
+            shouldProcessNode: node => node.name && node.name === "table",
             processNode: (node, children) => (
                 <div className="table-responsive" key={Math.random()}>
                     <table className="table table-striped table-hover">
-                        {children}
+                        { children }
                     </table>
                 </div>
             )

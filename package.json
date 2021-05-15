@@ -34,7 +34,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "watch:templates": "node dbexport.js --watch",
-    "export:templates": "node dbexport.js"
+    "export:templates": "node dbexport.js",
+    "export:templates:production": "node dbexport.js --production"
   },
   "eslintConfig": {
     "extends": [
@@ -55,6 +56,7 @@
     ]
   },
   "devDependencies": {
+    "commander": "^7.2.0",
     "jsonmark": "0.0.1",
     "markdown-to-json": "^0.5.4",
     "node-date-parser": "^1.0.12",

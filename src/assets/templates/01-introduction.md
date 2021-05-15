@@ -13,10 +13,6 @@ To have access to IGDB's database you have to register a Twitch Account and have
 
 ## Setting up your project
 
-| asfd | asdf |
-|------|------|
-|jasdf | assad|
-
 The project has multiple PHP files which are in the `src` folder of the repository:
  - **IGDB.php**: the IGDB wrapper itself
  - **IGDBEndpointException.php**: an exception thrown by the IGDB wrapper endpoint methods
