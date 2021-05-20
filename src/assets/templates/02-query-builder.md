@@ -7,7 +7,7 @@ icon: fa-hard-hat
 
 This class is a helper class to help you construct your queries. If you have used this wrapper's eariler versions you were able to send queries by passing an `$options` array directly to the endpoint methods. This possibility got removed and these endpoint methods are accepting only [apicalypse](https://api-docs.igdb.com/#apicalypse-1) formatted query strings.
 
-> Using the Builder class is optional as you can pass your own queries to the endpoint methods.
+>:tip Using the Builder class is optional as you can pass your own queries to the endpoint methods.
 
 ## Instantiating the Builder
 
@@ -22,6 +22,7 @@ To support the traditional way of configuring the queries - the `$options` array
 
     require_once "class.igdb.php";
 
+    // setting up the options array
     $options = array(
         "search" => "uncharted 4",
         "fields" => "id,name",
@@ -42,7 +43,7 @@ To support the traditional way of configuring the queries - the `$options` array
 ?>
 ```
 
-> Using the Builder this way is not recommended as this functionality may be removed in future versions.
+>:warning Using the Builder this way is not recommended as this functionality may be removed in future versions.
 
 ### Builder way
 
@@ -276,7 +277,7 @@ The where parameter can be either an apicalypse formatted string or an array wit
 
 The where filters will be concatenated with **AND** operators (`&`).
 
-> Multiple filter parameters can be applied to the same query. Check the examples below.
+>:tip Multiple filter parameters can be applied to the same query. Check the [examples](#examples) below.
 
 **Parameters**:
  - `$where`: either an apicalypse formatted string or an array with specific keys

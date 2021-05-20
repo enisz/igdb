@@ -9,7 +9,7 @@ The most important part of the wrapper, the `IGDB` class which does the most imp
 
 As mentioned in the [Introduction](#introduction), to have access to IGDB's database you have to register a Twitch Account and have your own `client_id` and `access_token`.
 
-> You can add your tokens to the documentation to replace them in the exmple codes. Click the logo in the top left corner to get back to the main page and save your tokens.
+>:tip You can add your tokens to the documentation to replace them in the exmple codes. Click the logo in the top left corner to get back to the main page and save your tokens.
 
 ## Instantiating the wrapper
 
@@ -25,7 +25,7 @@ After importing the dependencies you can instantiate the class with the `new` ke
 ?>
 ```
 
-> The wrapper itself does not validate your tokens. If your credentials are invalid, you will get an error from the IGDB API after executing a query.
+>:warning The wrapper itself does not validate your tokens. If your credentials are invalid, you will get an error from the IGDB API after executing a query.
 
 ## Public Methods
 
@@ -223,13 +223,13 @@ Every endpoint method is named after the IGDB API endpoints using snake-casing n
  - `$query`: the query itself as an apicalypse string
  - `$count`: a `boolean` value to whether return the records or the count of the records
 
-> To build your queries, give [IGDB Query Builder](#igdb-query-builder) a try!
+>:tip To build your queries, give [IGDB Query Builder](#igdb-query-builder) a try!
 
 These methods will return **an array of objects** decoded from IGDB response JSON by when the `$count` parameter is false. Otherwise, it will execute a count query against the selected endpoint which will return an object with a `count` property holding the sum of the found items. The count queries can be filtered with [where](#where) filters.
 
 `IGDBEndpointException` is thrown in any case of error.
 
-Refer to the [Return Values](#return-values) Section for more details about the return values of these methods.
+refer to the [return values section](#return-values) for more details about the return values of these methods.
 
 ### Age Rating Content Description
 ```php
@@ -260,7 +260,7 @@ Fetching data from IGDB API using the [Age Rating Content Description](https://a
  - `checksum` (uuid): Hash of the object
  - `description` (String)
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Age Rating
 ```php
@@ -294,7 +294,7 @@ Fetching data from IGDB API using the [Age Rating](https://api-docs.igdb.com/age
  - `rating_cover_url` (String): The url for  the image of a age rating
  - `synopsis` (String): A free text motivating a rating
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Alternative Name
 ```php
@@ -326,7 +326,7 @@ Fetching data from IGDB API using the [Alternative Name](https://api-docs.igdb.c
  - `game` (Reference ID for [Game](https://api-docs.igdb.com/#game)): The game this alternative name is associated with
  - `name` (String): An alternative name
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Artwork
 ```php
@@ -362,7 +362,7 @@ Fetching data from IGDB API using the [Artwork](https://api-docs.igdb.com/artwor
  - `url` (String): The website address (URL) of the item
  - `width` (Integer): The width of the image in pixels
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Character Mug Shot
 ```php
@@ -397,7 +397,7 @@ Fetching data from IGDB API using the [Character Mug Shot](https://api-docs.igdb
  - `url` (String): The website address (URL) of the item
  - `width` (Integer): The width of the image in pixels
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Character
 ```php
@@ -438,7 +438,7 @@ Fetching data from IGDB API using the [Character](https://api-docs.igdb.com/char
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Collection
 ```php
@@ -473,7 +473,7 @@ Fetching data from IGDB API using the [Collection](https://api-docs.igdb.com/col
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Company Logo
 ```php
@@ -508,7 +508,7 @@ Fetching data from IGDB API using the [Company Logo](https://api-docs.igdb.com/c
  - `url` (String): The website address (URL) of the item
  - `width` (Integer): The width of the image in pixels
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Company Website
 ```php
@@ -540,7 +540,7 @@ Fetching data from IGDB API using the [Company Website](https://api-docs.igdb.co
  - `trusted` (boolean)
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Company
 ```php
@@ -586,7 +586,7 @@ Fetching data from IGDB API using the [Company](https://api-docs.igdb.com/compan
  - `url` (String): The website address (URL) of the item
  - `websites` (Reference ID for [ Company Website](https://api-docs.igdb.com/#company-website)): The companies official websites
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Cover
 ```php
@@ -622,7 +622,7 @@ Fetching data from IGDB API using the [Cover](https://api-docs.igdb.com/cover) e
  - `url` (String): The website address (URL) of the item
  - `width` (Integer): The width of the image in pixels
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### External Game
 ```php
@@ -662,7 +662,7 @@ Fetching data from IGDB API using the [External Game](https://api-docs.igdb.com/
  - `url` (String): The website address (URL) of the item
  - `year` (Integer): The year in full (2018)
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Franchise
 ```php
@@ -697,7 +697,7 @@ Fetching data from IGDB API using the [Franchise](https://api-docs.igdb.com/fran
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Game Engine Logo
 ```php
@@ -732,7 +732,7 @@ Fetching data from IGDB API using the [Game Engine Logo](https://api-docs.igdb.c
  - `url` (String): The website address (URL) of the item
  - `width` (Integer): The width of the image in pixels
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Game Engine
 ```php
@@ -770,7 +770,7 @@ Fetching data from IGDB API using the [Game Engine](https://api-docs.igdb.com/ga
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Game Mode
 ```php
@@ -804,7 +804,7 @@ Fetching data from IGDB API using the [Game Mode](https://api-docs.igdb.com/game
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Game Version Feature Value
 ```php
@@ -837,7 +837,7 @@ Fetching data from IGDB API using the [Game Version Feature Value](https://api-d
  - `included_feature` ([Included Feature Enum](https://api-docs.igdb.com/#game-version-feature-value-enums)): The boole value of this feature
  - `note` (String): The text value of this feature
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Game Version Feature
 ```php
@@ -871,7 +871,7 @@ Fetching data from IGDB API using the [Game Version Feature](https://api-docs.ig
  - `title` (String): The title of the feature
  - `values` (Reference ID for [ Game Version Feature Value](https://api-docs.igdb.com/#game-version-feature-value)): The bool&#x2F;text value of the feature
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Game Version
 ```php
@@ -906,7 +906,7 @@ Fetching data from IGDB API using the [Game Version](https://api-docs.igdb.com/g
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Game Video
 ```php
@@ -938,7 +938,7 @@ Fetching data from IGDB API using the [Game Video](https://api-docs.igdb.com/gam
  - `name` (String): The name of the video
  - `video_id` (String): The external ID of the video (usually youtube)
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Game
 ```php
@@ -1015,7 +1015,7 @@ Fetching data from IGDB API using the [Game](https://api-docs.igdb.com/game) end
  - `videos` (Reference ID for [ Game Video](https://api-docs.igdb.com/#game-video)): Videos of this game
  - `websites` (Reference ID for [ Website](https://api-docs.igdb.com/#website)): Websites associated with this game
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Genre
 ```php
@@ -1049,7 +1049,7 @@ Fetching data from IGDB API using the [Genre](https://api-docs.igdb.com/genre) e
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Involved Company
 ```php
@@ -1086,7 +1086,7 @@ Fetching data from IGDB API using the [Involved Company](https://api-docs.igdb.c
  - `supporting` (boolean)
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Keyword
 ```php
@@ -1120,7 +1120,7 @@ Fetching data from IGDB API using the [Keyword](https://api-docs.igdb.com/keywor
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Multiplayer Mode
 ```php
@@ -1162,7 +1162,7 @@ Fetching data from IGDB API using the [Multiplayer Mode](https://api-docs.igdb.c
  - `splitscreen` (boolean): True if the game supports split screen, offline multiplayer
  - `splitscreenonline` (boolean): True if the game supports split screen, online multiplayer
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Platform Family
 ```php
@@ -1193,7 +1193,7 @@ Fetching data from IGDB API using the [Platform Family](https://api-docs.igdb.co
  - `name` (String): The name of the platform family
  - `slug` (String): A url-safe, unique, lower-case version of the name
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Platform Logo
 ```php
@@ -1228,7 +1228,7 @@ Fetching data from IGDB API using the [Platform Logo](https://api-docs.igdb.com/
  - `url` (String): The website address (URL) of the item
  - `width` (Integer): The width of the image in pixels
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Platform Version Company
 ```php
@@ -1261,7 +1261,7 @@ Fetching data from IGDB API using the [Platform Version Company](https://api-doc
  - `developer` (boolean)
  - `manufacturer` (boolean)
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Platform Version Release Date
 ```php
@@ -1299,7 +1299,7 @@ Fetching data from IGDB API using the [Platform Version Release Date](https://ap
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
  - `y` (Integer): The year in full (2018)
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Platform Version
 ```php
@@ -1346,7 +1346,7 @@ Fetching data from IGDB API using the [Platform Version](https://api-docs.igdb.c
  - `summary` (String): A short summary
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Platform Website
 ```php
@@ -1378,7 +1378,7 @@ Fetching data from IGDB API using the [Platform Website](https://api-docs.igdb.c
  - `trusted` (boolean)
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Platform
 ```php
@@ -1421,7 +1421,7 @@ Fetching data from IGDB API using the [Platform](https://api-docs.igdb.com/platf
  - `versions` (Reference ID for [ Platform Version](https://api-docs.igdb.com/#platform-version)): Associated versions of this platform
  - `websites` (Reference ID for [ Platform Website](https://api-docs.igdb.com/#platform-website)): The main website
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Player Perspective
 ```php
@@ -1455,7 +1455,7 @@ Fetching data from IGDB API using the [Player Perspective](https://api-docs.igdb
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Release Date
 ```php
@@ -1494,7 +1494,7 @@ Fetching data from IGDB API using the [Release Date](https://api-docs.igdb.com/r
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
  - `y` (Integer): The year in full (2018)
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Screenshot
 ```php
@@ -1530,7 +1530,7 @@ Fetching data from IGDB API using the [Screenshot](https://api-docs.igdb.com/scr
  - `url` (String): The website address (URL) of the item
  - `width` (Integer): The width of the image in pixels
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Search
 ```php
@@ -1570,7 +1570,7 @@ Fetching data from IGDB API using the [Search](https://api-docs.igdb.com/search)
  - `test_dummy` (Reference ID for [Test Dummy](https://api-docs.igdb.com/#test-dummy))
  - `theme` (Reference ID for [Theme](https://api-docs.igdb.com/#theme))
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Theme
 ```php
@@ -1604,7 +1604,7 @@ Fetching data from IGDB API using the [Theme](https://api-docs.igdb.com/theme) e
  - `updated_at` (Unix Time Stamp): The last date this entry was updated in the IGDB database
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ### Website
 ```php
@@ -1637,7 +1637,7 @@ Fetching data from IGDB API using the [Website](https://api-docs.igdb.com/websit
  - `trusted` (boolean)
  - `url` (String): The website address (URL) of the item
 
-> For more information on return values, refer to the [Return Values](#return-values) section!
+> For more information on return values, refer to the [return values section](#return-values)!
 
 ## MultiQuery
 ```php
@@ -1651,13 +1651,14 @@ Multi-Query is a new way to request a huge amount of information in one request!
  - `$result_name`:  name, given by you.
  - `$query`: an apicalypse query string. The default value is null, in this case no filter will be applied.
 
-> To build a query you can use the [IGDB Query Builder](#igdb-query-builder)!
+>:tip To build a query you can use the [IGDB Query Builder](#igdb-query-builder)!
 
 Returns either the records matching the filter criteria, or the count of these records. This depends on the `$endpoint` parameter.
 
 Example query:
 ```php
 /*
+
   A few things to note here:
     - the endpoint name has to be the IGDB endpoint name, not the
       wrapper class method name (platforms instead of the wrapper method name platform)
@@ -1665,6 +1666,7 @@ Example query:
       to return the record count instead of the actual records
     - the third parameter is missing, which has a default value NULL
       and the request will be sent without any filter parameters
+
 */
 
 $IGDB->mutliquery("platforms/count", "Count of Platforms");

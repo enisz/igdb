@@ -5,6 +5,13 @@ icon: fa-clipboard-list
 
 # Change Log
 
+## v4.1.2 - May 20, 2021
+ - Minor updates to the readme
+
+## v4.1.1 - May 20, 2021
+ - Removed a debugging var_dump from the IGDB Wrapper
+ - Updated the documentation with a [Query Builder example](#query-builder-with-options) with `$options` array
+
 ## v4.1.0 - May 15, 2021
  - The wrapper got a brand new documentation!
  - Introduced the [IGDBQueryBuilder](#igdb-query-builder) class

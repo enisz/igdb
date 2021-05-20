@@ -32,7 +32,7 @@ These files can be imported one-by-one but it is highly recommended to import th
 
 After the import, you are ready to use the wrapper.
 
-> If you decide to import the files separately, make sure to check the source code since the exception classes are imported in the respective files where they are needed with hardcoded paths. The files has to be in the same folder to make it work!
+>:warning If you decide to import the files separately, make sure to check the source code since the exception classes are imported in the respective files where they are needed with hardcoded paths. The files has to be in the same folder to make it work!
 
 ## Instantiating the wrapper
 

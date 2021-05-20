@@ -7,7 +7,7 @@ icon: fa-laptop-code
 
 The examples in this section will try to cover most of the use cases of the wrapper.
 
-> To see your own tokens in the example codes set them up on the home page!
+>:tip To see your own tokens in the example codes set them up on the home page!
 
 ![Save your tokens for the example codes](images/05-examples/set-tokens.png)
 
@@ -109,6 +109,90 @@ An example to see how to use the [IGDB Query Builder](#igdb-query-builder) to bu
             ->offset(10)
             // process the configuration and return a string
             ->build();
+
+        // executing the query
+        $games = $igdb->game($query);
+
+        // showing the results
+        var_dump($games);
+    } catch (IGDBInvalidParameterException $e) {
+        // an invalid parameter is passed to the query builder
+        echo $e->getMessage();
+    } catch (IGDBEnpointException $e) {
+        // a non-successful response recieved from the IGDB API
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+**Result**
+
+```text
+array (size=5)
+  0 =>
+    object(stdClass)[3]
+      public 'id' => int 125062
+      public 'cover' => int 83686
+      public 'name' => string 'Uncharted Ocean: Set Sail' (length=25)
+  1 =>
+    object(stdClass)[4]
+      public 'id' => int 19583
+      public 'cover' => int 15883
+      public 'name' => string 'Uncharted: Fight for Fortune' (length=28)
+  2 =>
+    object(stdClass)[5]
+      public 'id' => int 26193
+      public 'cover' => int 85149
+      public 'name' => string 'Uncharted: The Lost Legacy' (length=26)
+  3 =>
+    object(stdClass)[6]
+      public 'id' => int 19609
+      public 'cover' => int 85164
+      public 'name' => string 'Uncharted: Fortune Hunter' (length=25)
+  4 =>
+    object(stdClass)[7]
+      public 'id' => int 7331
+      public 'cover' => int 81917
+      public 'name' => string 'Uncharted 4: A Thief's End' (length=26)
+```
+
+## Query Builder with Options
+
+The [IGDB Query Builder](#igdb-query-builder) still supports the legacy `$options` array to parameterize the query.
+
+>:warning If possible try to avoid this method as it may will be removed in later versions.
+
+**Code**
+
+```php
+<?php
+
+    // importing the wrapper
+    require_once "class.igdb.php";
+
+    // instantiating the wrapper
+    $igdb = new IGDB("{client_id}", "{access_token}");
+
+    // creating the options array
+    $options = array(
+        // searching for games LIKE uncharted
+        "search" => "uncharted",
+        // we want to see these fields in the results
+        "fields" => array("id", "name", "cover"),
+        // we only need maximum 5 results per query (pagination)
+        "limit" => 5,
+        // we would like to show the third page; fetch the results from the tenth element (pagination)
+        "offset" => 10
+    );
+
+    try {
+        // instantiating the builder with the options array
+        // in this case make sure to do this in a try block
+        $builder = new IGDBQueryBuilder($options);
+
+        // building the query
+        $query = $builder->build();
 
         // executing the query
         $games = $igdb->game($query);
