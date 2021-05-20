@@ -51,7 +51,7 @@ export default function Header({searchBar = false, searchValue = "", hamburger =
                         {/*<ul className="social-list list-inline mx-md-3 mx-lg-5 mb-0 d-none d-lg-flex">
                             <li className="list-inline-item"><a href="https://github.com/enisz/igdb"><i className="fab fa-github fa-fw"></i></a></li>
                         </ul>*/}
-                        <a href="https://github.com/enisz/igdb/archive/master.zip" className="btn btn-primary d-none d-lg-flex">Download</a>
+                        <a href="https://github.com/enisz/igdb/archive/master.zip" className="btn btn-primary d-none d-lg-flex ml-3">Download</a>
                     </div>
                 </div>
             </div>

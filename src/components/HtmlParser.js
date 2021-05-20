@@ -14,16 +14,79 @@ export default function HtmlParser({content}) {
             shouldProcessNode: node => node.name && node.name === "blockquote",
             processNode: (node, children) => {
                 const id = Md5(ReactDOMServer.renderToString(children)).substr(2,9);
+                const typeRegex = new RegExp("^\\:([a-z]*)", "i")
+                const component = children.find(child => child !== "\n");
+                let text;
+                let type;
+
+                if(typeof component.props.children === "string") {
+                    text = component.props.children;
+                } else {
+                    text = component.props.children.find(child => typeof child === "string");
+                }
+
+                const match = text.match(typeRegex);
+
+                if(match != null) {
+                    type = match[1];
+                } else {
+                    type = "info";
+                }
+
+                let callout;
+
+                switch(type) {
+                    case "warn":
+                    case "warning":
+                        callout = {
+                            title : "Warning",
+                            icon : "exclamation-triangle",
+                            class : "warning"
+                        }
+                    break;
+
+                    case "success":
+                    case "tip":
+                        callout = {
+                            title : "Tip",
+                            icon : "thumbs-up",
+                            class : "success"
+                        }
+                    break;
+
+                    case "danger":
+                        callout = {
+                            title : "Danger",
+                            icon : "exclamation-circle",
+                            class : "danger"
+                        }
+                    break;
+
+                    case "info":
+                    case "note":
+                    default:
+                        callout = {
+                            title : "Note",
+                            icon : "info-circle",
+                            class : "info"
+                        }
+                    break;
+                }
+
                 return (
-                    <div className="callout-block callout-block-info" key={`callout-${id}`}>
+                    <div className={`callout-block callout-block-${callout.class}`} key={`callout-${id}`}>
                         <div className="content">
                             <h4 className="callout-title">
                                 <span className="callout-icon-holder mr-1">
-                                    <i className="fas fa-info-circle"></i>
+                                    <i className={`fas fa-${callout.icon}`}></i>
                                 </span>
-                                Note
+                                {callout.title}
                             </h4>
-                            {children}
+                            {
+                                typeof component.props.children === "string"
+                                    ? component.props.children.replace(typeRegex, "")
+                                    : component.props.children.map(child => typeof child === "string" ? child.replace(typeRegex, "") : child)
+                            }
                         </div>
                     </div>
             )}
