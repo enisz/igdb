@@ -25,7 +25,7 @@ If a non-successful response is recieved from Twitch, an `Exception` is thrown.
 ```php
 <?php
 
-    require_once "src/class.igdb.php";
+    require_once "class.igdb.php";
 
     try {
         var_dump(IGDBUtils::authenticate("{client_id}", "{client_secret}"));
@@ -83,7 +83,7 @@ If an invalid second parameter is passed, an `IGDBInvalidParameterException` wil
 ```php
 <?php
 
-    require_once "src/class.igdb.php";
+    require_once "class.igdb.php";
 
     $igdb = new IGDB("{client_id}", "{access_token}");
     $builder = new IGDBQueryBuilder();
