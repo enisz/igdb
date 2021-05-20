@@ -4,20 +4,6 @@
 
 - [Introduction](#introduction)
 - [Documentation](#documentation)
-- [Change Log](#change-log)
-  * [v4.1.0 - May 15, 2021](#v410---may-15-2021)
-  * [v4.0.2 - April 28, 2021](#v402---april-28-2021)
-  * [v4.0.1 - February 18, 2021](#v401---february-18-2021)
-  * [v4.0.0 - October 20, 2020](#v400---october-20-2020)
-  * [v2.0.3 - September 17, 2020](#v203---september-17-2020)
-  * [v2.0.2 - February 03, 2020](#v202---february-03-2020)
-  * [v2.0.1 - January 27, 2020](#v201---january-27-2020)
-  * [v2.0.0 - December 04, 2019](#v200---december-04-2019)
-  * [v1.0.5 - March 11, 2019](#v105---march-11-2019)
-  * [v1.0.4 - March 25, 2018](#v104---march-25-2018)
-  * [v1.0.3 - March 18, 2018](#v103---march-18-2018)
-  * [v1.0.2 - March 17, 2018](#v102---march-17-2018)
-  * [v1.0.1 - March 16, 2018](#v101---march-16-2018)
 
 <!-- tocstop -->
 
