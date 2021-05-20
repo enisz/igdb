@@ -146,8 +146,6 @@
                 $this->curl_reinit();
             }
 
-            var_dump($url);
-
             // Set the request URL
             curl_setopt($this->curl_handler, CURLOPT_URL, $url);
 
