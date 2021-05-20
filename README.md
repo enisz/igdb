@@ -1,11 +1,4 @@
-# Internet Game Database API Wrapper
-
-<!-- toc -->
-
-- [Introduction](#introduction)
-- [Documentation](#documentation)
-
-<!-- tocstop -->
+# IGDB API PHP Wrapper
 
 ## Introduction
 The wrapper's main purpose is to provide a simple solution to fetch data from IGDB's database using PHP.
