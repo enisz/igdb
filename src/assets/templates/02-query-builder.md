@@ -11,43 +11,27 @@ This class is a helper class to help you construct your queries. If you have use
 
 ## Instantiating the Builder
 
-There are two ways to instantiate the Builder.
-
-### Traditional way
-
-To support the traditional way of configuring the queries - the `$options` array - there is an optional parameter in the constructor. If you wish to use this approach you can pass your array to the constructor. In this case make sure to have the instantiating line in a try...catch block as the constructor could throw an exception if there is an invalid key or field in your array.
+To instantiate the Builder simply use the `new` keyword.
 
 ```php
 <?php
 
     require_once "class.igdb.php";
 
-    // setting up the options array
-    $options = array(
-        "search" => "uncharted 4",
-        "fields" => "id,name",
-        "limit" => 1
-    );
-
-    try {
-        // pass the options array to the constructor in a try...catch block
-        $builder = new IGDBQueryBuilder($options);
-
-        // you still have to call the build method to return the query
-        $query = $builder->build();
-    } catch (IGDBInvaliParameterException $e) {
-        // invalid key found in the $options array
-        echo $e->getMessage();
-    }
+    $builer = new IGDBQueryBuiler();
 
 ?>
 ```
 
->:warning Using the Builder this way is not recommended as this functionality may be removed in future versions.
+Now the `$builder` object will expose every configuring methods to set up your query before [building it](#building-the-query).
+
+## Configuring the Builder
+
+There are two ways to configure the builder.
 
 ### Builder way
 
-The Builder is using a builder pattern to configure itself before parsing the properties to a query string. When every parameter is set, calling the [`build()`](#building-the-query) method will start processing the parameters and will return the query string itself.
+The Builder is using a builder pattern to configure itself with the [configuring methods](#configuring-methods) before parsing the properties to a query string. When every parameter is set, calling the [`build()`](#building-the-query) method will start processing the parameters and will return the query string itself.
 
 ```php
 <?php
@@ -65,6 +49,37 @@ The Builder is using a builder pattern to configure itself before parsing the pr
             ->build();
     } catch (IGDBInvaliParameterException $e) {
         // invalid value passed to a method
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+### Traditional way
+
+To support the traditional way of configuring the queries - the `$options` array - there is a method called [`options()`](#options). Passing your `$options` array to this method will process your parameters and will set up the builder.
+
+>:warning Using the Builder this way is not recommended as this functionality may be removed in future versions. Use the [builder approach](#builder-way) instead.
+
+```php
+<?php
+
+    require_once "class.igdb.php";
+
+    $builder = new IGDBQueryBuilder();
+
+    $options = array(
+        "search" => "uncharted 4",
+        "fields" => "id,name",
+        "limit" => 1
+    );
+
+    try {
+        // pass your $options to the options method
+        // then build the query
+        $query = $builder->options($options)->build();
+    } catch (IGDBInvaliParameterException $e) {
+        // invalid key or value found in the $options array
         echo $e->getMessage();
     }
 
@@ -431,6 +446,139 @@ Sorting (ordering) is used to order results by a specific field. The parameter c
     );
 
 ?>
+```
+
+### Options
+```php
+public function options(array $options) throws IGDBInvalidArgumentException: IGDBQueryBuilder
+```
+
+>:warning Using the Builder this way is not recommended as this functionality may be removed in future versions. Use the [builder approach](#builder-way) instead.
+
+With this method you can parse your `$options` array instead of using the [builder approach](#builder-way). If a non-valid key or value is in the array, an `IGDBInvalidParameterException` will be thrown.
+
+Passing your `$options` array to this method will configure the builder with the parameters in it.
+
+**Parameters**:
+ - `$options`: the options array with your configuration in it
+
+**Returns**: `IGDBQueryBuilder` instance
+
+```php
+<?php
+
+    require_once "class.igdb.php";
+
+    // instantiate the query builder
+    $builder = new IGDBQueryBuilder();
+
+    // setting up the options array
+    $options = array(
+        "search" => "uncharted 4",
+        "fields" => "id,name",
+        "limit" => 1
+    );
+
+    try {
+        // configuring the builder with an options array
+        $builder->options($options);
+
+        // still have to call the build method to building the query
+        $query = $builder->build();
+    } catch (IGDBInvaliParameterException $e) {
+        // invalid key or value found in the $options array
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+>:warning Calling this method **will not reset** the configuration. To do so, use the [reset method](#reset).
+
+```php
+<?php
+
+    // importing the wrapper
+    require_once "class.igdb.php";
+
+    // instantiate the query builder
+    $builder = new IGDBQueryBuilder();
+
+    try {
+        // stacking the options calls will add each parameter as this not resets the configuration
+        $builder
+            ->options(array("search" => "uncharted"))
+            ->options(array("fields" => "id,name"))
+            ->options(array("limit" => 1));
+
+        // building the query
+        $query = $builder->build();
+    } catch (IGDBInvaliParameterException $e) {
+        // invalid key or value found in the $options array
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+Stacking the `options()` calls will add each parameter to the builder.
+
+```text
+fields id,name; search "uncharted"; limit 1;
+```
+
+### Reset
+```php
+public function reset(): IGDBQueryBuilder
+```
+
+This method will reset every configuration to the default values.
+
+**Parameters**: -
+
+**Returns**: `IGDBQueryBuilder` instance
+
+```php
+<?php
+
+    // importing the wrapper
+    require_once "class.igdb.php";
+
+    // instantiate the query builder
+    $builder = new IGDBQueryBuilder();
+
+    // setting up the options1 array
+    $options1 = array(
+        "search" => "uncharted 4",
+        "fields" => "id,name",
+        "limit" => 2
+    );
+
+    // setting upt he options2 array
+    $options2 = array(
+        "search" => "star wars",
+        "fields" => "cover,slug",
+        "limit" => 1
+    );
+
+    try {
+        // configuring the builder with options1, reset the values then pass options2
+        $builder->options($options1)->reset()->options($options2);
+
+        // building the query
+        $query = $builder->build();
+    } catch (IGDBInvaliParameterException $e) {
+        // invalid key or value found in the $options array
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+The code above will return the `$options2` array's configuration, as it got reset with the `reset()` method.
+
+```text
+fields cover,slug; search "star wars"; limit 1;
 ```
 
 ## Building the Query

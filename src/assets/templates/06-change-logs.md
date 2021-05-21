@@ -5,6 +5,10 @@ icon: fa-clipboard-list
 
 # Change Log
 
+## v4.2.0 - May 22, 2021
+ - IGDBQueryBuilder: Moved the `$options` array parsing to the [`options()`](#options) method
+ - IGDBQueryBuilder: [`reset()`](#reset) method added
+
 ## v4.1.2 - May 20, 2021
  - Minor updates to the readme
 

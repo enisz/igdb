@@ -161,7 +161,7 @@ array (size=5)
 
 The [IGDB Query Builder](#igdb-query-builder) still supports the legacy `$options` array to parameterize the query.
 
->:warning If possible try to avoid this method as it may will be removed in later versions.
+>:warning Using the Builder this way is not recommended as this functionality may be removed in future versions. Use the [builder approach](#builder-way) instead.
 
 **Code**
 
@@ -173,6 +173,9 @@ The [IGDB Query Builder](#igdb-query-builder) still supports the legacy `$option
 
     // instantiating the wrapper
     $igdb = new IGDB("{client_id}", "{access_token}");
+
+    // instantiating the builder
+    $builder = new IGDBQueryBuilder();
 
     // creating the options array
     $options = array(
@@ -187,9 +190,8 @@ The [IGDB Query Builder](#igdb-query-builder) still supports the legacy `$option
     );
 
     try {
-        // instantiating the builder with the options array
-        // in this case make sure to do this in a try block
-        $builder = new IGDBQueryBuilder($options);
+        // adding your $options array with the options method
+        $builder->options($options);
 
         // building the query
         $query = $builder->build();
