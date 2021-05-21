@@ -5,7 +5,7 @@
      *
      * Building apicalypse query strings
      *
-     * @version 1.0.0
+     * @version 1.1.0
      * @author Enisz Abdalla <enisz87@gmail.com>
      * @link https://github.com/enisz/igdb
      */
