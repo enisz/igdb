@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import dateParser from 'node-date-parser';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { getParagraphs } from '../utils/Database';
@@ -45,6 +46,7 @@ export default function DocumentationPage() {
         return counter + " " + textual[i] + (counter > 1 ? "s" : "");
     }
 
+    const formatDate = timestamp => timestamp == null ? "Not published yet" : `${dateParser.parse('jo', new Date(timestamp))} of ${dateParser.parse('F, Y', new Date(timestamp))}`;
 
     return (
         <>
@@ -58,7 +60,7 @@ export default function DocumentationPage() {
                         { topics.length > 0 && topics.map( topic => (
                             <article className="docs-article" id={topic.slug} key={topic.id}>
                                 <header className="docs-header">
-                                    <h1 className="docs-heading">{topic.title} <span className="docs-time"><i className="far fa-clock mr-1"></i>Last updated: {topic.date} { topic.timestamp != null && <>({ calculateElapsedTime(topic.timestamp)} ago)</>}</span></h1>
+                                    <h1 className="docs-heading">{topic.title} <span className="docs-time"><i className="far fa-clock mr-1"></i>Last updated: {formatDate(topic.timestamp)} { topic.timestamp != null && <>({ calculateElapsedTime(topic.timestamp)} ago)</>}</span></h1>
 
                                     <section className="docs-intro">
                                         <HtmlParser content={topic.body.html} />
