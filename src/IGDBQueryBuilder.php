@@ -62,6 +62,13 @@
          * Setting up the builder with default values
          */
         public function __construct() {
+            $this->reset();
+        }
+
+        /**
+         * Resets the configuration to the default values
+         */
+        public function reset() {
             $this->_search = "";
             $this->_fields = array("*");
             $this->_exclude = array();
@@ -69,6 +76,8 @@
             $this->_offset = $this->offset_default;
             $this->_where = array();
             $this->_sort = array();
+
+            return $this;
         }
 
         /**
