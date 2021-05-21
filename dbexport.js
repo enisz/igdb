@@ -158,16 +158,10 @@ const exportDb = () => {
             }
 
             if(level == 1) {
-                const time = execSync(`git log --format="%cD|%ct" "${path.join(TEMPLATE_PATH, basename + ".md")}"`).toString().split("\n")[0].trim();
+                const time = execSync(`git log --format=%ct "${path.join(TEMPLATE_PATH, basename + ".md")}"`).toString().split("\n")[0].trim();
                 toPush.icon = icon;
                 toPush.overview = overview;
-                if(time.length > 0) {
-                    const [gitDate, gitTimestamp] = time.split("|");
-                    toPush.date = `${dateParser.parse('jo', new Date(gitDate))} of ${dateParser.parse('F, Y', new Date(gitDate))}`;
-                    toPush.timestamp = parseInt(gitTimestamp)*1000;
-                } else {
-                    [toPush.date, toPush.timestamp] = ["Not published yet", null]
-                }
+                toPush.timestamp = time.length > 0 ? parseInt(time)*1000 : null;
             }
 
             documents.push(toPush)
