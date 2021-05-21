@@ -60,10 +60,8 @@
 
         /**
          * Setting up the builder with default values
-         * @param $query - the query can be built from a legacy query array. If null, nothing is set
-         * @throws IGDBInvalidParameterException If the passed query array contains invalid parameters
          */
-        public function __construct($query = null) {
+        public function __construct() {
             $this->_search = "";
             $this->_fields = array("*");
             $this->_exclude = array();
@@ -71,16 +69,24 @@
             $this->_offset = $this->offset_default;
             $this->_where = array();
             $this->_sort = array();
+        }
 
-            if(!is_null($query)) {
-                foreach($query as $parameter => $value) {
-                    if(method_exists($this, $parameter)) {
-                        $this->$parameter($value);
-                    } else {
-                        throw new IGDBInvalidParameterException("Invalid parameter found in passed query array. " . $parameter . " is not valid!");
-                    }
+        /**
+         * Configuring the query with an options array
+         * @param $options - The options array containing configuration items
+         * @return IGDBQueryBuilder
+         * @throws IGDBInvalidParameterException If the passed options array contains invalid parameters
+         */
+        public function options($options) {
+            foreach($options as $parameter => $value) {
+                if(method_exists($this, $parameter)) {
+                    $this->$parameter($value);
+                } else {
+                    throw new IGDBInvalidParameterException("Invalid parameter found in passed query array. " . $parameter . " is not valid!");
                 }
             }
+
+            return $this;
         }
 
         /**
