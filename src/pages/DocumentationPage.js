@@ -8,6 +8,11 @@ import Sidebar from '../components/Sidebar';
 import HighlightJS from 'highlight.js';
 import DocumentSections from '../components/DocumentSections';
 import HtmlParser from '../components/HtmlParser';
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+
+TimeAgo.addDefaultLocale(en);
+const timeAgo = new TimeAgo('en-US');
 
 export default function DocumentationPage() {
     useBodyClass("docs-page");
@@ -16,7 +21,6 @@ export default function DocumentationPage() {
     useEffect(() => {
         HighlightJS.highlightAll();
 
-        /* wmooth scrolling on page load if URL has a hash */
 		setTimeout(
             () => {
                 if(window.location.hash) {
@@ -26,27 +30,6 @@ export default function DocumentationPage() {
             }, 200
         )
     }, []);
-
-    const calculateElapsedTime = timestamp => {
-        const time = +new Date();
-        const difference = time - timestamp;
-        const units = [1000, 60, 60, 24, 7, 4, 12];
-        const textual = ["millisecond", "second", "minute", "hour", "day", "week", "year"]
-        let counter = difference;
-
-        let i;
-        for(i=0; i<units.length; i++) {
-            if(Math.floor(counter / units[i]) > 0) {
-                counter = Math.floor(counter / units[i]);
-            } else {
-                break;
-            }
-        }
-
-        return counter + " " + textual[i] + (counter > 1 ? "s" : "");
-    }
-
-    const formatDate = timestamp => timestamp == null ? "Not published yet" : `${dateParser.parse('jo', new Date(timestamp))} of ${dateParser.parse('F, Y', new Date(timestamp))}`;
 
     return (
         <>
@@ -60,8 +43,25 @@ export default function DocumentationPage() {
                         { topics.length > 0 && topics.map( topic => (
                             <article className="docs-article" id={topic.slug} key={topic.id}>
                                 <header className="docs-header">
-                                    <h1 className="docs-heading">{topic.title} <span className="docs-time"><i className="far fa-clock mr-1"></i>Last updated: {formatDate(topic.timestamp)} { topic.timestamp != null && <>({ calculateElapsedTime(topic.timestamp)} ago)</>}</span></h1>
-
+                                    <h1 className="docs-heading">
+                                        {topic.title}&nbsp;
+                                        <span className="docs-time">
+                                            <i className="far fa-clock mr-1"></i>
+                                            Last updated:&nbsp;
+                                            { topic.timestamp
+                                                ?
+                                                    <>
+                                                        {dateParser.parse('j', new Date(topic.timestamp))}
+                                                        <sup>{dateParser.parse('o', new Date(topic.timestamp))}</sup>&nbsp;
+                                                        of&nbsp;
+                                                        {dateParser.parse('F, Y', new Date(topic.timestamp))}&nbsp;
+                                                        ({timeAgo.format(new Date(topic.timestamp))})
+                                                    </>
+                                                :
+                                                <>Not published yet</>
+                                            }
+                                        </span>
+                                    </h1>
                                     <section className="docs-intro">
                                         <HtmlParser content={topic.body.html} />
                                     </section>
