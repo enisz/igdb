@@ -161,7 +161,7 @@ array (size=5)
 
 The [IGDB Query Builder](#igdb-query-builder) still supports the legacy `$options` array to parameterize the query.
 
->:warning Using the Builder this way is not recommended as this functionality may be removed in future versions. Use the [builder approach](#builder-way) instead.
+>:warning Using the Builder this way is not recommended as this functionality may be removed in future versions. Use the [builder approach](#builder-approach) instead.
 
 **Code**
 
@@ -395,81 +395,95 @@ array (size=2)
 
 ## MultiQuery
 
-Multiquery example
+Using multiquery multiple queries can be executed against the IGDB database using a single query. The multiquery method expects an array of multiquery query strings.
+
+>:info Using the [`build`](#build) method with a boolean `true` parameter, a query will be returned with a multiquery syntax.
 
 **Code**
 
 ```php
 <?php
 
-
     // importing the wrapper
-    require 'class.igdb.php';
+    require_once "class.igdb.php";
 
-    // instantiating the wrapper
+    // instantiate the wrapper
     $igdb = new IGDB("{client_id}", "{access_token}");
 
-    // instantiate the query builder
-    $builder = new IGDBQueryBuilder();
+    // query builder for the main game
+    $main = new IGDBQueryBuilder();
+
+    // query builder for the bundles
+    $bundle = new IGDBQueryBuilder();
 
     try {
-        // Leaving the optional third parameter, sending the request without any filters
-        // Also asking for the record count by providing /count after the endpoint name
-        // The method name has to be the IGDB endpoint name instead of the wrapper class method name => platforms instead of platform
-        $platforms = $igdb->multiquery("platforms/count", "Count of Platforms");
+        // configuring the main query
+        $main
+            ->name("Main Game")
+            ->endpoint("game")
+            ->fields("id,name")
+            ->where("id = 25076");
 
-        // showing the platforms
-        var_dump($platforms);
+        // configuring the bundle query
+        $bundle
+            ->name("Bundles")
+            ->endpoint("game")
+            ->fields("id,name,version_parent,category")
+            ->where("version_parent = 25076")
+            ->where("category = 0");
 
-        // optionally, you could pass a filter as a third parameter to narrow down the matches
-        $query = $builder
-            // fetching name and platforms.name fields
-            ->fields(array("name", "platforms.name"))
-            // where the platforms is not null and
-            ->where("platforms != null")
-            // where platforms is 48 (playstation)
-            ->where("platforms = {48}")
-            // limit the results to 1 record
-            ->limit(1)
-            // process the configuration and return a string
-            ->build();
-
-        $games = $igdb->mutliquery("games", "Playstation Games", $query);
-
-        // showing the games
-        var_dump($games);
-    } catch (IGDBEnpointException $e) {
-        // a non-successful response recieved from the IGDB API
+        var_dump(
+            $igdb->multiquery(
+                array(
+                    $main->build(true),
+                    $bundle->build(true)
+                )
+            )
+        );
+    } catch (IGDBInvaliParameterException $e) {
+        // a builder property is invalid
+        echo $e->getMessage();
+    } catch (IGDBEndpointException $e) {
+        // something went wront with the query
         echo $e->getMessage();
     }
-
 ?>
 ```
 
 **Result**
 
 ```text
-array (size=1)
-  0 =>
-    object(stdClass)[3]
-      public 'name' => string 'Count of Platforms' (length=18)
-      public 'count' => int 172
-
-
-array (size=1)
+array (size=2)
   0 =>
     object(stdClass)[4]
-      public 'name' => string 'Playstation Games' (length=17)
+      public 'name' => string 'Main Game' (length=9)
       public 'result' =>
         array (size=1)
           0 =>
             object(stdClass)[5]
-              public 'id' => int 132972
-              public 'name' => string 'One Piece: Pirate Warriors 4 - Deluxe Edition' (length=45)
-              public 'platforms' =>
-                array (size=1)
-                  0 =>
-                    object(stdClass)[6]
-                      public 'id' => int 48
-                      public 'name' => string 'PlayStation 4' (length=13)
+              public 'id' => int 25076
+              public 'name' => string 'Red Dead Redemption 2' (length=21)
+  1 =>
+    object(stdClass)[6]
+      public 'name' => string 'Bundles' (length=7)
+      public 'result' =>
+        array (size=3)
+          0 =>
+            object(stdClass)[7]
+              public 'id' => int 103205
+              public 'category' => int 0
+              public 'name' => string 'Red Dead Redemption 2: Special Edition' (length=38)
+              public 'version_parent' => int 25076
+          1 =>
+            object(stdClass)[8]
+              public 'id' => int 103207
+              public 'category' => int 0
+              public 'name' => string 'Red Dead Redemption 2: Collector's Box' (length=38)
+              public 'version_parent' => int 25076
+          2 =>
+            object(stdClass)[9]
+              public 'id' => int 103206
+              public 'category' => int 0
+              public 'name' => string 'Red dead Redemption 2: Ultimate Edition' (length=39)
+              public 'version_parent' => int 25076
 ```

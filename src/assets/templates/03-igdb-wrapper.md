@@ -5,7 +5,7 @@ icon: fa-gift
 
 # IGDB Wrapper
 
-The most important part of the wrapper, the `IGDB` class which does the most important work: communicating with the IGDB API.
+This is the most important part of the wrapper, the `IGDB` class which does the heavy lifting: communicating with the IGDB API.
 
 As mentioned in the [Introduction](#introduction), to have access to IGDB's database you have to register a Twitch Account and have your own `client_id` and `access_token`.
 
@@ -13,7 +13,7 @@ As mentioned in the [Introduction](#introduction), to have access to IGDB's data
 
 ## Instantiating the wrapper
 
-After importing the dependencies you can instantiate the class with the `new` keyword, passing your tokens to the constructor.
+After importing the dependencies you can instantiate the class with the `new` keyword by passing your tokens to the constructor.
 
 ```php
 <?php
@@ -25,7 +25,7 @@ After importing the dependencies you can instantiate the class with the `new` ke
 ?>
 ```
 
->:warning The wrapper itself does not validate your tokens. If your credentials are invalid, you will get an error from the IGDB API after executing a query.
+>:info The wrapper itself does not validate your tokens. If your credentials are invalid, you will get an error from the IGDB API after executing a query.
 
 ## Public Methods
 
@@ -1641,79 +1641,113 @@ Fetching data from IGDB API using the [Website](https://api-docs.igdb.com/websit
 
 ## MultiQuery
 ```php
-public function multiquery(string $endpoint, string $result_name, string $query = null) : mixed
+public function multiquery(array $queries) throws IGDBEndpointException, IGDBInvalidParameterException: mixed
 ```
 
-Multi-Query is a new way to request a huge amount of information in one request! With Multi-Query you can request multiple endpoints at once, it also works with multiple requests to a single endpoint as well.
+This method executes a query against the `multiquery` endpoint. With this functionality one is able to execute multiple queries in a single request.
 
 **Parameters**
- - `$endpoint`: the endpoint to use (note: not the wrapper method name, but the IGDB endpoint name. Also accepts count)
- - `$result_name`:  name, given by you.
- - `$query`: an apicalypse query string. The default value is null, in this case no filter will be applied.
+ - `$queries`: an array of apicalypse formatted multiquery query strings.
 
->:tip To build a query you can use the [IGDB Query Builder](#igdb-query-builder)!
+**Returns**: the response from the IGDB endpoint. The result object can vary depending on your query.
 
-Returns either the records matching the filter criteria, or the count of these records. This depends on the `$endpoint` parameter.
-
-Example query:
 ```php
-/*
+<?php
 
-  A few things to note here:
-    - the endpoint name has to be the IGDB endpoint name, not the
-      wrapper class method name (platforms instead of the wrapper method name platform)
-    - there is a /count after the endpoint name which tells the api
-      to return the record count instead of the actual records
-    - the third parameter is missing, which has a default value NULL
-      and the request will be sent without any filter parameters
+    // importing the wrapper
+    require_once "class.igdb.php";
 
-*/
+    // instantiate the wrapper
+    $igdb = new IGDB("{client_id}", "{access_token}");
 
-$IGDB->mutliquery("platforms/count", "Count of Platforms");
+    // query builder for the main game
+    $main_builder = new IGDBQueryBuilder();
+
+    // query builder for the bundles
+    $bundle_builder = new IGDBQueryBuilder();
+
+    try {
+        // building the main game query
+        $main = $main_builder
+            ->name("Main Game")
+            ->endpoint("game")
+            ->fields("id,name")
+            ->where("id = 25076")
+            ->build(true);
+
+        // building the bundle query
+        $bundle = $bundle_builder
+            ->name("Bundles")
+            ->endpoint("game")
+            ->fields("id,name,version_parent,category")
+            ->where("version_parent = 25076")
+            ->where("category = 0")
+            ->build(true);
+
+        // the query can be passed as a string too
+
+        // $main = "query games \"Main Game\" {
+        //     fields id,name;
+        //     where id = 25076;
+        // };";
+
+        // $bundle = "query games \"Bundles\" {
+        //     fields id,name,version_parent,category;
+        //     where version_parent = 25076 & category = 0;
+        // };";
+
+        // passing the queries to the multiquery method as an array of strings
+        var_dump(
+            $igdb->multiquery(
+                array($main, $bundle)
+            )
+        );
+    } catch (IGDBInvaliParameterException $e) {
+        // a builder property is invalid
+        echo $e->getMessage();
+    } catch (IGDBEndpointException $e) {
+        // something went wront with the query
+        echo $e->getMessage();
+    }
+?>
 ```
+The result of the query:
 
-Result of the query:
 ```text
-array (size=1)
+array (size=2)
   0 =>
-    object(stdClass)[2]
-      public 'name' => string 'Count of Platforms' (length=18)
-      public 'count' => int 169
-```
-
-Example query with filters:
-```php
-$IGDB->mutliquery(
-  "games",                                                                        // endpoint
-  "Playstation Games",                                                            // result name
-  "fields name,platforms.name; where platforms !=n & platforms = {48}; limit 1;"  // apicalypse query string
-);
-```
-
-
-
-Result of the query:
-```php
-// because of the limit parameter in the query, we have only 1 element in the result
-array (size=1)
-  0 =>
-    object(stdClass)[2]
-      public 'name' => string 'Playstation Games' (length=17)
+    object(stdClass)[4]
+      public 'name' => string 'Main Game' (length=9)
       public 'result' =>
         array (size=1)
           0 =>
-            object(stdClass)[3]
-              public 'id' => int 41058
-              public 'name' => string 'The Seven Deadly Sins: Knights of Britannia' (length=43)
-              public 'platforms' =>
-                array (size=1)
-                  0 =>
-                    object(stdClass)[4]
-                      public 'id' => int 48
-                      public 'name' => string 'PlayStation 4' (length=13)
+            object(stdClass)[5]
+              public 'id' => int 25076
+              public 'name' => string 'Red Dead Redemption 2' (length=21)
+  1 =>
+    object(stdClass)[6]
+      public 'name' => string 'Bundles' (length=7)
+      public 'result' =>
+        array (size=3)
+          0 =>
+            object(stdClass)[7]
+              public 'id' => int 103207
+              public 'category' => int 0
+              public 'name' => string 'Red Dead Redemption 2: Collector's Box' (length=38)
+              public 'version_parent' => int 25076
+          1 =>
+            object(stdClass)[8]
+              public 'id' => int 103206
+              public 'category' => int 0
+              public 'name' => string 'Red dead Redemption 2: Ultimate Edition' (length=39)
+              public 'version_parent' => int 25076
+          2 =>
+            object(stdClass)[9]
+              public 'id' => int 103205
+              public 'category' => int 0
+              public 'name' => string 'Red Dead Redemption 2: Special Edition' (length=38)
+              public 'version_parent' => int 25076
 ```
-
-> For more details on MultiQuery refer to the [IGDB Multi-Query Documentation](https://api-docs.igdb.com/#multi-query)!
 
 ## Return Values
 
@@ -1734,14 +1768,14 @@ The result of the query above:
 
 ```text
 array (size=2)
-0 =>
-    object(stdClass)[2]
-    public 'id' => int 1
-    public 'name' => string 'Thief II: The Metal Age' (length=23)
-1 =>
-    object(stdClass)[3]
-    public 'id' => int 2
-    public 'name' => string 'Thief: The Dark Project' (length=23)
+    0 =>
+        object(stdClass)[2]
+        public 'id' => int 1
+        public 'name' => string 'Thief II: The Metal Age' (length=23)
+    1 =>
+        object(stdClass)[3]
+        public 'id' => int 2
+        public 'name' => string 'Thief: The Dark Project' (length=23)
 ```
 
 If you pass a boolean `true` as a second parameter, then you will get an object with a `count` property containing the item count from the selected endpoint filtered by the `$query` filters.
@@ -1750,7 +1784,7 @@ If you pass a boolean `true` as a second parameter, then you will get an object 
 <?php
     // a query against the game endpoint with a second true parameter
     // note the second boolean true parameter
-    $igdb->game( "fields id,name; where id = (1,2);", true);
+    $igdb->game("fields id,name; where id = (1,2);", true);
 
 ?>
 ```

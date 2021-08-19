@@ -29,7 +29,7 @@ Now the `$builder` object will expose every configuring methods to set up your q
 
 There are two ways to configure the builder.
 
-### Builder way
+### Builder approach
 
 The Builder is using a builder pattern to configure itself with the [configuring methods](#configuring-methods) before parsing the properties to a query string. When every parameter is set, calling the [`build()`](#building-the-query) method will start processing the parameters and will return the query string itself.
 
@@ -55,11 +55,11 @@ The Builder is using a builder pattern to configure itself with the [configuring
 ?>
 ```
 
-### Traditional way
+### Traditional approach
 
-To support the traditional way of configuring the queries - the `$options` array - there is a method called [`options()`](#options). Passing your `$options` array to this method will process your parameters and will set up the builder.
+To support the traditional approach of configuring the queries - the `$options` array - there is a method called [`options()`](#options). Passing your `$options` array to this method will process your parameters and will set up the builder.
 
->:warning Using the Builder this way is not recommended as this functionality may be removed in future versions. Use the [builder approach](#builder-way) instead.
+>:warning Using the Builder this way is not recommended as this functionality may will be removed in future versions. Use the [builder approach](#builder-approach) instead.
 
 ```php
 <?php
@@ -105,20 +105,20 @@ This is kind of a traditional thing. Since the IGDB team introduced the apicalyp
 ```php
 <?php
 
-    // traditional way, single id
+    // traditional approach, single id
     $options = array(
         "id" => 1
     );
 
-    // traditional way, multiple id's
+    // traditional approach, multiple id's
     $options = array(
         "id" => array(1,2,3)
     );
 
-    // builder way, single id
+    // builder approach, single id
     $builder->id(1);
 
-    // builder way, multiple id's
+    // builder approach, multiple id's
     $builder->id(array(1,2,3));
 
 ?>
@@ -139,12 +139,12 @@ Search based on name, results are sorted by similarity to the given search strin
 ```php
 <?php
 
-    // traditional way
+    // traditional approach
     $options = array(
         "search" => "uncharted 4"
     );
 
-    // builder way
+    // builder approach
     $builder->search("uncharted 4");
 
 ?>
@@ -169,20 +169,20 @@ Fields are properties of an entity. For example, a Game field would be genres or
 ```php
 <?php
 
-    // traditional way, as a string
+    // traditional approach, as a string
     $options = array(
         "fields" => "id,name"
     );
 
-    // traditional way, as an array
+    // traditional approach, as an array
     $options = array(
         "fields" => array("id", "name")
     );
 
-    // builder way, as a string
+    // builder approach, as a string
     $builder->fields("id,name");
 
-    // builder way, as an array
+    // builder approach, as an array
     $builder->fields(array("id", "name"));
 
 ?>
@@ -203,20 +203,20 @@ Exclude is a complement to the regular fields which allows you to request all fi
 ```php
 <?php
 
-    // traditional way, as a string
+    // traditional approach, as a string
     $options = array(
         "exclude" => "name,slug"
     );
 
-    // traditional way, as an array
+    // traditional approach, as an array
     $options = array(
         "exclude" => array("name", "slug")
     );
 
-    // builder way, as a string
+    // builder approach, as a string
     $builder->exclude("name,slug");
 
-    // builder way, as an array
+    // builder approach, as an array
     $builder->exclude(array("name", "slug"));
 
 ?>
@@ -239,12 +239,12 @@ The maximum number of results in a single query. This value must be a number bet
 ```php
 <?php
 
-    // traditional way
+    // traditional approach
     $options => array(
         "limit" => 20
     );
 
-    // builder way
+    // builder approach
     $builder->limit(20);
 
 ?>
@@ -267,12 +267,12 @@ This will start the result list at the provided value and will give `limit` numb
 ```php
 <?php
 
-    // traditional way
+    // traditional approach
     $options = array(
         "offset" => 5
     );
 
-    // builder way
+    // builder approach
     $builder->offset(5);
 
 ?>
@@ -302,12 +302,12 @@ The where filters will be concatenated with **AND** operators (`&`).
 ```php
 <?php
 
-    // traditional way, single criteria as a string
+    // traditional approach, single criteria as a string
     $options = array(
         "where" => "release_dates.platform = 8"
     );
 
-    // traditional way, single criteria as an array
+    // traditional approach, single criteria as an array
     $options = array(
         "where" => array(
             "field" => "release_dates.platform",
@@ -316,7 +316,7 @@ The where filters will be concatenated with **AND** operators (`&`).
         )
     );
 
-    // traditional way, multiple criteria as a string
+    // traditional approach, multiple criteria as a string
     $options = array(
         "where" => array(
             "release_dates.platform = 8",
@@ -324,7 +324,7 @@ The where filters will be concatenated with **AND** operators (`&`).
         );
     );
 
-    // traditional way, multiple criteria as an array
+    // traditional approach, multiple criteria as an array
     $options = array(
         "where" => array(
             array(
@@ -340,10 +340,10 @@ The where filters will be concatenated with **AND** operators (`&`).
         )
     );
 
-    // builder way, single criteria as a string
+    // builder approach, single criteria as a string
     $builder->where("release_dates.platform = 8");
 
-    // builder way, single criteria as an array
+    // builder approach, single criteria as an array
     $builder->where(
         array(
             "field" => "release_dates.platform",
@@ -352,12 +352,12 @@ The where filters will be concatenated with **AND** operators (`&`).
         )
     );
 
-    // builder way, multiple criteria as a string
+    // builder approach, multiple criteria as a string
     $builder
         ->where("release_dates.platform = 8")
         ->where("total_rating >= 70");
 
-    // builder way, multiple criteria as an array
+    // builder approach, multiple criteria as an array
     $builder
         ->where(
             array(
@@ -393,7 +393,7 @@ This method will add a where statement to your query, but will not validate your
 ```php
 <?php
 
-    // traditional way
+    // traditional approach
     $options = array(
         "custom_where" => "(platforms = [6,48] & genres = 13) | (platforms = [130,48] & genres = 12)"
     );
@@ -421,12 +421,12 @@ Sorting (ordering) is used to order results by a specific field. The parameter c
 ```php
 <?php
 
-    // traditional way as a string
+    // traditional approach as a string
     $options = array(
         "sort" => "release_dates.date desc",
     );
 
-    // traditional way as an array
+    // traditional approach as an array
     $options = array(
         "sort" => array(
             "field" => "release_dates.date",
@@ -453,9 +453,9 @@ Sorting (ordering) is used to order results by a specific field. The parameter c
 public function options(array $options) throws IGDBInvalidArgumentException: IGDBQueryBuilder
 ```
 
->:warning Using the Builder this way is not recommended as this functionality may be removed in future versions. Use the [builder approach](#builder-way) instead.
+>:warning Using the Builder this way is not recommended as this functionality may be removed in future versions. Use the [builder approach](#builder-approach) instead.
 
-With this method you can parse your `$options` array instead of using the [builder approach](#builder-way). If a non-valid key or value is in the array, an `IGDBInvalidParameterException` will be thrown.
+With this method you can parse your `$options` array instead of using the [builder approach](#builder-approach). If a non-valid key or value is in the array, an `IGDBInvalidParameterException` will be thrown.
 
 Passing your `$options` array to this method will configure the builder with the parameters in it.
 
@@ -581,17 +581,231 @@ The code above will return the `$options2` array's configuration, as it got rese
 fields cover,slug; search "star wars"; limit 1;
 ```
 
-## Building the Query
+### Name
 ```php
-public function build(): string
+public function name(string $name) throws IGDBInvalidArgumentException: IGDBQueryBuilder
 ```
 
-When the Builder object is configured properly the final step is to build the query to an apicalypse query string.
+This method will set a name for the query. This parameter is processed **in case of a multiquery build only**.
 
-**Parameters**: -
+>:warning In case of a multiquery build this parameter is mandatory! If this is missing from the configuration the build will throw an `IGDBInvalidParameterException`! Refer to the [build method](#building-the-query) for details.
+
+**Parameters**:
+ - `$name`: the name of the query
+
+**Returns**: `IGDBQueryBuilder` instance
+
+```php
+<?php
+
+    // importing the wrapper
+    require_once "class.igdb.php";
+
+    // instantiate the query builder
+    $builder = new IGDBQueryBuilder();
+
+    try {
+        // configuring the query
+        $builder
+            ->name("Game with ID of 25076")
+            ->endpoint("game")
+            ->fields("id,name")
+            ->where("id = 25076");
+
+        // building the query
+        $query = $builder->build(true);
+    } catch (IGDBInvaliParameterException $e) {
+        // invalid key or value found in the $options array
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+The value of `$query`:
+
+```text
+query games "Game with ID 25076" {
+  fields id,name;
+  where id = 25076;
+};
+```
+
+### Endpoint
+```php
+public function endpoint(string $endpoint) throws IGDBInvalidArgumentException: IGDBQueryBuilder
+```
+
+This method will set the endpoint to send your **multiquery** against. This parameter is processed **in case of a multiquery build only**. When setting this value make sure to use the name of the endpoint instead of it's request path. (for example `game` instead of `games` and so on).
+
+>:warning In case of a multiquery build this parameter is mandatory! If this is missing from the configuration the build will throw an `IGDBInvalidParameterException`! Refer to the [build method](#building-the-query) for details.
+
+**Parameters**:
+ - `$endpoint`: the name of the endpoint to send the query against. Make sure to use the name of the endpoint instead of it's request path!
+   - age_rating
+   - alternative_name
+   - artwork
+   - character_mug_shot
+   - character
+   - collection
+   - company_logo
+   - company_website
+   - company
+   - cover
+   - external_game
+   - franchise
+   - game_engine_logo
+   - game_engine
+   - game_mode
+   - game_version_feature_value
+   - game_version_feature
+   - game_version
+   - game_video
+   - game
+   - genre
+   - involved_company
+   - keyword
+   - multiplayer_mode
+   - multiquery
+   - platform_family
+   - platform_logo
+   - platform_version_company
+   - platform_version_release_date
+   - platform_version
+   - platform_website
+   - platform
+   - player_perspective
+   - release_date
+   - screenshot
+   - search
+   - theme
+   - website
+
+**Returns**: `IGDBQueryBuilder` instance
+
+```php
+<?php
+
+    // importing the wrapper
+    require_once "class.igdb.php";
+
+    // instantiate the query builder
+    $builder = new IGDBQueryBuilder();
+
+    try {
+        // configuring the query
+        $builder
+            ->name("Game with ID of 25076")
+            ->endpoint("game")
+            ->fields("id,name")
+            ->where("id = 25076");
+
+        // building the query
+        $query = $builder->build(true);
+    } catch (IGDBInvaliParameterException $e) {
+        // invalid key or value found in the $options array
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+The value of `$query`:
+
+```text
+query games "Game with ID 25076" {
+  fields id,name;
+  where id = 25076;
+};
+```
+
+### Count
+```php
+public function count(boolean $count = true) throws IGDBInvalidArgumentException: IGDBQueryBuilder
+```
+
+This method will accept a boolean value. If this value is `true` the response from IGDB will contain the number of records matching the filters. If `false` the records will be returned.
+
+> If the method is called without parameters, the value will be set to `true`.
+
+**Default value**: by default this value is `false`.
+
+**Parameters**:
+ - `$count`: `true` if a record count is required, `false` otherwise.
+
+**Returns**: `IGDBQueryBuilder` instance
+
+```php
+<?php
+
+    // importing the wrapper
+    require_once "class.igdb.php";
+
+    // instantiate the query builder
+    $builder = new IGDBQueryBuilder();
+
+    try {
+        // Configuring the query
+        $builder
+            ->name("Number of games")
+            ->endpoint("game")
+            ->count(); // the default value of the parameter is true, hence it can be called without any parameter
+            // ->count(true) also valid
+
+        // building the query
+        $query = $builder->build(true);
+    } catch (IGDBInvaliParameterException $e) {
+        // invalid key or value found in the $options array
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+The value of `$query`:
+
+```text
+query games/count "Number of games" {
+  fields *;
+};
+```
+
+## Building the Query
+```php
+public function build(boolean $multiquery = false) throws IGDBInvalidParameterException: mixed
+```
+
+When the Builder object is configured properly the final step is to build the query to an apicalypse query string. The syntax of the query depends on which endpoint the query is executed against. The multiquery endpoint requires a few additional information and a slightly different syntax.
+
+A [`game`](#game) endpoint query:
+```text
+fields id,name;
+where id = 25076;
+```
+
+A [`multiquery`](#multiquery) query:
+```text
+query games "Main Game" {
+  fields id,name;
+  where id = 25076;
+};
+```
+
+The build method accepts one `boolean` parameter. Using this parameter the build method decides which syntax to return. If a multiquery is required, a few extra fields has to be set for the builder:
+ - [`name`](#name): the name of the query choosen by the user
+ - [`endpoint`](#endpoint): the endpoint to send the query against
+ - [`count`](#count): whether the records or their count is required
+
+>:warning In case of a multiquery request the properties [name](#name) and [endpoint](#endpoint) are **mandatory**! If any of these are missing from the configuration, an `IGDBInvalidParameterException` will be thrown.
+
+**Parameters**:
+ - `$multiquery`: if `true`, a multiquery will be returned, an endpoint query otherwise. The default value of this parameter is `false`.
 
 **Returns**: the apicalypse query string
 
+>:warning If a non-boolean parameter is passed to the build method, an `IGDBInavlidParameterException` is thrown!
+
+A simple query example:
 ```php
 <?php
 
@@ -612,4 +826,51 @@ When the Builder object is configured properly the final step is to build the qu
     }
 
 ?>
+```
+
+The value of `$query`:
+
+```text
+fields id,name;
+search "uncharted 4";
+limit 1;
+```
+
+A multiquery example:
+
+```php
+<?php
+
+    // importing the wrapper
+    require_once "class.igdb.php";
+
+    // instantiate the query builder
+    $builder = new IGDBQueryBuilder();
+
+    try {
+        // configuring the query
+        $builder
+            ->name("Game with ID of 25076")
+            ->endpoint("game")
+            ->fields("id,name")
+            ->where("id = 25076");
+
+        // building the query
+        // note the true parameter
+        $query = $builder->build(true);
+    } catch (IGDBInvaliParameterException $e) {
+        // invalid key or value found in the $options array
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+The value of `$query`:
+
+```text
+query games "Game with ID of 25076" {
+  fields id,name;
+  where id = 25076;
+};
 ```

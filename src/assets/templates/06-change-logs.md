@@ -5,6 +5,14 @@ icon: fa-clipboard-list
 
 # Change Log
 
+## v4.3.0 - August 19, 2021
+ - IGDBQueryBuilder: three new properties introduced for multiquery:
+  - [name](#name)
+  - [endpoint](#endpoint)
+  - [count](#count)
+ - IGDBQueryBuilder: [build method](#building-the-query) signature updated
+ - IGDBWrapper: [multiquery](#multiquery) updated to accept array of queries
+
 ## v4.2.0 - May 22, 2021
  - IGDBQueryBuilder: Moved the `$options` array parsing to the [`options()`](#options) method
  - IGDBQueryBuilder: [`reset()`](#reset) method added
