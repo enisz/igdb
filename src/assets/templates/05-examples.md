@@ -397,7 +397,7 @@ array (size=2)
 
 Using multiquery multiple queries can be executed against the IGDB database using a single query. The multiquery method expects an array of multiquery query strings.
 
->:info Using the [`build`](#build) method with a boolean `true` parameter, a query will be returned with a multiquery syntax.
+>:info Using the [`build`](#building-the-query) method with a boolean `true` parameter, a query will be returned with a multiquery syntax.
 
 **Code**
 
