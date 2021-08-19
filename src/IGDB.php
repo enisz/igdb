@@ -6,7 +6,7 @@
      * Fethching data from IGDB's database.
      * Compatible with IGDB API v4
      *
-     * @version 4.2.0
+     * @version 4.3.0
      * @author Enisz Abdalla <enisz87@gmail.com>
      * @link https://github.com/enisz/igdb
      */
@@ -181,7 +181,6 @@
 
         /**
          * Closes the CURL handler.
-         * After this method is called, the class cannot run any queries against IGDB unless you reinitialize it manually.
          */
         public function curl_close() {
             curl_close($this->curl_handler);
@@ -852,20 +851,23 @@
          *
          * @link https://api-docs.igdb.com/#multi-query
          *
-         * @param $endpoint ( string ) The endpoint to send your query to
-         * @param $result_name ( string ) A name for the result given by you
-         * @param $query ( string ) An apicalypse query string or null, if no filtering required
-         * @return $result ( mixed ) The result of the query
+         * @param $queries ( array of strings ) The queries to send to the multiquery endpoint as an array of multiquery formatted apicalypse strings.
+         * @return $result ( mixed ) The result of the query.
          * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @throws IGDBInvalidParameterException If not array of strings is passed as a parameter
          */
-        public function mutliquery($endpoint, $result_name, $query = null) {
-            return $this->_exec_query(
-                $this->construct_url(
-                    "multiquery",
-                    false
-                ),
-                "query $endpoint \"$result_name\" {\n" . (is_null($query) ? "" : $query) . "\n};"
-            );
+        public function multiquery($queries) {
+            if(gettype($queries) == "array") {
+                foreach($queries as $index => $query) {
+                    if(gettype($query) != "string") {
+                        throw new IGDBInvalidParameterException("Invalid type of parameter for multiquery! An array of strings is expected, " . gettype($query) . " passed at index " . $index . "!");
+                    }
+                }
+            } else {
+                throw new IGDBInvalidParameterException("Invalid type of parameter for multiquery! An array is expected, " . gettype($query) . " passed!");
+            }
+
+            return $this->_exec_query($this->construct_url("multiquery", false), implode("\n\n", $queries));
         }
 
     }
