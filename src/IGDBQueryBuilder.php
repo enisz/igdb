@@ -5,7 +5,7 @@
      *
      * Building apicalypse query strings
      *
-     * @version 1.1.0
+     * @version 1.2.0
      * @author Enisz Abdalla <enisz87@gmail.com>
      * @link https://github.com/enisz/igdb
      */
@@ -49,6 +49,21 @@
         private $_sort;
 
         /**
+         * A name for the query for multiquery (multiquery only)
+         */
+        private $_name;
+
+        /**
+         * The endpoint for the multiquery (multiquery only)
+         */
+        private $_endpoint;
+
+        /**
+         * Count switch for the endpoint (multiquery only)
+         */
+        private $_count;
+
+        /**
          * Default value of the limit parameter
          */
         private $limit_default = 10;
@@ -76,6 +91,9 @@
             $this->_offset = $this->offset_default;
             $this->_where = array();
             $this->_sort = array();
+            $this->_name = null;
+            $this->_endpoint = null;
+            $this->_count = false;
 
             return $this;
         }
@@ -334,9 +352,118 @@
         }
 
         /**
-         * Building the Apicalypse query string from the configured object
+         * Setting the name of the query. Will be processed in case of multiquery only.
+         * @param $name - The name of the query.
+         * @return IGDBQueryBuilder
+         * @throws IGDBInvalidParameterException if a non-string value is passed to the method.
          */
-        public function build() {
+        public function name($name) {
+            if(gettype($name) == "string") {
+                $this->_name = $name;
+            } else {
+                throw new IGDBInvalidParameterException("Invalid type of parameter for name! A string is expected, " . gettype($name) . " passed!");
+            }
+
+            return $this;
+        }
+
+        /**
+         * Setting the endpoint for the query. Will be processed in case of multiquery only.
+         * @param $endpoint - The endpont to send the query against.
+         * @return IGDBQueryBuilder
+         * @throws IGDBInvalidParameterException if a non-string value is passed to the method.
+         */
+        public function endpoint($endpoint) {
+            if(gettype($endpoint) == "string") {
+                $available_endpoints = array(
+                    "age_rating_content_description" => "age_rating_content_descriptions",
+                    "age_rating" => "age_ratings",
+                    "alternative_name" => "alternative_names",
+                    "artwork" => "artworks",
+                    "character_mug_shot" => "character_mug_shots",
+                    "character" => "characters",
+                    "collection" => "collections",
+                    "company_logo" => "company_logos",
+                    "company_website" => "company_websites",
+                    "company" => "companies",
+                    "cover" => "covers",
+                    "external_game" => "external_games",
+                    "franchise" => "franchises",
+                    "game_engine_logo" => "game_engine_logos",
+                    "game_engine" => "game_engines",
+                    "game_mode" => "game_modes",
+                    "game_version_feature_value" => "game_version_feature_values",
+                    "game_version_feature" => "game_version_features",
+                    "game_version" => "game_versions",
+                    "game_video" => "game_videos",
+                    "game" => "games",
+                    "genre" => "genres",
+                    "involved_company" => "involved_companies",
+                    "keyword" => "keywords",
+                    "multiplayer_mode" => "multiplayer_modes",
+                    "multiquery" => "multiquery",
+                    "platform_family" => "platform_families",
+                    "platform_logo" => "platform_logos",
+                    "platform_version_company" => "platform_version_companies",
+                    "platform_version_release_date" => "platform_version_release_dates",
+                    "platform_version" => "platform_versions",
+                    "platform_website" => "platform_websites",
+                    "platform" => "platforms",
+                    "player_perspective" => "player_perspectives",
+                    "release_date" => "release_dates",
+                    "screenshot" => "screenshots",
+                    "search" => "search",
+                    "theme" => "themes",
+                    "website" => "websites"
+                );
+
+                if(array_key_exists($endpoint, $available_endpoints)) {
+                    $this->_endpoint = $available_endpoints[$endpoint];
+                } else {
+                    throw new IGDBInvalidParameterException("The passed endpoint \"$endpoint\" is invalid. Make sure to use the name of the endpoint, not it's path!");
+                }
+            } else {
+                throw new IGDBInvalidParameterException("Invalid type of parameter for endpoint! A string is expected, " . gettype($endpoint) . " passed!");
+            }
+
+            return $this;
+        }
+
+        /**
+         * Setting the query to use the count functionality. Will be processed in case of multiquery only.
+         * @param $count - A boolean value whether the count of records is needed.
+         * @return IGDBQueryBuilder
+         * @throws IGDBInvalidParameterException if a non-boolean value is passed to the method.
+         */
+        public function count($count = true) {
+            if(gettype($count) == "boolean") {
+                $this->_count = $count;
+            } else {
+                throw new IGDBInvalidParameterException("Invalid type of parameter for endpoint! A boolean is expected, " . gettype($count) . " passed!");
+            }
+
+            return $this;
+        }
+
+        /**
+         * Building the apicalypse query from the configured object
+         * @param $multiquery - whether a multiquery string is required or a simple endpoint query
+         * @throws IGDBInavlidParameterException if a non-boolean parameter is passed to the method
+         * @return $query - the apicalpyse query string
+         */
+        public function build($multiquery = false) {
+            if(gettype($multiquery) != "boolean") {
+                throw new IGDBInvalidParameterException("Invalid type of parameter for build! A boolean is expected, " . gettype($multiquery) . "passed!");
+            }
+
+            return $multiquery ? $this->multiquery() : $this->query();
+        }
+
+        /**
+         * Building the Apicalypse query string from the configured object for endpoint query requests
+         * @return $query - Apicalypse formatted query string
+         */
+        private function query() {
             $segments = array();
 
             foreach(array("fields", "search", "exclude", "limit", "offset", "where", "sort") as $parameter) {
@@ -404,6 +531,31 @@
             }
 
             return implode(";\n", $segments) . ";";
+        }
+
+        /**
+         * Building the apicalpyse query string for multiquery requests.
+         * @throws IGBDInvalidParameterException if the name or endpoint properties are not set in the builder configuration
+         * @return $query - Apicalypse formatted multiquery query string
+         */
+        private function multiquery() {
+            if($this->_name == null) {
+                throw new IGDBInvalidParameterException("The name parameter for the multiquery is not set!");
+            }
+
+            if($this->_endpoint == null) {
+                throw new IGDBInvalidParameterException("The endpoint parameter for the multiquery is not set!");
+            }
+
+            $query = "query " . $this->_endpoint . ($this->_count ? "/count" : "") . " \"" . addslashes($this->_name) . "\" {\n";
+
+            foreach(explode("\n", $this->query()) as $line) {
+                $query .= "  $line\n";
+            }
+
+            $query .= "};";
+
+            return $query;
         }
 
     }

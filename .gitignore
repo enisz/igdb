@@ -1,6 +1,3 @@
-# npm packages
-node_modules
-
 # generated database file
 database.json
 
