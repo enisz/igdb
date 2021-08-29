@@ -41,10 +41,18 @@ export default function HomePage() {
                         </form>
                     </div>
 
-                    <div className="github-container">
-                        <GitHubButton href="https://github.com/enisz/igdb" data-size="large" data-show-count="true" aria-label="Star enisz/igdb on GitHub">Star</GitHubButton>
+                    <div className="github-container d-sm-none">
+                        <GitHubButton href="https://github.com/enisz" data-size="small" data-show-count="true" aria-label="Follow @enisz on GitHub">Follow @enisz</GitHubButton>
+                        <GitHubButton href="https://github.com/enisz/igdb" data-icon="octicon-star" data-size="small" data-show-count="true" aria-label="Star enisz/igdb on GitHub">Star</GitHubButton>
+                        <GitHubButton href="https://github.com/enisz/igdb/subscription" data-icon="octicon-eye" data-size="small" data-show-count="true" aria-label="Watch enisz/igdb on GitHub">Watch</GitHubButton>
+                        <GitHubButton href="https://github.com/enisz/igdb/fork" data-icon="octicon-repo-forked" data-size="small" data-show-count="true" aria-label="Fork enisz/igdb on GitHub">Fork</GitHubButton>
+                    </div>
+
+                    <div className="github-container d-none d-sm-block">
+                    <GitHubButton href="https://github.com/enisz" data-size="large" data-show-count="true" aria-label="Follow @enisz on GitHub">Follow @enisz</GitHubButton>
+                        <GitHubButton href="https://github.com/enisz/igdb" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star enisz/igdb on GitHub">Star</GitHubButton>
                         <GitHubButton href="https://github.com/enisz/igdb/subscription" data-icon="octicon-eye" data-size="large" data-show-count="true" aria-label="Watch enisz/igdb on GitHub">Watch</GitHubButton>
-                        <GitHubButton href="https://github.com/enisz" data-size="large" data-show-count="true" aria-label="Follow @enisz on GitHub">Follow @enisz</GitHubButton>
+                        <GitHubButton href="https://github.com/enisz/igdb/fork" data-icon="octicon-repo-forked" data-size="large" data-show-count="true" aria-label="Fork enisz/igdb on GitHub">Fork</GitHubButton>
                     </div>
                 </div>
             </div>
