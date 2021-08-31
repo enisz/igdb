@@ -90,49 +90,66 @@ To support the traditional approach of configuring the queries - the `$options` 
 
 The Builder class has its own configuring methods to set the parameters before building the query string. If any of these methods recieves an invalid argument they will throw an `IGDBInvalidArgumentException`. Make sure to set these parameters in a try...catch block.
 
-### ID
+### Count
 ```php
-public function id(array | int $id) throws IGDBInvalidArgumentException: IGDBQueryBuilder
+public function count(boolean $count = true) throws IGDBInvalidArgumentException: IGDBQueryBuilder
 ```
 
-This is kind of a traditional thing. Since the IGDB team introduced the apicalypse query there is no separate ID field. This method simply adds a [where](#where) statement to your query.
+This method will accept a boolean value. If this value is `true` the response from IGDB will contain the number of records matching the filters. If `false` the records will be returned.
+
+> If the method is called without parameters, the value will be set to `true`.
+
+**Default value**: by default this value is `false`.
 
 **Parameters**:
- - `$id`: one (integer) or more (array of integers) record ID's.
+ - `$count`: `true` if a record count is required, `false` otherwise.
 
 **Returns**: `IGDBQueryBuilder` instance
 
 ```php
 <?php
 
-    // traditional approach, single id
-    $options = array(
-        "id" => 1
-    );
+    // importing the wrapper
+    require_once "class.igdb.php";
 
-    // traditional approach, multiple id's
-    $options = array(
-        "id" => array(1,2,3)
-    );
+    // instantiate the query builder
+    $builder = new IGDBQueryBuilder();
 
-    // builder approach, single id
-    $builder->id(1);
+    try {
+        // Configuring the query
+        $builder
+            ->name("Number of games")
+            ->endpoint("game")
+            ->count(); // the default value of the parameter is true, hence it can be called without any parameter
+            // ->count(true) also valid
 
-    // builder approach, multiple id's
-    $builder->id(array(1,2,3));
+        // building the query
+        $query = $builder->build(true);
+    } catch (IGDBInvaliParameterException $e) {
+        // invalid key or value found in the $options array
+        echo $e->getMessage();
+    }
 
 ?>
 ```
 
-### Search
-```php
-public function search(string $search) throws IGDBInvalidArgumentException: IGDBQueryBuilder
+The value of `$query`:
+
+```text
+query games/count "Number of games" {
+  fields *;
+};
 ```
 
-Search based on name, results are sorted by similarity to the given search string.
+### Custom Where
+```php
+public function custom_where(string $custom_where): IGDBQueryBuilder
+```
+
+This method will add a [where statement](#where) to your query, but will not validate your input or throw any exceptions.
 
 **Parameters**:
- - `$search`: the search string
+ - `$custom_where`: an apicalypse string with a custom where statement
 
 **Returns**: `IGDBQueryBuilder` instance
 
@@ -141,11 +158,133 @@ Search based on name, results are sorted by similarity to the given search strin
 
     // traditional approach
     $options = array(
-        "search" => "uncharted 4"
+        "custom_where" => "(platforms = [6,48] & genres = 13) | (platforms = [130,48] & genres = 12)"
     );
 
-    // builder approach
-    $builder->search("uncharted 4");
+    // method way
+    $builder->custom_where("(platforms = [6,48] & genres = 13) | (platforms = [130,48] & genres = 12)");
+
+?>
+```
+
+### Endpoint
+```php
+public function endpoint(string $endpoint) throws IGDBInvalidArgumentException: IGDBQueryBuilder
+```
+
+This method will set the endpoint to send your **multiquery** against. This parameter is processed **in case of a multiquery build only**. When setting this value make sure to use the name of the endpoint instead of it's request path. (for example `game` instead of `games` and so on).
+
+>:warning In case of a multiquery build this parameter is mandatory! If this is missing from the configuration the build will throw an `IGDBInvalidParameterException`! Refer to the [build method](#building-the-query) for details.
+
+**Parameters**:
+ - `$endpoint`: the name of the endpoint to send the query against. Make sure to use the name of the endpoint instead of it's request path!
+   - age_rating
+   - alternative_name
+   - artwork
+   - character_mug_shot
+   - character
+   - collection
+   - company_logo
+   - company_website
+   - company
+   - cover
+   - external_game
+   - franchise
+   - game_engine_logo
+   - game_engine
+   - game_mode
+   - game_version_feature_value
+   - game_version_feature
+   - game_version
+   - game_video
+   - game
+   - genre
+   - involved_company
+   - keyword
+   - multiplayer_mode
+   - multiquery
+   - platform_family
+   - platform_logo
+   - platform_version_company
+   - platform_version_release_date
+   - platform_version
+   - platform_website
+   - platform
+   - player_perspective
+   - release_date
+   - screenshot
+   - search
+   - theme
+   - website
+
+**Returns**: `IGDBQueryBuilder` instance
+
+```php
+<?php
+
+    // importing the wrapper
+    require_once "class.igdb.php";
+
+    // instantiate the query builder
+    $builder = new IGDBQueryBuilder();
+
+    try {
+        // configuring the query
+        $builder
+            ->name("Game with ID of 25076")
+            ->endpoint("game")
+            ->fields("id,name")
+            ->where("id = 25076");
+
+        // building the query
+        $query = $builder->build(true);
+    } catch (IGDBInvaliParameterException $e) {
+        // invalid key or value found in the $options array
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+The value of `$query`:
+
+```text
+query games "Game with ID 25076" {
+  fields id,name;
+  where id = 25076;
+};
+```
+
+### Exclude
+```php
+public function exclude(string | array $exclude) throws IGDBInvalidArgumentException: IGDBQueryBuilder
+```
+
+Exclude is a complement to the regular fields which allows you to request all fields with the exception of any numbers of fields specified with exclude.
+
+**Parameters**:
+ - `$exclude`: the list of the fields to exclude. This can be either a comma separated list of field names or an array of field names.
+
+**Returns**: `IGDBQueryBuilder` instance
+
+```php
+<?php
+
+    // traditional approach, as a string
+    $options = array(
+        "exclude" => "name,slug"
+    );
+
+    // traditional approach, as an array
+    $options = array(
+        "exclude" => array("name", "slug")
+    );
+
+    // builder approach, as a string
+    $builder->exclude("name,slug");
+
+    // builder approach, as an array
+    $builder->exclude(array("name", "slug"));
 
 ?>
 ```
@@ -188,36 +327,36 @@ Fields are properties of an entity. For example, a Game field would be genres or
 ?>
 ```
 
-### Exclude
+### ID
 ```php
-public function exclude(string | array $exclude) throws IGDBInvalidArgumentException: IGDBQueryBuilder
+public function id(array | int $id) throws IGDBInvalidArgumentException: IGDBQueryBuilder
 ```
 
-Exclude is a complement to the regular fields which allows you to request all fields with the exception of any numbers of fields specified with exclude.
+This is kind of a traditional thing. Since the IGDB team introduced the apicalypse query there is no separate ID field. This method simply adds a [where](#where) statement to your query.
 
 **Parameters**:
- - `$exclude`: the list of the fields to exclude. This can be either a comma separated list of field names or an array of field names.
+ - `$id`: one (integer) or more (array of integers) record ID's.
 
 **Returns**: `IGDBQueryBuilder` instance
 
 ```php
 <?php
 
-    // traditional approach, as a string
+    // traditional approach, single id
     $options = array(
-        "exclude" => "name,slug"
+        "id" => 1
     );
 
-    // traditional approach, as an array
+    // traditional approach, multiple id's
     $options = array(
-        "exclude" => array("name", "slug")
+        "id" => array(1,2,3)
     );
 
-    // builder approach, as a string
-    $builder->exclude("name,slug");
+    // builder approach, single id
+    $builder->id(1);
 
-    // builder approach, as an array
-    $builder->exclude(array("name", "slug"));
+    // builder approach, multiple id's
+    $builder->id(array(1,2,3));
 
 ?>
 ```
@@ -250,6 +389,56 @@ The maximum number of results in a single query. This value must be a number bet
 ?>
 ```
 
+### Name
+```php
+public function name(string $name) throws IGDBInvalidArgumentException: IGDBQueryBuilder
+```
+
+This method will set a name for the query. This parameter is processed **in case of a multiquery build only**.
+
+>:warning In case of a multiquery build this parameter is mandatory! If this is missing from the configuration the build will throw an `IGDBInvalidParameterException`! Refer to the [build method](#building-the-query) for details.
+
+**Parameters**:
+ - `$name`: the name of the query
+
+**Returns**: `IGDBQueryBuilder` instance
+
+```php
+<?php
+
+    // importing the wrapper
+    require_once "class.igdb.php";
+
+    // instantiate the query builder
+    $builder = new IGDBQueryBuilder();
+
+    try {
+        // configuring the query
+        $builder
+            ->name("Game with ID of 25076")
+            ->endpoint("game")
+            ->fields("id,name")
+            ->where("id = 25076");
+
+        // building the query
+        $query = $builder->build(true);
+    } catch (IGDBInvaliParameterException $e) {
+        // invalid key or value found in the $options array
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+The value of `$query`:
+
+```text
+query games "Game with ID 25076" {
+  fields id,name;
+  where id = 25076;
+};
+```
+
 ### Offset
 ```php
 public function offset(int $offset) throws IGDBInvalidArgumentException: IGDBQueryBuilder
@@ -274,176 +463,6 @@ This will start the result list at the provided value and will give `limit` numb
 
     // builder approach
     $builder->offset(5);
-
-?>
-```
-
-### Where
-```php
-public function where(string | array $where) throws IGDBInvalidArgumentException: IGDBQueryBuilder
-```
-
-Filters are used to swift through results to get what you want. You can exclude and include results based on their properties. For example you could remove all Games where the rating was below 80 `(where rating >= 80)`.
-
-The where parameter can be either an apicalypse formatted string or an array with specific key-value pairs. If you provide the where parameters as an array, you must have three fix keys in it:
- - `field`: The name of the field you want to apply the filter to.
- - `postfix`: The postfix you want to use with the filter. Refer to the [Available Postfixes](https://api-docs.igdb.com/#filters) section of the IGDB Filters Documentation for available postfixes.
- - `value`: The value of the filter.
-
-The where filters will be concatenated with **AND** operators (`&`).
-
->:tip Multiple filter parameters can be applied to the same query. Check the [examples](#examples) below.
-
-**Parameters**:
- - `$where`: either an apicalypse formatted string or an array with specific keys
-
-**Returns**: `IGDBQueryBuilder` instance
-
-```php
-<?php
-
-    // traditional approach, single criteria as a string
-    $options = array(
-        "where" => "release_dates.platform = 8"
-    );
-
-    // traditional approach, single criteria as an array
-    $options = array(
-        "where" => array(
-            "field" => "release_dates.platform",
-            "postfix" => "=",
-            "value" => 8
-        )
-    );
-
-    // traditional approach, multiple criteria as a string
-    $options = array(
-        "where" => array(
-            "release_dates.platform = 8",
-            "total_rating >= 70"
-        );
-    );
-
-    // traditional approach, multiple criteria as an array
-    $options = array(
-        "where" => array(
-            array(
-                "field" => "release_dates.platform",
-                "postfix" => "=",
-                "value" => 8
-            ),
-            array(
-                "field" => "total_rating",
-                "postfix" => ">=",
-                "value" => 70
-            )
-        )
-    );
-
-    // builder approach, single criteria as a string
-    $builder->where("release_dates.platform = 8");
-
-    // builder approach, single criteria as an array
-    $builder->where(
-        array(
-            "field" => "release_dates.platform",
-            "postfix" => "=",
-            "value" => 8
-        )
-    );
-
-    // builder approach, multiple criteria as a string
-    $builder
-        ->where("release_dates.platform = 8")
-        ->where("total_rating >= 70");
-
-    // builder approach, multiple criteria as an array
-    $builder
-        ->where(
-            array(
-                "field" => "release_dates.platform",
-                "postfix" => "=",
-                "value" => 8
-            )
-        )
-        ->where(
-            array(
-                "field" => "total_rating",
-                "postfix" => ">=",
-                "value" => 70
-            )
-        );
-?>
-```
-
-> This method is trying to validate your input against some rules and will throw an `IGDBInvalidArgumentException` in case of any issues. If you need more flexibility or custom where statements with complex conditions in you queries use the [Custom Where](#custom-where) method instead.
-
-### Custom Where
-```php
-public function custom_where(string $custom_where): IGDBQueryBuilder
-```
-
-This method will add a where statement to your query, but will not validate your input or throw any exceptions.
-
-**Parameters**:
- - `$custom_where`: an apicalypse string with a custom where statement
-
-**Returns**: `IGDBQueryBuilder` instance
-
-```php
-<?php
-
-    // traditional approach
-    $options = array(
-        "custom_where" => "(platforms = [6,48] & genres = 13) | (platforms = [130,48] & genres = 12)"
-    );
-
-    // method way
-    $builder->custom_where("(platforms = [6,48] & genres = 13) | (platforms = [130,48] & genres = 12)");
-
-?>
-```
-
-### Sort
-```php
-public function sort(string | array $sort) throws IGDBInvalidArgumentException: IGDBQueryBuilder
-```
-
-Sorting (ordering) is used to order results by a specific field. The parameter can be either an apicalypse formatted sort string or an array with specific key-value pairs. If you provide the Order parameter as an array, you must have two values in it with the following keys:
- - `field`: The field you want to do the ordering by
- - `direction`: The direction of the ordering. It must be either `asc` for ascending or `desc` for descending ordering.
-
-**Parameters**:
- - `$sort`: either an apicalypse sort string or an array with specific key-value pairs.
-
-**Returns**: `IGDBQueryBuilder` instance
-
-```php
-<?php
-
-    // traditional approach as a string
-    $options = array(
-        "sort" => "release_dates.date desc",
-    );
-
-    // traditional approach as an array
-    $options = array(
-        "sort" => array(
-            "field" => "release_dates.date",
-            "direction" => "desc"
-        )
-    );
-
-    // method way as a string
-    $builder->sort("release_dates.date desc");
-
-    // method way as an array
-    $builder->sort(
-        array(
-            "field" => "release_dates.date",
-            "direction" => "desc"
-        )
-    );
 
 ?>
 ```
@@ -581,194 +600,175 @@ The code above will return the `$options2` array's configuration, as it got rese
 fields cover,slug; search "star wars"; limit 1;
 ```
 
-### Name
+### Search
 ```php
-public function name(string $name) throws IGDBInvalidArgumentException: IGDBQueryBuilder
+public function search(string $search) throws IGDBInvalidArgumentException: IGDBQueryBuilder
 ```
 
-This method will set a name for the query. This parameter is processed **in case of a multiquery build only**.
-
->:warning In case of a multiquery build this parameter is mandatory! If this is missing from the configuration the build will throw an `IGDBInvalidParameterException`! Refer to the [build method](#building-the-query) for details.
+Search based on name, results are sorted by similarity to the given search string.
 
 **Parameters**:
- - `$name`: the name of the query
+ - `$search`: the search string
 
 **Returns**: `IGDBQueryBuilder` instance
 
 ```php
 <?php
 
-    // importing the wrapper
-    require_once "class.igdb.php";
+    // traditional approach
+    $options = array(
+        "search" => "uncharted 4"
+    );
 
-    // instantiate the query builder
-    $builder = new IGDBQueryBuilder();
-
-    try {
-        // configuring the query
-        $builder
-            ->name("Game with ID of 25076")
-            ->endpoint("game")
-            ->fields("id,name")
-            ->where("id = 25076");
-
-        // building the query
-        $query = $builder->build(true);
-    } catch (IGDBInvaliParameterException $e) {
-        // invalid key or value found in the $options array
-        echo $e->getMessage();
-    }
+    // builder approach
+    $builder->search("uncharted 4");
 
 ?>
 ```
 
-The value of `$query`:
-
-```text
-query games "Game with ID 25076" {
-  fields id,name;
-  where id = 25076;
-};
-```
-
-### Endpoint
+### Sort
 ```php
-public function endpoint(string $endpoint) throws IGDBInvalidArgumentException: IGDBQueryBuilder
+public function sort(string | array $sort) throws IGDBInvalidArgumentException: IGDBQueryBuilder
 ```
 
-This method will set the endpoint to send your **multiquery** against. This parameter is processed **in case of a multiquery build only**. When setting this value make sure to use the name of the endpoint instead of it's request path. (for example `game` instead of `games` and so on).
-
->:warning In case of a multiquery build this parameter is mandatory! If this is missing from the configuration the build will throw an `IGDBInvalidParameterException`! Refer to the [build method](#building-the-query) for details.
+Sorting (ordering) is used to order results by a specific field. The parameter can be either an apicalypse formatted sort string or an array with specific key-value pairs. If you provide the Order parameter as an array, you must have two values in it with the following keys:
+ - `field`: The field you want to do the ordering by
+ - `direction`: The direction of the ordering. It must be either `asc` for ascending or `desc` for descending ordering.
 
 **Parameters**:
- - `$endpoint`: the name of the endpoint to send the query against. Make sure to use the name of the endpoint instead of it's request path!
-   - age_rating
-   - alternative_name
-   - artwork
-   - character_mug_shot
-   - character
-   - collection
-   - company_logo
-   - company_website
-   - company
-   - cover
-   - external_game
-   - franchise
-   - game_engine_logo
-   - game_engine
-   - game_mode
-   - game_version_feature_value
-   - game_version_feature
-   - game_version
-   - game_video
-   - game
-   - genre
-   - involved_company
-   - keyword
-   - multiplayer_mode
-   - multiquery
-   - platform_family
-   - platform_logo
-   - platform_version_company
-   - platform_version_release_date
-   - platform_version
-   - platform_website
-   - platform
-   - player_perspective
-   - release_date
-   - screenshot
-   - search
-   - theme
-   - website
+ - `$sort`: either an apicalypse sort string or an array with specific key-value pairs.
 
 **Returns**: `IGDBQueryBuilder` instance
 
 ```php
 <?php
 
-    // importing the wrapper
-    require_once "class.igdb.php";
+    // traditional approach as a string
+    $options = array(
+        "sort" => "release_dates.date desc",
+    );
 
-    // instantiate the query builder
-    $builder = new IGDBQueryBuilder();
+    // traditional approach as an array
+    $options = array(
+        "sort" => array(
+            "field" => "release_dates.date",
+            "direction" => "desc"
+        )
+    );
 
-    try {
-        // configuring the query
-        $builder
-            ->name("Game with ID of 25076")
-            ->endpoint("game")
-            ->fields("id,name")
-            ->where("id = 25076");
+    // method way as a string
+    $builder->sort("release_dates.date desc");
 
-        // building the query
-        $query = $builder->build(true);
-    } catch (IGDBInvaliParameterException $e) {
-        // invalid key or value found in the $options array
-        echo $e->getMessage();
-    }
+    // method way as an array
+    $builder->sort(
+        array(
+            "field" => "release_dates.date",
+            "direction" => "desc"
+        )
+    );
 
 ?>
 ```
 
-The value of `$query`:
-
-```text
-query games "Game with ID 25076" {
-  fields id,name;
-  where id = 25076;
-};
-```
-
-### Count
+### Where
 ```php
-public function count(boolean $count = true) throws IGDBInvalidArgumentException: IGDBQueryBuilder
+public function where(string | array $where) throws IGDBInvalidArgumentException: IGDBQueryBuilder
 ```
 
-This method will accept a boolean value. If this value is `true` the response from IGDB will contain the number of records matching the filters. If `false` the records will be returned.
+Filters are used to swift through results to get what you want. You can exclude and include results based on their properties. For example you could remove all Games where the rating was below 80 `(where rating >= 80)`.
 
-> If the method is called without parameters, the value will be set to `true`.
+The where parameter can be either an apicalypse formatted string or an array with specific key-value pairs. If you provide the where parameters as an array, you must have three fix keys in it:
+ - `field`: The name of the field you want to apply the filter to.
+ - `postfix`: The postfix you want to use with the filter. Refer to the [Available Postfixes](https://api-docs.igdb.com/#filters) section of the IGDB Filters Documentation for available postfixes.
+ - `value`: The value of the filter.
 
-**Default value**: by default this value is `false`.
+The where filters will be concatenated with **AND** operators (`&`).
+
+>:tip Multiple filter parameters can be applied to the same query. Check the [examples](#examples) below.
 
 **Parameters**:
- - `$count`: `true` if a record count is required, `false` otherwise.
+ - `$where`: either an apicalypse formatted string or an array with specific keys
 
 **Returns**: `IGDBQueryBuilder` instance
 
 ```php
 <?php
 
-    // importing the wrapper
-    require_once "class.igdb.php";
+    // traditional approach, single criteria as a string
+    $options = array(
+        "where" => "release_dates.platform = 8"
+    );
 
-    // instantiate the query builder
-    $builder = new IGDBQueryBuilder();
+    // traditional approach, single criteria as an array
+    $options = array(
+        "where" => array(
+            "field" => "release_dates.platform",
+            "postfix" => "=",
+            "value" => 8
+        )
+    );
 
-    try {
-        // Configuring the query
-        $builder
-            ->name("Number of games")
-            ->endpoint("game")
-            ->count(); // the default value of the parameter is true, hence it can be called without any parameter
-            // ->count(true) also valid
+    // traditional approach, multiple criteria as a string
+    $options = array(
+        "where" => array(
+            "release_dates.platform = 8",
+            "total_rating >= 70"
+        );
+    );
 
-        // building the query
-        $query = $builder->build(true);
-    } catch (IGDBInvaliParameterException $e) {
-        // invalid key or value found in the $options array
-        echo $e->getMessage();
-    }
+    // traditional approach, multiple criteria as an array
+    $options = array(
+        "where" => array(
+            array(
+                "field" => "release_dates.platform",
+                "postfix" => "=",
+                "value" => 8
+            ),
+            array(
+                "field" => "total_rating",
+                "postfix" => ">=",
+                "value" => 70
+            )
+        )
+    );
 
+    // builder approach, single criteria as a string
+    $builder->where("release_dates.platform = 8");
+
+    // builder approach, single criteria as an array
+    $builder->where(
+        array(
+            "field" => "release_dates.platform",
+            "postfix" => "=",
+            "value" => 8
+        )
+    );
+
+    // builder approach, multiple criteria as a string
+    $builder
+        ->where("release_dates.platform = 8")
+        ->where("total_rating >= 70");
+
+    // builder approach, multiple criteria as an array
+    $builder
+        ->where(
+            array(
+                "field" => "release_dates.platform",
+                "postfix" => "=",
+                "value" => 8
+            )
+        )
+        ->where(
+            array(
+                "field" => "total_rating",
+                "postfix" => ">=",
+                "value" => 70
+            )
+        );
 ?>
 ```
 
-The value of `$query`:
-
-```text
-query games/count "Number of games" {
-  fields *;
-};
-```
+> This method is trying to validate your input against some rules and will throw an `IGDBInvalidArgumentException` in case of any issues. If you need more flexibility or custom where statements with complex conditions in you queries use the [Custom Where](#custom-where) method instead.
 
 ## Building the Query
 ```php
