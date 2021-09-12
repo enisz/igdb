@@ -105,12 +105,12 @@ export default function HomePage() {
 
                                 <div className="col-12 col-lg-6 mb-3">
                                     <label htmlFor="client-id">Client ID</label>
-                                    <input type="text" placeholder="Client ID" id="client-id" className="form-control form-control-sm" value={clientId} onChange={event => setClientId(event.target.value)} />
+                                    <input type="text" placeholder="Client ID" id="client-id" className="form-control form-control-sm" value={clientId} onChange={event => setClientId(event.target.value)} autoComplete="off" />
                                 </div>
 
                                 <div className="col-12 col-lg-6 mb-3">
-                                <label htmlFor="client-id">Access Token</label>
-                                    <input type="text" placeholder="Access Token" id="access-token" className="form-control form-control-sm" value={accessToken} onChange={event => setAccessToken(event.target.value)} />
+                                    <label htmlFor="access-token">Access Token</label>
+                                    <input type="text" placeholder="Access Token" id="access-token" className="form-control form-control-sm" value={accessToken} onChange={event => setAccessToken(event.target.value)} autoComplete="off" />
                                 </div>
 
                                 <div className="col-12 col-lg-6 mb-3">
