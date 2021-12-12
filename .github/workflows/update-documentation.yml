@@ -40,7 +40,9 @@ jobs:
         run: npm ci
 
       - name: Building the Application
-        run: npm run build
+        run: |
+          npm run build
+          cp build/index.html build/404.html
 
       - name: Archiving Application
         uses: actions/upload-artifact@v2
