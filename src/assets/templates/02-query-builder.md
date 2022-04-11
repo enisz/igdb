@@ -99,7 +99,7 @@ This method will accept a boolean value. If this value is `true` the response fr
 
 > If the method is called without parameters, the value will be set to `true`.
 
-**Default value**: by default this value is `false`.
+**Default value**: by default this value is `true`.
 
 **Parameters**:
  - `$count`: `true` if a record count is required, `false` otherwise.
@@ -120,8 +120,10 @@ This method will accept a boolean value. If this value is `true` the response fr
         $builder
             ->name("Number of games")
             ->endpoint("game")
-            ->count(); // the default value of the parameter is true, hence it can be called without any parameter
-            // ->count(true) also valid
+            // the default value of count is true,
+            // hence it can be called without any parameter
+            // ->count(true) has the same result
+            ->count();
 
         // building the query
         $query = $builder->build(true);
@@ -161,7 +163,7 @@ This method will add a [where statement](#where) to your query, but will not val
         "custom_where" => "(platforms = [6,48] & genres = 13) | (platforms = [130,48] & genres = 12)"
     );
 
-    // method way
+    // builder approach
     $builder->custom_where("(platforms = [6,48] & genres = 13) | (platforms = [130,48] & genres = 12)");
 
 ?>
@@ -177,7 +179,7 @@ This method will set the endpoint to send your **multiquery** against. This para
 >:warning In case of a multiquery build this parameter is mandatory! If this is missing from the configuration the build will throw an `IGDBInvalidParameterException`! Refer to the [build method](#building-the-query) for details.
 
 **Parameters**:
- - `$endpoint`: the name of the endpoint to send the query against. Make sure to use the name of the endpoint instead of it's request path!
+ - `$endpoint`: the name of the endpoint to send the query against. Make sure to use the name of the endpoint instead of it's request path! The list of endpoints for this parameter:
    - age_rating
    - alternative_name
    - artwork
@@ -334,6 +336,18 @@ public function id(array | int $id) throws IGDBInvalidArgumentException: IGDBQue
 
 This is kind of a traditional thing. Since the IGDB team introduced the apicalypse query there is no separate ID field. This method simply adds a [where](#where) statement to your query.
 
+```php
+<?php
+
+    $builder->id(1);
+    // where id = 1;
+
+    $builder->id(array(1,2,3));
+    // where id = (1,2,3);
+
+?>
+```
+
 **Parameters**:
  - `$id`: one (integer) or more (array of integers) record ID's.
 
@@ -396,7 +410,7 @@ public function name(string $name) throws IGDBInvalidArgumentException: IGDBQuer
 
 This method will set a name for the query. This parameter is processed **in case of a multiquery build only**.
 
->:warning In case of a multiquery build this parameter is mandatory! If this is missing from the configuration the build will throw an `IGDBInvalidParameterException`! Refer to the [build method](#building-the-query) for details.
+>:warning In case of a multiquery build this parameter is **mandatory**! If this is missing from the configuration the build will throw an `IGDBInvalidParameterException`! Refer to the [build method](#building-the-query) for details.
 
 **Parameters**:
  - `$name`: the name of the query
@@ -444,12 +458,12 @@ query games "Game with ID 25076" {
 public function offset(int $offset) throws IGDBInvalidArgumentException: IGDBQueryBuilder
 ```
 
-This will start the result list at the provided value and will give `limit` number of results. This value must be `0` or greater.
+This will start the result list at the provided value and will give [`limit`](#limit) number of results. This value must be `0` or greater.
 
-**Default value**: the IGDB API will use 0 as a default offset value.
+**Default value**: the IGDB API will use `0` as a default offset value.
 
 **Parameters**:
- - `$offset`: a number which can be 0 or greater.
+ - `$offset`: a number which can be `0` or greater.
 
 **Returns**: `IGDBQueryBuilder` instance
 
@@ -512,7 +526,7 @@ Passing your `$options` array to this method will configure the builder with the
 ?>
 ```
 
->:warning Calling this method **will not reset** the configuration. To do so, use the [reset method](#reset).
+>:warning Calling this method **will not reset** the configuration. Stacking the `options()` calls will add each parameter to the builder. To clear the previous configuration items use the [reset method](#reset).
 
 ```php
 <?php
@@ -540,7 +554,7 @@ Passing your `$options` array to this method will configure the builder with the
 ?>
 ```
 
-Stacking the `options()` calls will add each parameter to the builder.
+The query:
 
 ```text
 fields id,name; search "uncharted"; limit 1;
@@ -656,10 +670,10 @@ Sorting (ordering) is used to order results by a specific field. The parameter c
         )
     );
 
-    // method way as a string
+    // builder approach as a string
     $builder->sort("release_dates.date desc");
 
-    // method way as an array
+    // builder approach as an array
     $builder->sort(
         array(
             "field" => "release_dates.date",
@@ -783,7 +797,7 @@ fields id,name;
 where id = 25076;
 ```
 
-A [`multiquery`](#multiquery) query:
+A [`multiquery`](#multiquery) to the game [`game`](#game) endpoint:
 ```text
 query games "Main Game" {
   fields id,name;
@@ -794,7 +808,7 @@ query games "Main Game" {
 The build method accepts one `boolean` parameter. Using this parameter the build method decides which syntax to return. If a multiquery is required, a few extra fields has to be set for the builder:
  - [`name`](#name): the name of the query choosen by the user
  - [`endpoint`](#endpoint): the endpoint to send the query against
- - [`count`](#count): whether the records or their count is required
+ - [`count`](#count) [optional]: whether the records or their count is required. By default the value of this parameter is `false`.
 
 >:warning In case of a multiquery request the properties [name](#name) and [endpoint](#endpoint) are **mandatory**! If any of these are missing from the configuration, an `IGDBInvalidParameterException` will be thrown.
 

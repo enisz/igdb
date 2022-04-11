@@ -36,9 +36,9 @@ These methods are exposed from the `$igdb` object.
 public function get_request_info()
 ```
 
-After a query is executed, the request information will be stored and can be retrieved using this method.
+After a query is executed, the latest request information will be stored and can be retrieved using this method.
 
-> The new version of the IGDB API (v4) will return a http response code `429` when you exceed the limit of requests on the database (4 requests per second at the time of writing this docs).
+> The new version of the IGDB API (v4) will return a http response code `429` when you exceed the limit of requests on the database (4 requests per second at the time of writing this documentation).
 
 ```php
 <?php

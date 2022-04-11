@@ -112,3 +112,5 @@ The parameters in the above example are valid, so the `$query` variable will hol
 ```text
 fields id,name; search "uncharted 4"; limit 1;
 ```
+
+> For more details on the Query Builder refer to the [IGDB Query Builder section](#igdb-query-builder) of this documentation.
