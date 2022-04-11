@@ -1,5 +1,5 @@
 ---
-overview: Utility class with helper methods.
+overview: Utility tools for making the job easier with the IGDB API
 icon: fa-tools
 ---
 

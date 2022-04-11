@@ -1,5 +1,5 @@
 ---
-overview: A few thoughts about the project and the documentation.
+overview: A few thoughts about the project and the documentation. Setting up your project.
 icon: fa-map-signs
 ---
 

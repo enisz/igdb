@@ -1,5 +1,5 @@
 ---
-overview: The main wrapper. Methods, properties, configurations. Sending queries to the IGDB API.
+overview: The main wrapper. Methods, endpoints, properties, configurations. Sending your queries to the IGDB API.
 icon: fa-gift
 ---
 

@@ -1,5 +1,5 @@
 ---
-overview: Changes, updates, important notes.
+overview: Changes, updates, notes.
 icon: fa-clipboard-list
 ---
 

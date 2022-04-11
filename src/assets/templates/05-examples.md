@@ -1,6 +1,6 @@
 ---
-overview: Example codes
-icon: fa-laptop-code
+overview: Working examples, covering most of the functionalities of the wrapper
+icon: fa-code
 ---
 
 # Examples

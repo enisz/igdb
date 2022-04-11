@@ -1,6 +1,6 @@
 ---
-overview: Everything about the Query Builder class. Setting up and configuring your queries.
-icon: fa-hard-hat
+overview: Everything about the Query Builder. Configuring and building your queries.
+icon: fa-hammer
 ---
 
 # IGDB Query Builder
