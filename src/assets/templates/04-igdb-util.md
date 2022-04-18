@@ -5,7 +5,9 @@ icon: fa-tools
 
 # IGDB Utils
 
-A utility class to help with some tasks. The methods in this class are [static](https://www.php.net/manual/en/language.oop5.static.php), therefore you can use them with the double colon syntax.
+A utility class to help with some tasks.
+
+> The methods in this class are [static](https://www.php.net/manual/en/language.oop5.static.php), therefore you can use them with the double colon syntax.
 
 ## Authenticate
 ```php
