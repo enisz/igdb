@@ -95,11 +95,11 @@ The Builder class has its own configuring methods to set the parameters before b
 public function count(boolean $count = true) throws IGDBInvalidArgumentException: IGDBQueryBuilder
 ```
 
-This method will accept a boolean value. If this value is `true` the response from IGDB will contain the number of records matching the filters. If `false` the records will be returned.
+This method will accept a boolean value. This parameter is processed **in case of a multiquery build only**. If this value is `true` the response from IGDB will contain the number of records matching the filters. If `false` the records will be returned.
 
 > If the method is called without parameters, the value will be set to `true`.
 
-**Default value**: by default this value is `true`.
+**Default value**: by default this value is `false`, the queries will return the records instead of their count.
 
 **Parameters**:
  - `$count`: `true` if a record count is required, `false` otherwise.
@@ -120,10 +120,14 @@ This method will accept a boolean value. If this value is `true` the response fr
         $builder
             ->name("Number of games")
             ->endpoint("game")
-            // the default value of count is true,
-            // hence it can be called without any parameter
+            // the default value of count is false
+            // to retrieve the count of the matched records, set it to true
             // ->count(true) has the same result
             ->count();
+
+            // if you wish to remove the count parameter for any reason later on
+            // you can call the count method with a false parameter
+            // ->count(false)
 
         // building the query
         $query = $builder->build(true);
@@ -526,7 +530,7 @@ Passing your `$options` array to this method will configure the builder with the
 ?>
 ```
 
->:warning Calling this method **will not reset** the configuration. Stacking the `options()` calls will add each parameter to the builder. To clear the previous configuration items use the [reset method](#reset).
+>:warning Calling this method **will not reset** the configuration. Stacking the `options()` calls will add each parameter to the builder, overwriting the old values with the new ones. To clear the previous configuration items use the [reset method](#reset).
 
 ```php
 <?php
@@ -542,6 +546,8 @@ Passing your `$options` array to this method will configure the builder with the
         $builder
             ->options(array("search" => "uncharted"))
             ->options(array("fields" => "id,name"))
+            // this call will overwrite the search parameter!
+            ->options(array("search" => "overwritten uncharted"))
             ->options(array("limit" => 1));
 
         // building the query
@@ -557,7 +563,7 @@ Passing your `$options` array to this method will configure the builder with the
 The query:
 
 ```text
-fields id,name; search "uncharted"; limit 1;
+fields id,name; search "overwritten uncharted"; limit 1;
 ```
 
 ### Reset
@@ -698,7 +704,7 @@ The where parameter can be either an apicalypse formatted string or an array wit
 
 The where filters will be concatenated with **AND** operators (`&`).
 
->:tip Multiple filter parameters can be applied to the same query. Check the [examples](#examples) below.
+>:tip Multiple filter parameters can be applied to the same query. Check the examples below.
 
 **Parameters**:
  - `$where`: either an apicalypse formatted string or an array with specific keys
@@ -815,20 +821,22 @@ The build method accepts one `boolean` parameter. Using this parameter the build
 **Parameters**:
  - `$multiquery`: if `true`, a multiquery will be returned, an endpoint query otherwise. The default value of this parameter is `false`.
 
+ >:warning If a non-boolean parameter is passed to the build method, an `IGDBInavlidParameterException` is thrown!
+
 **Returns**: the apicalypse query string
 
->:warning If a non-boolean parameter is passed to the build method, an `IGDBInavlidParameterException` is thrown!
-
-A simple query example:
+An endpoint query example:
 ```php
 <?php
 
+    // importing the wrapper
     require_once "class.igdb.php";
 
+    // instantiate the query builder
     $builder = new IGDBQueryBuilder();
 
     try {
-        // the return value of the final build method is the apicalypse query string
+        // configuring the query
         $query = $builder
             ->search("uncharted 4")
             ->fields("id, name")
@@ -867,11 +875,9 @@ A multiquery example:
             ->name("Game with ID of 25076")
             ->endpoint("game")
             ->fields("id,name")
-            ->where("id = 25076");
-
-        // building the query
-        // note the true parameter
-        $query = $builder->build(true);
+            ->where("id = 25076")
+            // note the true parameter
+            ->build(true);
     } catch (IGDBInvaliParameterException $e) {
         // invalid key or value found in the $options array
         echo $e->getMessage();

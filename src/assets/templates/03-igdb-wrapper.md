@@ -7,7 +7,7 @@ icon: fa-gift
 
 This is the most important part of the wrapper, the `IGDB` class which does the heavy lifting: communicating with the IGDB API.
 
-As mentioned in the [Introduction](#introduction), to have access to IGDB's database you have to register a Twitch Account and have your own `client_id` and `access_token`.
+As mentioned in the [Introduction](#getting-started), to have access to IGDB's database you have to register a Twitch Account and have your own `client_id` and `access_token`.
 
 >:tip You can add your tokens to the documentation to replace them in the exmple codes. Click the logo in the top left corner to get back to the main page and save your tokens.
 
@@ -29,7 +29,7 @@ After importing the dependencies you can instantiate the class with the `new` ke
 
 ## Public Methods
 
-These methods are exposed from the `$igdb` object.
+These methods are exposed from the `IGDB` object.
 
 ### Get Request Info
 ```php
@@ -112,7 +112,7 @@ array (size=37)
 public function construct_url(string $endpoint, boolean $count = false) throws IGDBInvalidParameterException: string
 ```
 
-The method will construct the full URL for the request and will return the constructed URL as a string. If an invalid endpoint name passed to `$endpoint` and `IGDBInvalidParameterException` will be thrown.
+The method will construct the full URL for the request and will return the constructed URL as a string. If an invalid endpoint name passed to `$endpoint` an `IGDBInvalidParameterException` will be thrown.
 
 **Parameters**:
  - `$endpoint`: the endpoint to use (the name of the endpoint, not the path to it!). Possible values:
@@ -185,7 +185,7 @@ The method will construct the full URL for the request and will return the const
 Output:
 
 ```text
-url: https://api.igdb.com/v4/gamescount
+url: https://api.igdb.com/v4/games
 count url: https://api.igdb.com/v4/games/count
 ```
 
@@ -217,7 +217,7 @@ After you closed the CURL session manually with [curl_close()](#close-curl-sessi
 
 ## Endpoints
 
-Every endpoint method is named after the IGDB API endpoints using snake-casing naming convention. These methods are expecting at least one parameter, the `$query` itself. The second `$count` parameter is conditional, it is `false` by default.
+Every endpoint method is named after the IGDB API endpoints using snake-casing naming convention. These methods are expecting at least one parameter, the `$query` itself. The second `$count` parameter is optional, it is `false` by default.
 
 **Parameters**:
  - `$query`: the query itself as an apicalypse string
@@ -225,11 +225,11 @@ Every endpoint method is named after the IGDB API endpoints using snake-casing n
 
 >:tip To build your queries, give [IGDB Query Builder](#igdb-query-builder) a try!
 
-These methods will return **an array of objects** decoded from IGDB response JSON by when the `$count` parameter is false. Otherwise, it will execute a count query against the selected endpoint which will return an object with a `count` property holding the sum of the found items. The count queries can be filtered with [where](#where) filters.
+These methods will return **an array of objects** decoded from IGDB response JSON when the `$count` parameter is false. Otherwise, it will execute a count query against the selected endpoint which will return an object with a `count` property holding the sum of the found items. The count queries can be filtered with [where](#where) parameters.
 
-`IGDBEndpointException` is thrown in any case of error.
+`IGDBEndpointException` is thrown if a non-successful response code is recieved from the IGDB API.
 
-refer to the [return values section](#return-values) for more details about the return values of these methods.
+Please refer to the [return values section](#return-values) for more details about the return values of these methods.
 
 ### Age Rating Content Description
 ```php
@@ -244,7 +244,7 @@ Fetching data from IGDB API using the [Age Rating Content Description](https://a
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -275,7 +275,7 @@ Fetching data from IGDB API using the [Age Rating](https://api-docs.igdb.com/age
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -309,7 +309,7 @@ Fetching data from IGDB API using the [Alternative Name](https://api-docs.igdb.c
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -341,7 +341,7 @@ Fetching data from IGDB API using the [Artwork](https://api-docs.igdb.com/artwor
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -377,7 +377,7 @@ Fetching data from IGDB API using the [Character Mug Shot](https://api-docs.igdb
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -412,7 +412,7 @@ Fetching data from IGDB API using the [Character](https://api-docs.igdb.com/char
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -453,7 +453,7 @@ Fetching data from IGDB API using the [Collection](https://api-docs.igdb.com/col
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -488,7 +488,7 @@ Fetching data from IGDB API using the [Company Logo](https://api-docs.igdb.com/c
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -523,7 +523,7 @@ Fetching data from IGDB API using the [Company Website](https://api-docs.igdb.co
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -555,7 +555,7 @@ Fetching data from IGDB API using the [Company](https://api-docs.igdb.com/compan
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -601,7 +601,7 @@ Fetching data from IGDB API using the [Cover](https://api-docs.igdb.com/cover) e
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -637,7 +637,7 @@ Fetching data from IGDB API using the [External Game](https://api-docs.igdb.com/
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -677,7 +677,7 @@ Fetching data from IGDB API using the [Franchise](https://api-docs.igdb.com/fran
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -712,7 +712,7 @@ Fetching data from IGDB API using the [Game Engine Logo](https://api-docs.igdb.c
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -747,7 +747,7 @@ Fetching data from IGDB API using the [Game Engine](https://api-docs.igdb.com/ga
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -785,7 +785,7 @@ Fetching data from IGDB API using the [Game Mode](https://api-docs.igdb.com/game
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -819,7 +819,7 @@ Fetching data from IGDB API using the [Game Version Feature Value](https://api-d
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -852,7 +852,7 @@ Fetching data from IGDB API using the [Game Version Feature](https://api-docs.ig
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -886,7 +886,7 @@ Fetching data from IGDB API using the [Game Version](https://api-docs.igdb.com/g
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -921,7 +921,7 @@ Fetching data from IGDB API using the [Game Video](https://api-docs.igdb.com/gam
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -953,7 +953,7 @@ Fetching data from IGDB API using the [Game](https://api-docs.igdb.com/game) end
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1030,7 +1030,7 @@ Fetching data from IGDB API using the [Genre](https://api-docs.igdb.com/genre) e
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1064,7 +1064,7 @@ Fetching data from IGDB API using the [Involved Company](https://api-docs.igdb.c
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1101,7 +1101,7 @@ Fetching data from IGDB API using the [Keyword](https://api-docs.igdb.com/keywor
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1135,7 +1135,7 @@ Fetching data from IGDB API using the [Multiplayer Mode](https://api-docs.igdb.c
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1177,7 +1177,7 @@ Fetching data from IGDB API using the [Platform Family](https://api-docs.igdb.co
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1208,7 +1208,7 @@ Fetching data from IGDB API using the [Platform Logo](https://api-docs.igdb.com/
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1243,7 +1243,7 @@ Fetching data from IGDB API using the [Platform Version Company](https://api-doc
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1276,7 +1276,7 @@ Fetching data from IGDB API using the [Platform Version Release Date](https://ap
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1314,7 +1314,7 @@ Fetching data from IGDB API using the [Platform Version](https://api-docs.igdb.c
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1361,7 +1361,7 @@ Fetching data from IGDB API using the [Platform Website](https://api-docs.igdb.c
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1393,7 +1393,7 @@ Fetching data from IGDB API using the [Platform](https://api-docs.igdb.com/platf
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1436,7 +1436,7 @@ Fetching data from IGDB API using the [Player Perspective](https://api-docs.igdb
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1470,7 +1470,7 @@ Fetching data from IGDB API using the [Release Date](https://api-docs.igdb.com/r
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1509,7 +1509,7 @@ Fetching data from IGDB API using the [Screenshot](https://api-docs.igdb.com/scr
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1545,7 +1545,7 @@ Fetching data from IGDB API using the [Search](https://api-docs.igdb.com/search)
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1585,7 +1585,7 @@ Fetching data from IGDB API using the [Theme](https://api-docs.igdb.com/theme) e
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1619,7 +1619,7 @@ Fetching data from IGDB API using the [Website](https://api-docs.igdb.com/websit
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
 
-**Returns**: either the resultset as an array of objects, or a single object with a count property. Depending on the second `$count` parameter.
+**Returns**: either the resultset as an array of objects, or a single object with a count property. Depends on the second `$count` parameter.
 
 ```php
 <?php
@@ -1645,6 +1645,8 @@ public function multiquery(array $queries) throws IGDBEndpointException, IGDBInv
 ```
 
 This method executes a query against the `multiquery` endpoint. With this functionality one is able to execute multiple queries in a single request.
+
+> :warning If you are using the [Query Builder](#igdb-query-builder) to construct your queries, the parameters [`name`](#name) and [`endpoint`](#endpoint) are **mandatory**! There is also a third optional parameter [`count`](#count). If any of the mandatory parameters are missing for the multiquery, an `IGDBInvalidParameterException` is thrown! Please refer to the [`build`](#building-the-query) method for more information!
 
 **Parameters**
  - `$queries`: an array of apicalypse formatted multiquery query strings.
