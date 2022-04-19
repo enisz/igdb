@@ -165,8 +165,14 @@
             if($response_code < 200 || $response_code > 299) {
                 $message = "Something went wrong with your query! Use <a href=\"https://enisz.github.io/igdb/documentation#get-request-info\" target=\"_blank\">get_request_info()</a> method to see the details of your query!";
 
-                if(is_array($result) && is_object($result[0]) && property_exists($result[0], "cause")) {
-                    $message = $result[0]->cause;
+                if(is_array($result) && is_object($result[0])) {
+                    if(property_exists($result[0], "cause")) {
+                        $message = $result[0]->cause;
+                    }
+
+                    if(property_exists($result[0], "title")) {
+                        $message = $result[0]->title;
+                    }
                 }
 
                 if(is_object($result) && property_exists($result, "message")) {
