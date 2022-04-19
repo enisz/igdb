@@ -345,7 +345,7 @@
                     throw new IGDBInvalidParameterException("Missing parameters for sort! field and direction is required, " . implode(", ", array_keys($sort)) . " passed!");
                 }
             } else {
-                throw new IGDBInvalidParameterException("Invalid type of parameter for sort! A string or an array is expected, " . gettype($where) . " passed!");
+                throw new IGDBInvalidParameterException("Invalid type of parameter for sort! A string or an array is expected, " . gettype($sort) . " passed!");
             }
 
             return $this;
@@ -449,7 +449,7 @@
          * Building the apicalypse query from the configured object
          * @param $multiquery - whether a multiquery string is required or a simple endpoint query
          * @throws IGDBInavlidParameterException if a non-boolean parameter is passed to the method
-         * @return $query - the apicalpyse query string
+         * @return string the apicalpyse query string
          */
         public function build($multiquery = false) {
             if(gettype($multiquery) != "boolean") {
@@ -461,7 +461,7 @@
 
         /**
          * Building the Apicalypse query string from the configured object for endpoint query requests
-         * @return $query - Apicalypse formatted query string
+         * @return string Apicalypse formatted query string
          */
         private function query() {
             $segments = array();
@@ -536,7 +536,7 @@
         /**
          * Building the apicalpyse query string for multiquery requests.
          * @throws IGBDInvalidParameterException if the name or endpoint properties are not set in the builder configuration
-         * @return $query - Apicalypse formatted multiquery query string
+         * @return string Apicalypse formatted multiquery query string
          */
         private function multiquery() {
             if($this->_name == null) {

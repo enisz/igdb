@@ -6,7 +6,7 @@
      * Fethching data from IGDB's database.
      * Compatible with IGDB API v4
      *
-     * @version 4.3.0
+     * @version 4.3.1
      * @author Enisz Abdalla <enisz87@gmail.com>
      * @link https://github.com/enisz/igdb
      */
@@ -163,14 +163,20 @@
 
             // If there were errors
             if($response_code < 200 || $response_code > 299) {
-                $message = "Error " . $response_code;
+                $message = "Something went wrong with your query! Use <a href=\"https://enisz.github.io/igdb/documentation#get-request-info\" target=\"_blank\">get_request_info()</a> method to see the details of your query!";
 
-                if(is_array($result) && is_object($result[0]) && property_exists($result[0], "cause")) {
-                    $message .= ": " . $result[0]->cause;
+                if(is_array($result) && is_object($result[0])) {
+                    if(property_exists($result[0], "cause")) {
+                        $message = $result[0]->cause;
+                    }
+
+                    if(property_exists($result[0], "title")) {
+                        $message = $result[0]->title;
+                    }
                 }
 
                 if(is_object($result) && property_exists($result, "message")) {
-                    $message .= ": " . $result->message;
+                    $message = $result->message;
                 }
 
                 throw new IGDBEndpointException($message, $response_code);
@@ -864,7 +870,7 @@
                     }
                 }
             } else {
-                throw new IGDBInvalidParameterException("Invalid type of parameter for multiquery! An array is expected, " . gettype($query) . " passed!");
+                throw new IGDBInvalidParameterException("Invalid type of parameter for multiquery! An array is expected, " . gettype($queries) . " passed!");
             }
 
             return $this->_exec_query($this->construct_url("multiquery", false), implode("\n\n", $queries));
