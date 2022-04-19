@@ -215,6 +215,40 @@ After you closed the CURL session manually with [curl_close()](#close-curl-sessi
 
 > Before sending a request with an endpoint method, the wrapper will check the status of the curl handler. If it is closed, it will reinitialize it automatically.
 
+## Handling Request Errors
+
+Your query may fail on the IGDB side. In this case the API will send back a non-successful response code indicating that something went wrong. When this happens an `IGDBEndpointException` can be caught to extract information about the issue. To catch these errors you have to enclose your [endpoint](#endpoints) method calls in a try...catch block.
+
+```php
+<?php
+
+    $igdb = new IGDB("{client_id}", "{access_token}");
+
+    // your query string with a field that doesn't exist
+    $query = 'search "uncharted"; fields nonexistingfield;';
+
+    try {
+        // executing the query
+        $games = $igdb->game($query);
+    } catch (IGDBEndpointException $e) {
+        // since the query contains a non-existing field, an error occured
+        // printing the response code and the error message
+        echo "Response code: " . $e->getResponseCode();
+        echo "Message: " . $e->getMessage();
+    }
+
+?>
+```
+
+Since the query above is not valid, as there is no field called `nonexistingfield` on the game endpoint, the API will send a response with an error message and a non-successful response code. The result of the script above is:
+
+```text
+Response code: 400
+Message: Invalid Field
+```
+
+You can also get some additional information about this request using the [`get_request_info()`](#get-request-info) method.
+
 ## Endpoints
 
 Every endpoint method is named after the IGDB API endpoints using snake-casing naming convention. These methods are expecting at least one parameter, the `$query` itself. The second `$count` parameter is optional, it is `false` by default.
@@ -227,7 +261,7 @@ Every endpoint method is named after the IGDB API endpoints using snake-casing n
 
 These methods will return **an array of objects** decoded from IGDB response JSON when the `$count` parameter is false. Otherwise, it will execute a count query against the selected endpoint which will return an object with a `count` property holding the sum of the found items. The count queries can be filtered with [where](#where) parameters.
 
-`IGDBEndpointException` is thrown if a non-successful response code is recieved from the IGDB API.
+`IGDBEndpointException` is thrown if a non-successful response code is recieved from the IGDB API. To find out how to handle request errors, head to the [Handle Request Errors](#handling-request-errors) section.
 
 Please refer to the [return values section](#return-values) for more details about the return values of these methods.
 

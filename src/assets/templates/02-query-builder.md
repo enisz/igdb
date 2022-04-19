@@ -33,6 +33,8 @@ There are two ways to configure the builder.
 
 The Builder is using a builder pattern to configure itself with the [configuring methods](#configuring-methods) before parsing the properties to a query string. When every parameter is set, calling the [`build()`](#building-the-query) method will start processing the parameters and will return the query string itself.
 
+>:warning When using the builder approach, you must enclose your configuring methods in try...catch blocks. Read more on this in the [Handling Builder Errors](#handling-builder-errors) section.
+
 ```php
 <?php
 
@@ -85,6 +87,69 @@ To support the traditional approach of configuring the queries - the `$options` 
 
 ?>
 ```
+
+## Handling Builder Errors
+
+When an invalid parameter is passed to any of the [configuring methods](#configuring-methods), an `IGDBInvaliParameterException` is thrown. To properly handle these errors, at least the configuring methods should be enclosed in a try...catch block. Calling the `getMessage()` method of the exception object will return the error message.
+
+```php
+<?php
+
+    $builder = new IGDBQueryBuilder();
+
+    try {
+        $query = $builder
+            ->search("uncharted")
+            // passing an integer to the fields parameter is invalid
+            // as this methods expects a string or an array of strings
+            ->fields(1)
+            ->build();
+
+        echo $query;
+    } catch (IGDBInvalidParameterException $e) {
+        // catching the exception, printing the error message
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+The script above will produce this output:
+
+```text
+Invalid type of parameter for fields! String or array of strings are expected, integer passed!
+```
+
+It is important to keep in mind, that this validation is happening "locally" on your server. The query builder can only validate the type of variables you pass, or it can validate against a list of predefined values that the API expects. For example, if the example above is altered like this:
+
+```php
+<?php
+
+    $builder = new IGDBQueryBuilder();
+
+    try {
+        $query = $builder
+            ->search("uncharted")
+            // passing a field name that doesnt exist on the game endpoint
+            ->fields("nonexistingfield")
+            ->build();
+
+        // no exception thrown, printing the query string
+        echo $query;
+    } catch (IGDBInvalidParameterException $e) {
+        echo $e->getMessage();
+    }
+
+?>
+```
+
+The builder will not throw an exception as the method got a string, which is valid. The output of the script will be:
+
+```text
+fields nonexistingfield; search "uncharted";
+```
+
+The field `nonexistingfield` does not exist on the `game` endpoint which will cause an error on the IGDB API. These errors has to be handled separately. Read more on this in the [Handling Request Errors](#handling-request-errors) section.
 
 ## Configuring Methods
 

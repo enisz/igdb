@@ -5,6 +5,14 @@ icon: fa-clipboard-list
 
 # Change Log
 
+## v4.3.1 - April 19, 2022
+ - IGDBEndpointException
+   - Added a `getResponseCode()` to fetch http response code from IGDB API
+ - Added sections to the documentation:
+   - [Handling Errors](#handling-errors)
+   - [Handling Builder Errors](#handling-builder-errors)
+   - [Handling Request Errors](#handling-request-errors)
+
 ## v4.3.0 - August 19, 2021
  - IGDBQueryBuilder: three new properties introduced for multiquery:
   - [name](#name)
