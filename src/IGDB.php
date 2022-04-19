@@ -6,7 +6,7 @@
      * Fethching data from IGDB's database.
      * Compatible with IGDB API v4
      *
-     * @version 4.3.0
+     * @version 4.3.1
      * @author Enisz Abdalla <enisz87@gmail.com>
      * @link https://github.com/enisz/igdb
      */
