@@ -110,6 +110,22 @@ export default function HtmlParser({content}) {
             }
         },
         {
+            shouldProcessNode: node => node.name && node.name === "pre" && node.children[0].attribs.class !== "language-text",
+            processNode: (node, children) => {
+                return (
+                    <pre style={{ position: "relative" }}>
+                        { children[0].props.children.match(/\n/g).length > 1 &&
+                            <button key={"random"} className='btn btn-sm btn-light btn-clipboard' style={{ position: "absolute", right: "3px", top: "2px" }}>
+                                <i className='fa fa-fw fa-copy'></i>
+                            </button>
+                        }
+
+                        {children}
+                    </pre>
+                )
+            }
+        },
+        {
             shouldProcessNode: node => node.name && node.name === "p" && node.children.find(child => child.name && child.name === "img"),
             processNode: (node, children) => {
                 const props = children[0].props;

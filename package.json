@@ -26,6 +26,7 @@
     "react-router-dom": "^5.2.0",
     "react-router-hash-link": "^2.4.1",
     "react-scripts": "4.0.3",
+    "react-toastify": "^8.2.0",
     "remark-gfm": "^1.0.0",
     "sass": "^1.32.12",
     "web-vitals": "^1.1.2"

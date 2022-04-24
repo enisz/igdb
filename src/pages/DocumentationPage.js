@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import dateParser from 'node-date-parser';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
@@ -10,6 +10,8 @@ import DocumentSections from '../components/DocumentSections';
 import HtmlParser from '../components/HtmlParser';
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
+import useToastContext from '../hooks/useToastContext';
+
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
@@ -17,6 +19,18 @@ const timeAgo = new TimeAgo('en-US');
 export default function DocumentationPage() {
     useBodyClass("docs-page");
     const [topics] = useState(getParagraphs({ parents : {"$size" : 0} }));
+    const toast = useToastContext();
+
+    const clipboardClick = useMemo(() => event => {
+        const content = event.currentTarget.nextElementSibling.textContent;
+
+        if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(content);
+            toast.success("Code snippet copied to the clipboard!")
+        } else {
+            toast.error("Failed to copy the code snippet to the clipboard!");
+        }
+    }, [toast])
 
     useEffect(() => {
         HighlightJS.highlightAll();
@@ -26,10 +40,22 @@ export default function DocumentationPage() {
                 if(window.location.hash) {
                     var urlhash = window.location.hash;
                     window.jQuery('body').scrollTo(urlhash, 800, {offset: -69, 'axis':'y'});
+
+                    const elements = document.getElementsByClassName("btn-clipboard");
+                    for(let i=0; i<elements.length; i++) {
+                        elements[i].addEventListener("click", clipboardClick)
+                    }
                 }
             }, 200
         )
-    }, []);
+
+        return () => {
+            const elements = document.getElementsByClassName("btn-clipboard");
+            for(let i=0; i<elements.length; i++) {
+                elements[i].removeEventListener("click", clipboardClick)
+            }
+        }
+    }, [toast, clipboardClick]);
 
     return (
         <>

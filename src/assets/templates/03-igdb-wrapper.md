@@ -270,7 +270,7 @@ Please refer to the [return values section](#return-values) for more details abo
 public function age_rating_content_description(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Age Rating Content Description](https://api-docs.igdb.com/age-rating-content-description) endpoint.
+Fetching data from IGDB API using the [Age Rating Content Description](https://api-docs.igdb.com/#age-rating-content-description) endpoint.
 
 **Endpoint Description**: The organisation behind a specific rating
 
@@ -301,7 +301,7 @@ Fetching data from IGDB API using the [Age Rating Content Description](https://a
 public function age_rating(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Age Rating](https://api-docs.igdb.com/age-rating) endpoint.
+Fetching data from IGDB API using the [Age Rating](https://api-docs.igdb.com/#age-rating) endpoint.
 
 **Endpoint Description**: Age Rating according to various rating organisations
 
@@ -335,7 +335,7 @@ Fetching data from IGDB API using the [Age Rating](https://api-docs.igdb.com/age
 public function alternative_name(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Alternative Name](https://api-docs.igdb.com/alternative-name) endpoint.
+Fetching data from IGDB API using the [Alternative Name](https://api-docs.igdb.com/#alternative-name) endpoint.
 
 **Endpoint Description**: Alternative and international game titles
 
@@ -367,7 +367,7 @@ Fetching data from IGDB API using the [Alternative Name](https://api-docs.igdb.c
 public function artwork(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Artwork](https://api-docs.igdb.com/artwork) endpoint.
+Fetching data from IGDB API using the [Artwork](https://api-docs.igdb.com/#artwork) endpoint.
 
 **Endpoint Description**: official artworks (resolution and aspect ratio may vary)
 
@@ -403,7 +403,7 @@ Fetching data from IGDB API using the [Artwork](https://api-docs.igdb.com/artwor
 public function character_mug_shot(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Character Mug Shot](https://api-docs.igdb.com/character-mug-shot) endpoint.
+Fetching data from IGDB API using the [Character Mug Shot](https://api-docs.igdb.com/#character-mug-shot) endpoint.
 
 **Endpoint Description**: Images depicting game characters
 
@@ -438,7 +438,7 @@ Fetching data from IGDB API using the [Character Mug Shot](https://api-docs.igdb
 public function character(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Character](https://api-docs.igdb.com/character) endpoint.
+Fetching data from IGDB API using the [Character](https://api-docs.igdb.com/#character) endpoint.
 
 **Endpoint Description**: Video game characters
 
@@ -479,7 +479,7 @@ Fetching data from IGDB API using the [Character](https://api-docs.igdb.com/char
 public function collection(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Collection](https://api-docs.igdb.com/collection) endpoint.
+Fetching data from IGDB API using the [Collection](https://api-docs.igdb.com/#collection) endpoint.
 
 **Endpoint Description**: Collection, AKA Series
 
@@ -514,7 +514,7 @@ Fetching data from IGDB API using the [Collection](https://api-docs.igdb.com/col
 public function company_logo(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Company Logo](https://api-docs.igdb.com/company-logo) endpoint.
+Fetching data from IGDB API using the [Company Logo](https://api-docs.igdb.com/#company-logo) endpoint.
 
 **Endpoint Description**: The logos of developers and publishers
 
@@ -549,7 +549,7 @@ Fetching data from IGDB API using the [Company Logo](https://api-docs.igdb.com/c
 public function company_website(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Company Website](https://api-docs.igdb.com/company-website) endpoint.
+Fetching data from IGDB API using the [Company Website](https://api-docs.igdb.com/#company-website) endpoint.
 
 **Endpoint Description**: Company Website
 
@@ -581,7 +581,7 @@ Fetching data from IGDB API using the [Company Website](https://api-docs.igdb.co
 public function company(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Company](https://api-docs.igdb.com/company) endpoint.
+Fetching data from IGDB API using the [Company](https://api-docs.igdb.com/#company) endpoint.
 
 **Endpoint Description**: Video game companies. Both publishers &amp;amp; developers
 
@@ -627,7 +627,7 @@ Fetching data from IGDB API using the [Company](https://api-docs.igdb.com/compan
 public function cover(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Cover](https://api-docs.igdb.com/cover) endpoint.
+Fetching data from IGDB API using the [Cover](https://api-docs.igdb.com/#cover) endpoint.
 
 **Endpoint Description**: The cover art of games
 
@@ -663,7 +663,7 @@ Fetching data from IGDB API using the [Cover](https://api-docs.igdb.com/cover) e
 public function external_game(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [External Game](https://api-docs.igdb.com/external-game) endpoint.
+Fetching data from IGDB API using the [External Game](https://api-docs.igdb.com/#external-game) endpoint.
 
 **Endpoint Description**: Game IDs on other services
 
@@ -703,7 +703,7 @@ Fetching data from IGDB API using the [External Game](https://api-docs.igdb.com/
 public function franchise(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Franchise](https://api-docs.igdb.com/franchise) endpoint.
+Fetching data from IGDB API using the [Franchise](https://api-docs.igdb.com/#franchise) endpoint.
 
 **Endpoint Description**: A list of video game franchises such as Star Wars.
 
@@ -738,7 +738,7 @@ Fetching data from IGDB API using the [Franchise](https://api-docs.igdb.com/fran
 public function game_engine_logo(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Game Engine Logo](https://api-docs.igdb.com/game-engine-logo) endpoint.
+Fetching data from IGDB API using the [Game Engine Logo](https://api-docs.igdb.com/#game-engine-logo) endpoint.
 
 **Endpoint Description**: The logos of game engines
 
@@ -773,7 +773,7 @@ Fetching data from IGDB API using the [Game Engine Logo](https://api-docs.igdb.c
 public function game_engine(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Game Engine](https://api-docs.igdb.com/game-engine) endpoint.
+Fetching data from IGDB API using the [Game Engine](https://api-docs.igdb.com/#game-engine) endpoint.
 
 **Endpoint Description**: Video game engines such as unreal engine.
 
@@ -811,7 +811,7 @@ Fetching data from IGDB API using the [Game Engine](https://api-docs.igdb.com/ga
 public function game_mode(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Game Mode](https://api-docs.igdb.com/game-mode) endpoint.
+Fetching data from IGDB API using the [Game Mode](https://api-docs.igdb.com/#game-mode) endpoint.
 
 **Endpoint Description**: Single player, Multiplayer etc
 
@@ -845,7 +845,7 @@ Fetching data from IGDB API using the [Game Mode](https://api-docs.igdb.com/game
 public function game_version_feature_value(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Game Version Feature Value](https://api-docs.igdb.com/game-version-feature-value) endpoint.
+Fetching data from IGDB API using the [Game Version Feature Value](https://api-docs.igdb.com/#game-version-feature-value) endpoint.
 
 **Endpoint Description**: The bool&#x2F;text value of the feature
 
@@ -878,7 +878,7 @@ Fetching data from IGDB API using the [Game Version Feature Value](https://api-d
 public function game_version_feature(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Game Version Feature](https://api-docs.igdb.com/game-version-feature) endpoint.
+Fetching data from IGDB API using the [Game Version Feature](https://api-docs.igdb.com/#game-version-feature) endpoint.
 
 **Endpoint Description**: Features and descriptions of what makes each version&#x2F;edition different from the main game
 
@@ -912,7 +912,7 @@ Fetching data from IGDB API using the [Game Version Feature](https://api-docs.ig
 public function game_version(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Game Version](https://api-docs.igdb.com/game-version) endpoint.
+Fetching data from IGDB API using the [Game Version](https://api-docs.igdb.com/#game-version) endpoint.
 
 **Endpoint Description**: Details about game editions and versions.
 
@@ -947,7 +947,7 @@ Fetching data from IGDB API using the [Game Version](https://api-docs.igdb.com/g
 public function game_video(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Game Video](https://api-docs.igdb.com/game-video) endpoint.
+Fetching data from IGDB API using the [Game Video](https://api-docs.igdb.com/#game-video) endpoint.
 
 **Endpoint Description**: A video associated with a game
 
@@ -979,7 +979,7 @@ Fetching data from IGDB API using the [Game Video](https://api-docs.igdb.com/gam
 public function game(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Game](https://api-docs.igdb.com/game) endpoint.
+Fetching data from IGDB API using the [Game](https://api-docs.igdb.com/#game) endpoint.
 
 **Endpoint Description**: Video Games!
 
@@ -1056,7 +1056,7 @@ Fetching data from IGDB API using the [Game](https://api-docs.igdb.com/game) end
 public function genre(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Genre](https://api-docs.igdb.com/genre) endpoint.
+Fetching data from IGDB API using the [Genre](https://api-docs.igdb.com/#genre) endpoint.
 
 **Endpoint Description**: Genres of video game
 
@@ -1090,9 +1090,7 @@ Fetching data from IGDB API using the [Genre](https://api-docs.igdb.com/genre) e
 public function involved_company(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Involved Company](https://api-docs.igdb.com/involved-company) endpoint.
-
-**Endpoint Description**: &lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;involved_companies&lt;&#x2F;code&gt;
+Fetching data from IGDB API using the [Involved Company](https://api-docs.igdb.com/#involved-company) endpoint.
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
@@ -1127,7 +1125,7 @@ Fetching data from IGDB API using the [Involved Company](https://api-docs.igdb.c
 public function keyword(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Keyword](https://api-docs.igdb.com/keyword) endpoint.
+Fetching data from IGDB API using the [Keyword](https://api-docs.igdb.com/#keyword) endpoint.
 
 **Endpoint Description**: Keywords are words or phrases that get tagged to a game such as “world war 2” or “steampunk”.
 
@@ -1161,7 +1159,7 @@ Fetching data from IGDB API using the [Keyword](https://api-docs.igdb.com/keywor
 public function multiplayer_mode(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Multiplayer Mode](https://api-docs.igdb.com/multiplayer-mode) endpoint.
+Fetching data from IGDB API using the [Multiplayer Mode](https://api-docs.igdb.com/#multiplayer-mode) endpoint.
 
 **Endpoint Description**: Data about the supported multiplayer types
 
@@ -1203,7 +1201,7 @@ Fetching data from IGDB API using the [Multiplayer Mode](https://api-docs.igdb.c
 public function platform_family(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Platform Family](https://api-docs.igdb.com/platform-family) endpoint.
+Fetching data from IGDB API using the [Platform Family](https://api-docs.igdb.com/#platform-family) endpoint.
 
 **Endpoint Description**: A collection of closely related platforms
 
@@ -1234,7 +1232,7 @@ Fetching data from IGDB API using the [Platform Family](https://api-docs.igdb.co
 public function platform_logo(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Platform Logo](https://api-docs.igdb.com/platform-logo) endpoint.
+Fetching data from IGDB API using the [Platform Logo](https://api-docs.igdb.com/#platform-logo) endpoint.
 
 **Endpoint Description**: Logo for a platform
 
@@ -1269,7 +1267,7 @@ Fetching data from IGDB API using the [Platform Logo](https://api-docs.igdb.com/
 public function platform_version_company(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Platform Version Company](https://api-docs.igdb.com/platform-version-company) endpoint.
+Fetching data from IGDB API using the [Platform Version Company](https://api-docs.igdb.com/#platform-version-company) endpoint.
 
 **Endpoint Description**: A platform developer
 
@@ -1302,7 +1300,7 @@ Fetching data from IGDB API using the [Platform Version Company](https://api-doc
 public function platform_version_release_date(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Platform Version Release Date](https://api-docs.igdb.com/platform-version-release-date) endpoint.
+Fetching data from IGDB API using the [Platform Version Release Date](https://api-docs.igdb.com/#platform-version-release-date) endpoint.
 
 **Endpoint Description**: A handy endpoint that extends platform release dates. Used to dig deeper into release dates, platforms and versions.
 
@@ -1340,7 +1338,7 @@ Fetching data from IGDB API using the [Platform Version Release Date](https://ap
 public function platform_version(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Platform Version](https://api-docs.igdb.com/platform-version) endpoint.
+Fetching data from IGDB API using the [Platform Version](https://api-docs.igdb.com/#platform-version) endpoint.
 
 **Endpoint Description**: &lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;platform_versions&lt;&#x2F;code&gt;
 
@@ -1387,7 +1385,7 @@ Fetching data from IGDB API using the [Platform Version](https://api-docs.igdb.c
 public function platform_website(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Platform Website](https://api-docs.igdb.com/platform-website) endpoint.
+Fetching data from IGDB API using the [Platform Website](https://api-docs.igdb.com/#platform-website) endpoint.
 
 **Endpoint Description**: The main website for the platform
 
@@ -1419,7 +1417,7 @@ Fetching data from IGDB API using the [Platform Website](https://api-docs.igdb.c
 public function platform(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Platform](https://api-docs.igdb.com/platform) endpoint.
+Fetching data from IGDB API using the [Platform](https://api-docs.igdb.com/#platform) endpoint.
 
 **Endpoint Description**: The hardware used to run the game or game delivery network
 
@@ -1462,7 +1460,7 @@ Fetching data from IGDB API using the [Platform](https://api-docs.igdb.com/platf
 public function player_perspective(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Player Perspective](https://api-docs.igdb.com/player-perspective) endpoint.
+Fetching data from IGDB API using the [Player Perspective](https://api-docs.igdb.com/#player-perspective) endpoint.
 
 **Endpoint Description**: Player perspectives describe the view&#x2F;perspective of the player in a video game.
 
@@ -1496,7 +1494,7 @@ Fetching data from IGDB API using the [Player Perspective](https://api-docs.igdb
 public function release_date(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Release Date](https://api-docs.igdb.com/release-date) endpoint.
+Fetching data from IGDB API using the [Release Date](https://api-docs.igdb.com/#release-date) endpoint.
 
 **Endpoint Description**: A handy endpoint that extends game release dates. Used to dig deeper into release dates, platforms and versions.
 
@@ -1535,7 +1533,7 @@ Fetching data from IGDB API using the [Release Date](https://api-docs.igdb.com/r
 public function screenshot(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Screenshot](https://api-docs.igdb.com/screenshot) endpoint.
+Fetching data from IGDB API using the [Screenshot](https://api-docs.igdb.com/#screenshot) endpoint.
 
 **Endpoint Description**: Screenshots of games
 
@@ -1571,7 +1569,7 @@ Fetching data from IGDB API using the [Screenshot](https://api-docs.igdb.com/scr
 public function search(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Search](https://api-docs.igdb.com/search) endpoint.
+Fetching data from IGDB API using the [Search](https://api-docs.igdb.com/#search) endpoint.
 
 **Endpoint Description**: &lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;search&lt;&#x2F;code&gt;
 
@@ -1611,7 +1609,7 @@ Fetching data from IGDB API using the [Search](https://api-docs.igdb.com/search)
 public function theme(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Theme](https://api-docs.igdb.com/theme) endpoint.
+Fetching data from IGDB API using the [Theme](https://api-docs.igdb.com/#theme) endpoint.
 
 **Endpoint Description**: Video game themes
 
@@ -1645,7 +1643,7 @@ Fetching data from IGDB API using the [Theme](https://api-docs.igdb.com/theme) e
 public function website(string $query, boolean $count = false) throws IGDBEndpointException: mixed
 ```
 
-Fetching data from IGDB API using the [Website](https://api-docs.igdb.com/website) endpoint.
+Fetching data from IGDB API using the [Website](https://api-docs.igdb.com/#website) endpoint.
 
 **Endpoint Description**: A website url, usually associated with a game
 

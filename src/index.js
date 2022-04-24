@@ -18,6 +18,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './assets/css/theme.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'highlight.js/styles/atom-one-dark.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 loadDatabase(`${process.env.PUBLIC_URL}/database.json`)
   .then(() =>
