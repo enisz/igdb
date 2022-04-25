@@ -115,7 +115,7 @@ export default function HtmlParser({content}) {
                 return (
                     <pre style={{ position: "relative" }}>
                         { children[0].props.children.match(/\n/g).length > 1 &&
-                            <button data-toggle="tooltip" data-placement="left" title="Tooltip on left" key={"random"} className='btn btn-sm btn-light btn-clipboard' style={{ position: "absolute", right: "2px", top: "2px" }}>
+                            <button key={"random"} className='btn btn-sm btn-light btn-clipboard' style={{ position: "absolute", right: "2px", top: "2px" }} data-toggle="tooltip" data-placement="left" title="Copy to clipboard">
                                 <i className='fa fa-fw fa-copy'></i>
                             </button>
                         }

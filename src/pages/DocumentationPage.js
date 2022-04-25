@@ -40,7 +40,8 @@ export default function DocumentationPage() {
                 if(window.location.hash) {
                     var urlhash = window.location.hash;
                     window.jQuery('body').scrollTo(urlhash, 800, {offset: -69, 'axis':'y'});
-                    window.jQuery(".btn-clipboard").on("click", clipboardClick)
+                    window.jQuery(".btn-clipboard").on("click", clipboardClick);
+                    window.jQuery('[data-toggle="tooltip"]').tooltip();
                 }
             }, 200
         )
