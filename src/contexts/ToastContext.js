@@ -10,7 +10,7 @@ export const ToastContextProvider = ({ children }) => {
         <ToastContext.Provider value={toast}>
             { children }
             <ToastContainer
-                autoClose={5000}
+                autoClose={3000}
                 position="bottom-right"
                 theme="light"
                 hideProgressBar={true}

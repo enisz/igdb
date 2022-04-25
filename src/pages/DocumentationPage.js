@@ -40,21 +40,12 @@ export default function DocumentationPage() {
                 if(window.location.hash) {
                     var urlhash = window.location.hash;
                     window.jQuery('body').scrollTo(urlhash, 800, {offset: -69, 'axis':'y'});
-
-                    const elements = document.getElementsByClassName("btn-clipboard");
-                    for(let i=0; i<elements.length; i++) {
-                        elements[i].addEventListener("click", clipboardClick)
-                    }
+                    window.jQuery(".btn-clipboard").on("click", clipboardClick)
                 }
             }, 200
         )
 
-        return () => {
-            const elements = document.getElementsByClassName("btn-clipboard");
-            for(let i=0; i<elements.length; i++) {
-                elements[i].removeEventListener("click", clipboardClick)
-            }
-        }
+        return () => window.jQuery(".btn-clipboard").off("click", clipboardClick);
     }, [toast, clipboardClick]);
 
     return (
