@@ -33,12 +33,15 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "watch:templates": "node dbexport.js --watch",
-    "export:templates": "node dbexport.js",
-    "export:templates:production": "node dbexport.js --production"
+    "prod:db": "node dbexport.js --production",
+    "dev:client": "wait-on public/database.json && react-scripts start",
+    "dev:db": "node dbexport.js --watch",
+    "db": "node dbexport.js",
+    "dev": "concurrently -c \"blue,yellow\" -p name npm:dev:db npm:dev:client",
+    "prod:client": "wait-on public/database.json && react-scripts build",
+    "build": "rimraf build public/images public/database.json && npm run prod:db && react-scripts build"
   },
   "eslintConfig": {
     "extends": [
@@ -61,12 +64,15 @@
   "devDependencies": {
     "@types/javascript-time-ago": "^2.0.3",
     "commander": "^7.2.0",
+    "concurrently": "^7.6.0",
     "jsonmark": "0.0.1",
     "markdown-to-json": "^0.5.4",
     "remark": "^13.0.0",
     "remark-external-links": "^8.0.0",
     "remark-html": "^13.0.1",
+    "rimraf": "^3.0.2",
     "romanize": "^1.1.1",
-    "strip-markdown": "^4.0.0"
+    "strip-markdown": "^4.0.0",
+    "wait-on": "^6.0.1"
   }
 }

@@ -133,29 +133,19 @@ const exportDb = () => {
                 console.log(`  Processing images:`);
                 let match;
 
+                // while there are images in the template
                 while(match = IMAGE_REGEX.exec(paragraph.body.trim())) {
-                    const source = match[2].split("/").join(path.sep);
-                    const target = path.join(PUBLIC_PATH, source);
+                    const source = path.join(TEMPLATE_PATH, match[2]);
+                    const target = path.join(PUBLIC_PATH, match[2]);
+                    const targetDir = path.parse(target).dir;
 
-                    if(!fs.existsSync(target)) {
-                        const dirtree = path.dirname(target).split(path.sep);
-                        let targetPath = "";
-    
-                        for(let index in dirtree) {
-                            if(targetPath == "") {
-                                targetPath = dirtree[0];
-                            } else {
-                                targetPath = path.join(targetPath, dirtree[index]);
-                            }
-    
-                            if(!fs.existsSync(targetPath)) {
-                                fs.mkdirSync(targetPath)
-                            }
-                        }
+                    // if the target path does not exist, create it
+                    if(!fs.existsSync(targetDir)) {
+                        fs.mkdirSync(targetDir, { recursive: true });
                     }
     
-                    fs.copyFileSync(path.join(TEMPLATE_PATH, source), target);
-                    console.log(`   ${path.join(TEMPLATE_PATH, source)} => ${target}`);
+                    fs.copyFileSync(source, target);
+                    console.log(`   ${source} => ${target}`);
                 }
             }            
 
