@@ -9,7 +9,6 @@ const remark = require("remark");
 const remarkExternalLinks = require("remark-external-links");
 const remarkHtml = require("remark-html");
 const remarkStrip = require("strip-markdown");
-const dateParser = require("node-date-parser");
 const execSync = require("child_process").execSync;
 const remarkGfm = require("remark-gfm");
 const commander = require("commander");
@@ -23,6 +22,7 @@ commander
 // Variables
 const TEMPLATE_PATH = path.join(__dirname, "src", "assets", "templates");
 const PUBLIC_PATH = path.join(__dirname, "public");
+const IMAGE_REGEX = new RegExp("!\\[(.*?)\\]\\((.*?)\\)", "gi");
 
 // Calculating file size
 const calculateFileSize = size => {
@@ -47,28 +47,27 @@ const calculateFileSize = size => {
 // Exporting the database
 const exportDb = () => {
     if(fs.existsSync(path.join(PUBLIC_PATH, "images"))) {
-        console.log("Clearing existing images in public folder...");
+        console.log("Clearing existing images in public folder");
         const deleteFiles = folder => {
             fs.readdirSync(folder, { encoding : "utf-8"}).forEach( item => {
                 const currentItem = path.join(folder, item);
                 const isFile = fs.lstatSync(currentItem).isFile();
 
                 if(isFile) {
-                    console.log(` Deleting ${currentItem}...`)
                     fs.rmSync(currentItem);
                 } else {
-                    console.log(` ${currentItem} is a folder. Going deeper...`);
                     deleteFiles(currentItem);
-
-                    console.log(` ${currentItem} cleared! Deleting...`);
                     fs.rmdirSync(currentItem);
                 }
+
+                console.log(` Deleting ${currentItem}`)
             })
         }
 
         deleteFiles(path.join(PUBLIC_PATH, "images"));
     }
-    console.log(`Exporting ${commander.opts().production ? "production " : " "}database...`);
+    
+    console.log(`Exporting ${commander.opts().production ? "production " : ""}database`);
     const database = new lokijs("DocumentationDB", { env : "BROWSER", persistenceMethod : "memory", serializationMethod : commander.opts().production ? "normal" : "pretty" });
     const templates = database.addCollection("templates");
 
@@ -84,7 +83,7 @@ const exportDb = () => {
     )
 
     for(let index in json) {
-        console.log(`Processing template: ${json[index].basename}.md`);
+        console.log(`Processing template: ${path.join(TEMPLATE_PATH, json[index].basename)}.md`);
 
         const current = json[index];
         const overview = current.overview;
@@ -93,7 +92,7 @@ const exportDb = () => {
         const paragraphs = jsonmark.parse(current.content.trim()).content;
 
         for(let title in paragraphs) {
-            console.log(`Processing paragrah: ${title}`);
+            console.log(` Processing paragraph: ${title}`);
 
             const paragraph = paragraphs[title];
             const level = paragraph.head.match(new RegExp("#", "g")).length;
@@ -130,32 +129,35 @@ const exportDb = () => {
             }
 
             // processing images
-            const match = new RegExp("!\\[(.*?)\\]\\((.*?)\\)", "gi").exec(paragraph.body.trim());
-            if(match != null) {
-                console.log(` Processing images in ${title}`);
-                const source = match[2].split("/").join(path.sep);
-                const target = path.join("public", source.split("/").join(path.sep));
+            if(paragraph.body.trim().match(IMAGE_REGEX)) {
+                console.log(`  Processing images:`);
+                let match;
 
-                if(!fs.existsSync(target)) {
-                    const dirtree = path.dirname(target).split(path.sep);
-                    let targetPath = "";
+                while(match = IMAGE_REGEX.exec(paragraph.body.trim())) {
+                    const source = match[2].split("/").join(path.sep);
+                    const target = path.join(PUBLIC_PATH, source);
 
-                    for(let index in dirtree) {
-                        if(targetPath == "") {
-                            targetPath = dirtree[0];
-                        } else {
-                            targetPath = path.join(targetPath, dirtree[index]);
-                        }
-
-                        if(!fs.existsSync(targetPath)) {
-                            fs.mkdirSync(targetPath)
+                    if(!fs.existsSync(target)) {
+                        const dirtree = path.dirname(target).split(path.sep);
+                        let targetPath = "";
+    
+                        for(let index in dirtree) {
+                            if(targetPath == "") {
+                                targetPath = dirtree[0];
+                            } else {
+                                targetPath = path.join(targetPath, dirtree[index]);
+                            }
+    
+                            if(!fs.existsSync(targetPath)) {
+                                fs.mkdirSync(targetPath)
+                            }
                         }
                     }
+    
+                    fs.copyFileSync(path.join(TEMPLATE_PATH, source), target);
+                    console.log(`   ${path.join(TEMPLATE_PATH, source)} => ${target}`);
                 }
-
-                fs.copyFileSync(path.join(TEMPLATE_PATH, source), target);
-                console.log(`  Image ${path.basename(source)} from ${path.dirname(path.join(__dirname, source))} to ${path.dirname(path.join(__dirname, target))} copied!`);
-            }
+            }            
 
             if(level == 1) {
                 const time = execSync(`git log --format=%ct "${path.join(TEMPLATE_PATH, basename + ".md")}"`).toString().split("\n")[0].trim();
@@ -197,15 +199,11 @@ const exportDb = () => {
         templates.insert(item)
     });
 
-    console.log("Saving database...");
+    console.log("\nSaving database");
+
     fs.writeFileSync(path.join(PUBLIC_PATH, "database.json"), database.serialize(), { encoding : "utf-8"});
 
-    console.log(`${commander.opts().production ? "Production " : ""}Database saved: ${path.join(PUBLIC_PATH, "database.json")}`);
-    const stats = fs.lstatSync(path.join(PUBLIC_PATH, "database.json"));
-
-    console.log("\nDetails:");
-    console.log("  File: " + path.join(PUBLIC_PATH, "database.json"));
-    console.log("  Size: " + calculateFileSize(stats.size) + "\n");
+    console.log(`\n${commander.opts().production ? "Production " : ""}Database saved: ${path.join(PUBLIC_PATH, "database.json")} (${calculateFileSize(fs.lstatSync(path.join(PUBLIC_PATH, "database.json")).size)})`);
 }
 
 // Exporting the database
@@ -213,15 +211,18 @@ exportDb();
 
 // Watching for changes if -w or --watch is passed
 if(commander.opts().watch) {
-    console.log(`Watching changes in ${TEMPLATE_PATH}...`);
+    console.log(`\nWatching for changes in ${TEMPLATE_PATH}`);
     let fsWait = false;
     fs.watch(TEMPLATE_PATH, (event, filename) => {
         if (filename) {
             if (fsWait) return;
+
             fsWait = setTimeout(() => {
-            fsWait = false;
+                fsWait = false;
             }, 100);
+
             console.log(`${path.join(TEMPLATE_PATH, filename)} ${event}d!`);
+
             exportDb();
         }
     });

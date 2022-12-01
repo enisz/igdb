@@ -7,9 +7,7 @@ icon: fa-code
 
 The examples in this section will try to cover most of the use cases of the wrapper.
 
->:tip To see your own tokens in the example codes set them up on the home page!
-
-![Save your tokens for the example codes](images/05-examples/set-tokens.png)
+>:tip To see your own tokens in the example codes set them up on the home page as described in [Using the documentation section](#using-the-documentation)!
 
 ## Basic Example
 
@@ -303,7 +301,7 @@ object(stdClass)[3]
 
 ## Expander
 
-Some fields are actually ids pointing to another endpoint. The expander feature is a convenient way to go into these other endpoints and access more information from them in the same query, instead of having to do multiple queries.
+Some fields are actually ids pointing to other endpoints. The expander feature is a convenient way to go into these other endpoints and access more information from them in the same query, instead of having to do multiple queries.
 
 **Code**
 

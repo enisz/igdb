@@ -11,6 +11,24 @@ The wrapper's main purpose is to provide a simple solution to fetch data from IG
 
 To have access to IGDB's database you have to register a Twitch Account and have your own `client_id` and `access_token`. Refer to the [Account Creation](https://api-docs.igdb.com/#account-creation) and [Authentication](https://api-docs.igdb.com/#authentication) sections of the [IGDB API Documentation](https://api-docs.igdb.com/) for details.
 
+## Using the documentation
+
+The documentation contains a lot of copy-paste example codes. In most cases, the code snippets contains the instantiation of the `IGDB` class. The constructor of this class will require you to pass your `client_id` and `access_token`. If you would like to have example codes with your personal tokens you can provide these on the front page of the documentation. To get back to the main page, just click the logo on the top left corner.
+
+![Click the link on the homescreen to set your tokens](images/set-token-link.png)
+
+Clicking the link will open the window where you can see additional information about this feature and two fields where you can store your tokens.
+
+![The window where the tokens can be stored](images/set-token-dialog.png)
+
+> If you chose to save the tokens these will be stored only in your browser locally! If the tokens are not saved the data will be erased when your browser is closed.
+
+After your tokens are set the example codes will contain your tokens which are ready to copy.
+
+![The tokens are set in the example code](images/example-code-with-token.png)
+
+If you want to delete your tokens you can click the Delete the tokens button anytime.
+
 ## Setting up your project
 
 The project has multiple PHP files which are in the `src` folder of the repository:
