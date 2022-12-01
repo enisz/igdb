@@ -46,30 +46,17 @@ const calculateFileSize = size => {
 
 // Exporting the database
 const exportDb = () => {
-    if(fs.existsSync(path.join(PUBLIC_PATH, "images"))) {
-        console.log("Clearing existing images in public folder");
-        const deleteFiles = folder => {
-            fs.readdirSync(folder, { encoding : "utf-8"}).forEach( item => {
-                const currentItem = path.join(folder, item);
-                const isFile = fs.lstatSync(currentItem).isFile();
-
-                if(isFile) {
-                    fs.rmSync(currentItem);
-                } else {
-                    deleteFiles(currentItem);
-                    fs.rmdirSync(currentItem);
-                }
-
-                console.log(` Deleting ${currentItem}`)
-            })
-        }
-
-        deleteFiles(path.join(PUBLIC_PATH, "images"));
-    }
-    
     console.log(`Exporting ${commander.opts().production ? "production " : ""}database`);
+    const imagesPath = path.join(PUBLIC_PATH, "images");
     const database = new lokijs("DocumentationDB", { env : "BROWSER", persistenceMethod : "memory", serializationMethod : commander.opts().production ? "normal" : "pretty" });
     const templates = database.addCollection("templates");
+
+    if(fs.existsSync(imagesPath)) {
+        console.log(`\nClearing existing images in ${imagesPath}`);
+        fs.rmSync(imagesPath, { recursive: true, force: true })
+    }
+
+    console.log(`\nProcessing templates in ${TEMPLATE_PATH}`);
 
     let documents = [];
     const json = JSON.parse(
@@ -83,7 +70,7 @@ const exportDb = () => {
     )
 
     for(let index in json) {
-        console.log(`Processing template: ${path.join(TEMPLATE_PATH, json[index].basename)}.md`);
+        console.log(`\nTemplate: ${path.join(TEMPLATE_PATH, json[index].basename)}.md`);
 
         const current = json[index];
         const overview = current.overview;
@@ -91,13 +78,14 @@ const exportDb = () => {
         const basename = current.basename;
         const paragraphs = jsonmark.parse(current.content.trim()).content;
 
+        console.log(` Processing paragraphs in template:`)
         for(let title in paragraphs) {
-            console.log(` Processing paragraph: ${title}`);
-
             const paragraph = paragraphs[title];
             const level = paragraph.head.match(new RegExp("#", "g")).length;
             let slug;
             let counter = 1;
+
+            console.log(` ${" ".repeat(level)}[${title}]`);
 
             do {
                 slug = (title + (counter > 1 ? `-${romanize(counter)}` : "")).trim()  .toLowerCase().replace(new RegExp("( |,|\\.|'|!|\\?|\\)|\\(|\\]|\\[|\\}|\\{)", "g"), "-");
@@ -129,8 +117,10 @@ const exportDb = () => {
             }
 
             // processing images
-            if(paragraph.body.trim().match(IMAGE_REGEX)) {
-                console.log(`  Processing images:`);
+            const images = (paragraph.body.trim().match(IMAGE_REGEX) || []).length;
+
+            if(images) {
+                console.log(`  ${" ".repeat(level)}Found ${images} image${images > 1 ? "s" : ""}:`);
                 let match;
 
                 // while there are images in the template
@@ -145,7 +135,7 @@ const exportDb = () => {
                     }
     
                     fs.copyFileSync(source, target);
-                    console.log(`   ${source} => ${target}`);
+                    console.log(`   ${" ".repeat(level)}- ${source} => ${target}`);
                 }
             }            
 
@@ -160,7 +150,7 @@ const exportDb = () => {
         }
     }
 
-    console.log("Mapping parents, assigning id's...");
+    console.log("\nMapping parents, assigning id's");
     documents.map( (paragraph, index) => {
         if(paragraph.level > 1) {
             let parents = [];
@@ -181,11 +171,13 @@ const exportDb = () => {
         }
 
         // assign id
-        documents[index].id = md5(documents[index].parents.length == 0 ? documents[index].title : documents[index].parents.concat([documents[index].title]).join("|")).substr(2,9);
+        documents[index].id = md5(documents[index].parents.length == 0 ? documents[index].title : documents[index].parents.concat([documents[index].title]).join("|")).substring(2,9);
     })
 
+    console.log(`\nInjecting paragraphs to database:`)
+
     documents.forEach(item => {
-        console.log(`Adding paragraph to the database: [${item.id}]${" ".repeat(item.level)}${item.title}`);
+        console.log(` [${item.id}]${" ".repeat(item.level)}${item.title}`);
         templates.insert(item)
     });
 
