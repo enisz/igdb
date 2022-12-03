@@ -14,11 +14,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Installing Modules
-        run: npm ci
-
       - name: Building Application
-        run: npm run build
+        run: |
+          npm ci
+          npm run build
+          cp ./build/index.html ./build/404.html
 
       - name: Publishing
         uses: JamesIves/github-pages-deploy-action@4.1.1
