@@ -17,10 +17,10 @@ jobs:
         with:
           node-version: 14
           cache: 'npm'
+        run: npm ci
 
       - name: Building Application
         run: |
-          npm ci
           npm run build
           cp ./build/index.html ./build/404.html
 
