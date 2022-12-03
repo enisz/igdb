@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import HtmlParser from '../components/HtmlParser';
 import { getParagraphs } from '../utils/Database';
+import HighlightJS from 'highlight.js';
 
 export default function SearchPage() {
     const location = useLocation();
@@ -18,6 +19,8 @@ export default function SearchPage() {
                 { title : { "$contains" : queryString } }
             ]
         }));
+
+        setTimeout(() => HighlightJS.highlightAll(), 500)
     }, [queryString]);
 
     const getTopicIcon = paragraph => paragraph.level === 1 ? paragraph.icon : getParagraphs({ id : paragraph.parents[0]})[0].icon;
@@ -44,10 +47,11 @@ export default function SearchPage() {
                         <span className="theme-icon-holder card-icon-holder mr-2">
                             <i className={`fas ${getTopicIcon(paragraph)}`}></i>
                         </span>
-                        <span className="card-title-text">{ getParagraphPath(paragraph).map((title, index) => <Fragment key={`path-${title}`}>{ index > 0 && <i className="fas fa-angle-right"></i>}<span> <HtmlParser content={title.replace(new RegExp(`(${queryString})`, "gi"), "<mark>$1</mark>")} /> </span></Fragment>) } </span>
+
+                        <span className='card-title-text'>{getParagraphPath(paragraph).map((title, index) => <Fragment key={`path-${index}`}>{index > 0 && <i style={{marginLeft: "5px"}} className="fas fa-angle-right fa-fw"></i>} {title}</Fragment>)}</span>
                     </h5>
                     <div className="card-text">
-                        <HtmlParser content={paragraph.body.stripped.replace(new RegExp(`(${queryString})`, "gi"), "<mark>$1</mark>")} />
+                        <HtmlParser content={paragraph.body.html} />
                     </div>
                     <NavLink to={`/documentation#${paragraph.slug}`} className="card-link-mask"></NavLink>
                 </div>

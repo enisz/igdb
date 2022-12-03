@@ -1340,8 +1340,6 @@ public function platform_version(string $query, boolean $count = false) throws I
 
 Fetching data from IGDB API using the [Platform Version](https://api-docs.igdb.com/#platform-version) endpoint.
 
-**Endpoint Description**: &lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;platform_versions&lt;&#x2F;code&gt;
-
 **Parameters**:
  - `$query`: an apicalypse formatted query String
  - `$count`: whether the request should return the number of matches instead of the actual resultset
@@ -1570,8 +1568,6 @@ public function search(string $query, boolean $count = false) throws IGDBEndpoin
 ```
 
 Fetching data from IGDB API using the [Search](https://api-docs.igdb.com/#search) endpoint.
-
-**Endpoint Description**: &lt;code&gt;https:&#x2F;&#x2F;api.igdb.com&#x2F;v4&#x2F;search&lt;&#x2F;code&gt;
 
 **Parameters**:
  - `$query`: an apicalypse formatted query String
