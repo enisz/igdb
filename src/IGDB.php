@@ -251,7 +251,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#age_rating
+         * @link https://api-docs.igdb.com/#age-rating
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -269,7 +269,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#age_rating_content_description
+         * @link https://api-docs.igdb.com/#age-rating-content-description
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -287,7 +287,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#alternative_name
+         * @link https://api-docs.igdb.com/#alternative-name
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -341,7 +341,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#character_mug_shot
+         * @link https://api-docs.igdb.com/#character-mug-shot
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -377,7 +377,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#collection_membership
+         * @link https://api-docs.igdb.com/#collection-membership
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -395,7 +395,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#collection_membership_type
+         * @link https://api-docs.igdb.com/#collection-membership-type
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -413,7 +413,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#collection_relation
+         * @link https://api-docs.igdb.com/#collection-relation
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -431,7 +431,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#collection_relation_type
+         * @link https://api-docs.igdb.com/#collection-relation-type
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -449,7 +449,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#collection_type
+         * @link https://api-docs.igdb.com/#collection-type
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -461,7 +461,7 @@
         }
 
         /**
-         * Video game companies. Both publishers &amp; developers
+         * Video game companies. Both publishers & developers
          * 
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
@@ -485,7 +485,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#company_logo
+         * @link https://api-docs.igdb.com/#company-logo
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -503,7 +503,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#company_website
+         * @link https://api-docs.igdb.com/#company-website
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -557,7 +557,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#event_logo
+         * @link https://api-docs.igdb.com/#event-logo
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -575,7 +575,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#event_network
+         * @link https://api-docs.igdb.com/#event-network
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -593,7 +593,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#external_game
+         * @link https://api-docs.igdb.com/#external-game
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -647,7 +647,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#game_engine
+         * @link https://api-docs.igdb.com/#game-engine
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -665,7 +665,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#game_engine_logo
+         * @link https://api-docs.igdb.com/#game-engine-logo
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -683,7 +683,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#game_localization
+         * @link https://api-docs.igdb.com/#game-localization
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -701,7 +701,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#game_mode
+         * @link https://api-docs.igdb.com/#game-mode
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -719,7 +719,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#game_version
+         * @link https://api-docs.igdb.com/#game-version
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -737,7 +737,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#game_version_feature
+         * @link https://api-docs.igdb.com/#game-version-feature
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -755,7 +755,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#game_version_feature_value
+         * @link https://api-docs.igdb.com/#game-version-feature-value
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -773,7 +773,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#game_video
+         * @link https://api-docs.igdb.com/#game-video
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -809,7 +809,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#involved_company
+         * @link https://api-docs.igdb.com/#involved-company
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -863,7 +863,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#language_support
+         * @link https://api-docs.igdb.com/#language-support
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -881,7 +881,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#multiplayer_mode
+         * @link https://api-docs.igdb.com/#multiplayer-mode
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -917,7 +917,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#language_support_type
+         * @link https://api-docs.igdb.com/#language-support-type
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -935,7 +935,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#platform_family
+         * @link https://api-docs.igdb.com/#platform-family
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -953,7 +953,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#network_type
+         * @link https://api-docs.igdb.com/#network-type
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -971,7 +971,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#platform_logo
+         * @link https://api-docs.igdb.com/#platform-logo
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -989,7 +989,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#platform_version_company
+         * @link https://api-docs.igdb.com/#platform-version-company
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -1007,7 +1007,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#platform_version
+         * @link https://api-docs.igdb.com/#platform-version
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -1025,7 +1025,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#platform_website
+         * @link https://api-docs.igdb.com/#platform-website
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -1043,7 +1043,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#platform_version_release_date
+         * @link https://api-docs.igdb.com/#platform-version-release-date
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -1061,7 +1061,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#player_perspective
+         * @link https://api-docs.igdb.com/#player-perspective
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -1097,7 +1097,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#release_date
+         * @link https://api-docs.igdb.com/#release-date
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
@@ -1115,7 +1115,7 @@
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
          *
-         * @link https://api-docs.igdb.com/#release_date_status
+         * @link https://api-docs.igdb.com/#release-date-status
          *
          * @param $query ( string ) an apicalypse query string to send to the IGDB server
          * @param $count ( boolean ) whether the method should return the results or their count.
