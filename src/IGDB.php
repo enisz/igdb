@@ -6,7 +6,7 @@
      * Fethching data from IGDB's database.
      * Compatible with IGDB API v4
      *
-     * @version 4.3.1
+     * @version 4.3.2
      * @author Enisz Abdalla <enisz87@gmail.com>
      * @link https://github.com/enisz/igdb
      */
@@ -84,45 +84,59 @@
          */
         public function construct_url($endpoint, $count = false) {
             $endpoints = array(
-                "age_rating_content_description" => "age_rating_content_descriptions",
                 "age_rating" => "age_ratings",
+                "age_rating_content_description" => "age_rating_content_descriptions",
                 "alternative_name" => "alternative_names",
                 "artwork" => "artworks",
-                "character_mug_shot" => "character_mug_shots",
                 "character" => "characters",
+                "character_mug_shot" => "character_mug_shots",
                 "collection" => "collections",
+                "collection_membership" => "collection_memberships",
+                "collection_membership_type" => "collection_membership_types",
+                "collection_relation" => "collection_relations",
+                "collection_relation_type" => "collection_relation_types",
+                "collection_type" => "collection_types",
+                "company" => "companies",
                 "company_logo" => "company_logos",
                 "company_website" => "company_websites",
-                "company" => "companies",
                 "cover" => "covers",
+                "event" => "events",
+                "event_logo" => "event_logos",
+                "event_network" => "event_networks",
                 "external_game" => "external_games",
                 "franchise" => "franchises",
-                "game_engine_logo" => "game_engine_logos",
-                "game_engine" => "game_engines",
-                "game_mode" => "game_modes",
-                "game_version_feature_value" => "game_version_feature_values",
-                "game_version_feature" => "game_version_features",
-                "game_version" => "game_versions",
-                "game_video" => "game_videos",
                 "game" => "games",
+                "game_engine" => "game_engines",
+                "game_engine_logo" => "game_engine_logos",
+                "game_localization" => "game_localizations",
+                "game_mode" => "game_modes",
+                "game_version" => "game_versions",
+                "game_version_feature" => "game_version_features",
+                "game_version_feature_value" => "game_version_feature_values",
+                "game_video" => "game_videos",
                 "genre" => "genres",
                 "involved_company" => "involved_companies",
                 "keyword" => "keywords",
+                "language" => "languages",
+                "language_support" => "language_supports",
                 "multiplayer_mode" => "multiplayer_modes",
-                "multiquery" => "multiquery",
+                "platform" => "platforms",
+                "language_support_type" => "language_support_types",
                 "platform_family" => "platform_families",
+                "network_type" => "network_types",
                 "platform_logo" => "platform_logos",
                 "platform_version_company" => "platform_version_companies",
-                "platform_version_release_date" => "platform_version_release_dates",
                 "platform_version" => "platform_versions",
                 "platform_website" => "platform_websites",
-                "platform" => "platforms",
+                "platform_version_release_date" => "platform_version_release_dates",
                 "player_perspective" => "player_perspectives",
+                "region" => "regions",
                 "release_date" => "release_dates",
+                "release_date_status" => "release_date_statuses",
                 "screenshot" => "screenshots",
                 "search" => "search",
                 "theme" => "themes",
-                "website" => "websites"
+                "website" => "websites",
             );
 
             if(array_key_exists($endpoint, $endpoints)) {
@@ -203,652 +217,6 @@
         }
 
         /**
-         * Fetch data from IGDB using Age Rating Content Description endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#age-rating-content-description
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function age_rating_content_description($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Age Rating endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#age-rating
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function age_rating($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Alternative Name endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#alternative-name
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function alternative_name($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Artwork endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#artwork
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function artwork($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Character Mug Shot endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#character-mug-shot
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function character_mug_shot($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Character endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#character
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function character($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Collection endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#collection
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function collection($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Company Logo endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#company-logo
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function company_logo($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Company Website endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#company-website
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function company_website($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Company endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#company
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function company($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Cover endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#cover
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function cover($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using External Game endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#external-game
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function external_game($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Franchise endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#franchise
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function franchise($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Game Engine Logo endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#game-engine-logo
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function game_engine_logo($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Game Engine endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#game-engine
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function game_engine($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Game Mode endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#game-mode
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function game_mode($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Game Version Feature Value endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#game-version-feature-value
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function game_version_feature_value($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Game Version Feature endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#game-version-feature
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function game_version_feature($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Game Version endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#game-version
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function game_version($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Game Video endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#game-video
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function game_video($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Game endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#game
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function game($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Genre endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#genre
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function genre($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Involved Company endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#involved-company
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function involved_company($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Keyword endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#keyword
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function keyword($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Multiplayer Mode endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#multiplayer-mode
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function multiplayer_mode($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Platform Family endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#platform-family
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function platform_family($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Platform Logo endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#platform-logo
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function platform_logo($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Platform Version Company endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#platform-version-company
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function platform_version_company($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Platform Version Release Date endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#platform-version-release-date
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function platform_version_release_date($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Platform Version endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#platform-version
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function platform_version($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Platform Website endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#platform-website
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function platform_website($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Platform endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#platform
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function platform($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Player Perspective endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#player-perspective
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function player_perspective($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Release Date endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#release-date
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function release_date($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Screenshot endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#screenshot
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function screenshot($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Search endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#search
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function search($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Theme endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#theme
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function theme($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
-         * Fetch data from IGDB using Website endpoint.
-         * Depending on the @param $count, the method will either return
-         *  - an array of objects, containing the matched records from IGDB
-         *  - an object containing a <code>count</code> property with the number of matched records
-         *
-         * @link https://api-docs.igdb.com/#website
-         *
-         * @param $query ( string ) an apicalypse query string to send to the IGDB server
-         * @param $count ( boolean ) whether the method should return the results or their count.
-         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
-         * @return $result ( array | object ) response from IGDB
-         */
-        public function website($query, $count = false) {
-            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
-        }
-
-        /**
          * Executing a multiquery
          *
          * Multi-Query is a new way to request a huge amount of information in one request!
@@ -876,6 +244,958 @@
             return $this->_exec_query($this->construct_url("multiquery", false), implode("\n\n", $queries));
         }
 
-    }
+        /**
+         * Age Rating according to various rating organisations
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#age_rating
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function age_rating($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
 
+        /**
+         * Age Rating Descriptors
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#age_rating_content_description
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function age_rating_content_description($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Alternative and international game titles
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#alternative_name
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function alternative_name($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * official artworks (resolution and aspect ratio may vary)
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#artwork
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function artwork($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Video game characters
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#character
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function character($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Images depicting game characters
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#character_mug_shot
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function character_mug_shot($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Collection, AKA Series
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#collection
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function collection($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * The Collection Memberships.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#collection_membership
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function collection_membership($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Enums for collection membership types.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#collection_membership_type
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function collection_membership_type($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Describes Relationship between Collections.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#collection_relation
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function collection_relation($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Collection Relation Types
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#collection_relation_type
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function collection_relation_type($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Enums for collection types.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#collection_type
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function collection_type($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Video game companies. Both publishers &amp; developers
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#company
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function company($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * The logos of developers and publishers
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#company_logo
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function company_logo($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Company Website
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#company_website
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function company_website($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * The cover art of games
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#cover
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function cover($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Gaming event like GamesCom, Tokyo Game Show, PAX or GSL
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#event
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function event($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Logo for the event
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#event_logo
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function event_logo($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Urls related to the event like twitter, facebook and youtube
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#event_network
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function event_network($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Game IDs on other services
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#external_game
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function external_game($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * A list of video game franchises such as Star Wars.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#franchise
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function franchise($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Video Games!
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#game
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Video game engines such as unreal engine.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#game_engine
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_engine($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * The logos of game engines
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#game_engine_logo
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_engine_logo($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Game localization for a game
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#game_localization
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_localization($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Single player, Multiplayer etc
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#game_mode
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_mode($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Details about game editions and versions.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#game_version
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_version($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Features and descriptions of what makes each version&#x2F;edition different from the main game
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#game_version_feature
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_version_feature($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * The bool&#x2F;text value of the feature
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#game_version_feature_value
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_version_feature_value($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * A video associated with a game
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#game_video
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function game_video($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Genres of video game
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#genre
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function genre($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * 
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#involved_company
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function involved_company($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Keywords are words or phrases that get tagged to a game such as &quot;world war 2&quot; or &quot;steampunk&quot;.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#keyword
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function keyword($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Languages that are used in the Language Support endpoint.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#language
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function language($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Games can be played with different languages for voice acting, subtitles, or the interface language.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#language_support
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function language_support($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Data about the supported multiplayer types
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#multiplayer_mode
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function multiplayer_mode($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * The hardware used to run the game or game delivery network
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#platform
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Language Support Types contains the identifiers for the support types that Language Support uses.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#language_support_type
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function language_support_type($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * A collection of closely related platforms
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#platform_family
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform_family($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Social networks related to the event like twitter, facebook and youtube
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#network_type
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function network_type($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Logo for a platform
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#platform_logo
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform_logo($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * A platform developer
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#platform_version_company
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform_version_company($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * 
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#platform_version
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform_version($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * The main website for the platform
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#platform_website
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform_website($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * A handy endpoint that extends platform release dates. Used to dig deeper into release dates, platforms and versions.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#platform_version_release_date
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function platform_version_release_date($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Player perspectives describe the view&#x2F;perspective of the player in a video game.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#player_perspective
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function player_perspective($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Region for game localization
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#region
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function region($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * A handy endpoint that extends game release dates. Used to dig deeper into release dates, platforms and versions.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#release_date
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function release_date($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * An endpoint to provide definition of all of the current release date statuses.
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#release_date_status
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function release_date_status($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Screenshots of games
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#screenshot
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function screenshot($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * 
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#search
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function search($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * Video game themes
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#theme
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function theme($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+
+        /**
+         * A website url, usually associated with a game
+         * 
+         * Depending on $count, the method will either return:
+         *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
+         *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
+         *
+         * @link https://api-docs.igdb.com/#website
+         *
+         * @param $query ( string ) an apicalypse query string to send to the IGDB server
+         * @param $count ( boolean ) whether the method should return the results or their count.
+         * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
+         * @return $result ( array | object ) response from IGDB
+         */
+        public function website($query, $count = false) {
+            return $this->_exec_query($this->construct_url(__FUNCTION__, $count), $query);
+        }
+    }
 ?>
