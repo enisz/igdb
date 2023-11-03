@@ -9,7 +9,7 @@ jobs:
     name: Publishing Documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: docker://node:14-alpine
+      - uses: docker://node:18-alpine
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
