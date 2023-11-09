@@ -242,7 +242,7 @@
                 throw new IGDBInvalidParameterException("Invalid type of parameter for multiquery! An array is expected, " . gettype($queries) . " passed!");
             }
 
-            return $this->_exec_query($this->construct_url("multiquery", false), implode("\n\n", $queries));
+            return $this->_exec_query($this->construct_url(__FUNCTION__, false), implode("\n\n", $queries));
         }
 
         /**
