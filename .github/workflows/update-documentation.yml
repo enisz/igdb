@@ -16,6 +16,7 @@ jobs:
 
       - name: Building Application
         run: |
+          export NODE_OPTIONS=--openssl-legacy-provider
           npm ci
           npm run build
           cp ./build/index.html ./build/404.html
