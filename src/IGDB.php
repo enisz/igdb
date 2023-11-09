@@ -119,16 +119,17 @@
                 "keyword" => "keywords",
                 "language" => "languages",
                 "language_support" => "language_supports",
-                "multiplayer_mode" => "multiplayer_modes",
-                "platform" => "platforms",
                 "language_support_type" => "language_support_types",
-                "platform_family" => "platform_families",
+                "multiplayer_mode" => "multiplayer_modes",
+                "multiquery" => "multiquery",
                 "network_type" => "network_types",
+                "platform" => "platforms",
+                "platform_family" => "platform_families",
                 "platform_logo" => "platform_logos",
-                "platform_version_company" => "platform_version_companies",
                 "platform_version" => "platform_versions",
-                "platform_website" => "platform_websites",
+                "platform_version_company" => "platform_version_companies",
                 "platform_version_release_date" => "platform_version_release_dates",
+                "platform_website" => "platform_websites",
                 "player_perspective" => "player_perspectives",
                 "region" => "regions",
                 "release_date" => "release_dates",
@@ -246,7 +247,7 @@
 
         /**
          * Age Rating according to various rating organisations
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -264,7 +265,7 @@
 
         /**
          * Age Rating Descriptors
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -282,7 +283,7 @@
 
         /**
          * Alternative and international game titles
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -300,7 +301,7 @@
 
         /**
          * official artworks (resolution and aspect ratio may vary)
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -318,7 +319,7 @@
 
         /**
          * Video game characters
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -336,7 +337,7 @@
 
         /**
          * Images depicting game characters
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -354,7 +355,7 @@
 
         /**
          * Collection, AKA Series
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -372,7 +373,7 @@
 
         /**
          * The Collection Memberships.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -390,7 +391,7 @@
 
         /**
          * Enums for collection membership types.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -408,7 +409,7 @@
 
         /**
          * Describes Relationship between Collections.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -426,7 +427,7 @@
 
         /**
          * Collection Relation Types
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -444,7 +445,7 @@
 
         /**
          * Enums for collection types.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -462,7 +463,7 @@
 
         /**
          * Video game companies. Both publishers & developers
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -480,7 +481,7 @@
 
         /**
          * The logos of developers and publishers
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -498,7 +499,7 @@
 
         /**
          * Company Website
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -516,7 +517,7 @@
 
         /**
          * The cover art of games
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -534,7 +535,7 @@
 
         /**
          * Gaming event like GamesCom, Tokyo Game Show, PAX or GSL
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -552,7 +553,7 @@
 
         /**
          * Logo for the event
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -570,7 +571,7 @@
 
         /**
          * Urls related to the event like twitter, facebook and youtube
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -588,7 +589,7 @@
 
         /**
          * Game IDs on other services
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -606,7 +607,7 @@
 
         /**
          * A list of video game franchises such as Star Wars.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -624,7 +625,7 @@
 
         /**
          * Video Games!
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -642,7 +643,7 @@
 
         /**
          * Video game engines such as unreal engine.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -660,7 +661,7 @@
 
         /**
          * The logos of game engines
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -678,7 +679,7 @@
 
         /**
          * Game localization for a game
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -696,7 +697,7 @@
 
         /**
          * Single player, Multiplayer etc
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -714,7 +715,7 @@
 
         /**
          * Details about game editions and versions.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -732,7 +733,7 @@
 
         /**
          * Features and descriptions of what makes each version&#x2F;edition different from the main game
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -750,7 +751,7 @@
 
         /**
          * The bool&#x2F;text value of the feature
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -768,7 +769,7 @@
 
         /**
          * A video associated with a game
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -786,7 +787,7 @@
 
         /**
          * Genres of video game
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -803,8 +804,8 @@
         }
 
         /**
-         * 
-         * 
+         *
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -822,7 +823,7 @@
 
         /**
          * Keywords are words or phrases that get tagged to a game such as &quot;world war 2&quot; or &quot;steampunk&quot;.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -840,7 +841,7 @@
 
         /**
          * Languages that are used in the Language Support endpoint.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -858,7 +859,7 @@
 
         /**
          * Games can be played with different languages for voice acting, subtitles, or the interface language.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -876,7 +877,7 @@
 
         /**
          * Data about the supported multiplayer types
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -894,7 +895,7 @@
 
         /**
          * The hardware used to run the game or game delivery network
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -912,7 +913,7 @@
 
         /**
          * Language Support Types contains the identifiers for the support types that Language Support uses.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -930,7 +931,7 @@
 
         /**
          * A collection of closely related platforms
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -948,7 +949,7 @@
 
         /**
          * Social networks related to the event like twitter, facebook and youtube
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -966,7 +967,7 @@
 
         /**
          * Logo for a platform
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -984,7 +985,7 @@
 
         /**
          * A platform developer
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -1001,8 +1002,8 @@
         }
 
         /**
-         * 
-         * 
+         *
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -1020,7 +1021,7 @@
 
         /**
          * The main website for the platform
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -1038,7 +1039,7 @@
 
         /**
          * A handy endpoint that extends platform release dates. Used to dig deeper into release dates, platforms and versions.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -1056,7 +1057,7 @@
 
         /**
          * Player perspectives describe the view&#x2F;perspective of the player in a video game.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -1074,7 +1075,7 @@
 
         /**
          * Region for game localization
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -1092,7 +1093,7 @@
 
         /**
          * A handy endpoint that extends game release dates. Used to dig deeper into release dates, platforms and versions.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -1110,7 +1111,7 @@
 
         /**
          * An endpoint to provide definition of all of the current release date statuses.
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -1128,7 +1129,7 @@
 
         /**
          * Screenshots of games
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -1145,8 +1146,8 @@
         }
 
         /**
-         * 
-         * 
+         *
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -1164,7 +1165,7 @@
 
         /**
          * Video game themes
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
@@ -1182,7 +1183,7 @@
 
         /**
          * A website url, usually associated with a game
-         * 
+         *
          * Depending on $count, the method will either return:
          *  - <code>TRUE</code>: an object containing a <code>count</code> property with the number of matched records
          *  - <code>FALSE</code>: an array of objects, containing the matched records from IGDB
