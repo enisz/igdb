@@ -5,6 +5,24 @@ icon: fa-clipboard-list
 
 # Change Log
 
+## v4.3.2 - October 26, 2023
+ - Added new endpoint methods to the wrapper
+   - [collection_membership](#collection-membership)
+   - [collection_membership_type](#collection-membership-type)
+   - [collection_relation](#collection-relation)
+   - [collection_relation_type](#collection-relation-type)
+   - [collection_type](#collection-type)
+   - [event](#event)
+   - [event_logo](#event-logo)
+   - [event_network](#event-network)
+   - [game_localization](#game-localization)
+   - [language](#language)
+   - [language_support](#language-support)
+   - [language_support_type](#language-support-type)
+   - [network_type](#network-type)
+   - [region](#region)
+   - [release_date_status](#release-date-status)
+
 ## v4.3.1 - April 19, 2022
  - IGDBEndpointException
    - Added a `getResponseCode()` to fetch http response code from IGDB API
