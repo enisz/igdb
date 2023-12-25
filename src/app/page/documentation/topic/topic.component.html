@@ -1,7 +1,16 @@
 @if (topic && sections) {
     <article class="docs-article">
         <header class="docs-header" [ngbScrollSpyFragment]="topic.slug">
-            <h1 [id]="topic.slug" class="docs-heading">{{ topic.title }} <span class="docs-time">Last updated: 2019-06-01 ({{ '1703464739114' | ago }})</span></h1>
+            <h1 [id]="topic.slug" class="docs-heading">
+                {{ topic.title }}
+                <span class="docs-time">
+                @if (topic.date) {
+                    Last updated: {{ topic.date * 1000 | date: 'longDate' }} ({{ topic.date * 1000 | ago }})
+                } @else {
+                    Not published yet.
+                }
+                </span>
+            </h1>
             <p [innerHTML]="topic.html"></p>
         </header>
 

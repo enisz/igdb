@@ -4,11 +4,13 @@ export default class Paragraph {
     private level: number;
     private parents: number[] = [];
     private content = '';
+    private date: number | null;
 
     public constructor(id: number, title: string, level: number) {
         this.id = id;
         this.title = title;
         this.level = level;
+        this.date = null;
     }
 
     public getId(): number {
@@ -29,6 +31,14 @@ export default class Paragraph {
 
     public addLine(content: string): void {
         this.content += `${content}\n`;
+    }
+
+    public getDate(): number | null {
+        return this.date;
+    }
+
+    public setDate(date: number | null): void {
+        this.date = date;
     }
 
     public addParent(parentId: number): void {

@@ -6,20 +6,21 @@ export default class Topic {
     private icon: string;
     private slug: string;
     private overview: string;
-    private date!: number;
+    private date: number | null;
     private title: string;
     private body: string;
     private stripped = '';
     private html = '';
     private sections: Section[] = [];
 
-    constructor(id: number, icon: string, overview: string, title: string, body: string) {
+    constructor(id: number, icon: string, overview: string, title: string, body: string, date: number | null) {
         this.id = id;
         this.icon = icon;
         this.slug = StringR.toSlug(title);
         this.overview = overview;
         this.title = title;
         this.body = body;
+        this.date = date;
 
         this.html = StringR.toHtml(body);
         this.stripped = StringR.toStripped(body);

@@ -6,11 +6,12 @@ import { SectionDocumentMethods, SectionDocumentType } from '../../../database/d
 import { SectionComponent } from '../section/section.component';
 import { NgbScrollSpyModule, NgbScrollSpyService } from '@ng-bootstrap/ng-bootstrap';
 import { AgoPipe } from '../../../pipe/ago.pipe';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-topic',
   standalone: true,
-  imports: [SectionComponent, NgbScrollSpyModule, AgoPipe],
+  imports: [SectionComponent, NgbScrollSpyModule, AgoPipe, DatePipe],
   templateUrl: './topic.component.html',
   styleUrl: './topic.component.scss'
 })
@@ -27,6 +28,10 @@ export class TopicComponent implements OnInit {
   public async ngOnInit(): Promise<void> {
     this.topic = await this.documentationService.getTopic(this.topicId);
     this.sections = await this.documentationService.getSectionsByTopic(this.topic.id);
+
+    const mydate = this.topic.date;
+
+    // console.log(mydate, Date.parse(mydate as string ));
     // this.ngbScrollSpyService.active$.subscribe(
     //   (id: string) => {
     //     console.log('active$: ' + id);

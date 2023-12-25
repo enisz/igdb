@@ -147,7 +147,7 @@ export default class RxdbWriter extends FileWriter {
               type: 'string',
             },
             date: {
-              type: 'number',
+              type: ['number', 'null'],
             },
             title: {
               type: 'string',
@@ -181,7 +181,7 @@ export type TopicDocumentType = {
     icon: string;
     slug: string;
     overview: string;
-    date: number;
+    date: number | null;
     title: string;
     body: string;
     stripped: string;

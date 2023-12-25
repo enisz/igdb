@@ -113,7 +113,7 @@ export class DatabaseService {
           type: 'string',
         },
         date: {
-          type: 'number',
+          type: ['number', 'null'],
         },
         title: {
           type: 'string',

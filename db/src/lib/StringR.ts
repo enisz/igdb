@@ -45,9 +45,6 @@ export default class StringR {
 
     private static link(href: string, title: string | null | undefined, text: string): string {
         const local = href.startsWith('#');
-
-
-        console.log({ href, title, text});
         return `<a href="${local ? `documentation${href}` : href}" title="${title || text}" target="${local ? '_self' : '_blank'}" />${text}</a>`;
     }
 

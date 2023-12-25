@@ -2,6 +2,7 @@ import FileReader from '../abstract/FileReader'
 import File from '../model/File';
 import Fs from 'fs';
 import Path from 'path';
+import ChildProcess from 'child_process';
 
 export default class Reader extends FileReader {
     public constructor(path: string) {
@@ -12,8 +13,12 @@ export default class Reader extends FileReader {
         return Fs
             .readdirSync(this.getPath(), { encoding: 'utf-8'})
             .filter((filename: string) => filename.endsWith('.md'))
-            .map((filename: string) =>
-                new File(this.getPath(), filename, Fs.readFileSync(Path.join(this.getPath(), filename), { encoding: 'utf-8'})
-            ));
+            .map((filename: string) => {
+                const content = Fs.readFileSync(Path.join(this.getPath(), filename), { encoding: 'utf-8'});
+                const path = Path.join(this.getPath(), filename);
+                const timestamp = ChildProcess.execSync(`git log --format=%ct "${path}"`, { encoding: 'utf-8'}).trim();
+
+                return new File(this.getPath(), filename, content, parseInt(timestamp, 10) || null);
+            });
     }
 }

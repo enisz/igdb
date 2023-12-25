@@ -14,7 +14,9 @@ export class AgoPipe implements PipeTransform {
         this.timeAgo = new TimeAgo('en-US')
     }
 
-    public transform(value: any, ...args: any[]) {
-        return this.timeAgo.format(new Date(parseInt(value, 10)));
+    public transform(value: number, ...args: any[]) {
+        return this.timeAgo.format(
+            new Date(value)
+        );
     }
 }

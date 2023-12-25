@@ -24,7 +24,9 @@ export default class Processor extends FileProcessor {
 
                 if (match) {
                     const id = paragraphId++;
-                    paragraphs.push(new Paragraph(id, match[2].trim(), match[1].length));
+                    const paragraph = new Paragraph(id, match[2].trim(), match[1].length);
+                    paragraph.setDate(file.getDate());
+                    paragraphs.push(paragraph);
                     attributeMap[id] = attributes;
                 } else {
                     paragraphs[paragraphs.length - 1].addLine(line);
@@ -38,7 +40,7 @@ export default class Processor extends FileProcessor {
             if (paragraph.getLevel() === 1) {
                 const { icon, overview } = attributeMap[paragraph.getId()];
                 document.addTopic(
-                    new Topic(paragraph.getId(), icon, overview, paragraph.getTitle(), paragraph.getContent())
+                    new Topic(paragraph.getId(), icon, overview, paragraph.getTitle(), paragraph.getContent(), paragraph.getDate())
                 );
             } else {
                 const topic = document.getLastTopic();
