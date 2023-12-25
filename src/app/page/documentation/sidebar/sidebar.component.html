@@ -1,0 +1,29 @@
+<div id="docs-sidebar" class="docs-sidebar" #sidebar>
+    <div class="top-search-box d-lg-none p-3">
+        <form class="search-form">
+            <input type="text" placeholder="Search the docs..." name="search" class="form-control search-input">
+            <button type="submit" class="btn search-btn" value="Search"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
+
+    <nav id="docs-nav" class="docs-nav navbar">
+        <ul class="section-items list-unstyled nav flex-column pb-3" id="docs-nav">
+            @if (sections && topics) {
+                @for (topic of topics; track topic.id) {
+                    <li class="nav-item section-title">
+                        <a class="nav-link scrollto {{ activeId === topic.slug ? 'active' : ''}}" routerLink="/documentation" [fragment]="topic.slug" [ngbScrollSpyItem]="topic.slug">
+                            <span class="theme-icon-holder me-2">
+                                <i class="fas {{ topic.icon }}"></i>
+                            </span>
+                            {{ topic.title }}
+                        </a>
+                    </li>
+
+                    @for (section of filterByTopic(topic.id); track section.id) {
+                        <li class="nav-item"><a class="nav-link scrollto {{ activeId === section.slug ? 'active' : ''}}" routerLink="/documentation" [fragment]="section.slug" [ngbScrollSpyItem]="section.slug">{{ section.title }}</a></li>
+                    }
+                }
+            }
+        </ul>
+    </nav>
+</div>

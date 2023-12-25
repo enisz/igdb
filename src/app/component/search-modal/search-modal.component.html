@@ -1,0 +1,43 @@
+<ng-template #content let-modal>
+	<div class="modal-header bg-primary text-white">
+		<!-- <h4 class="modal-title" id="modal-basic-title">Profile update</h4> -->
+        <form class="w-75" [formGroup]="searchForm" (submit)="handleSearch($event)">
+            <input type="text" placeholder="search the docs..." class="form-control" formControlName="term" (input)="handleInput($event)" />
+        </form>
+		<button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+	</div>
+	<div class="modal-body">
+        <div class="mb-3">
+            @if (results.length) {
+                @for (topic of results; track topic.id) {
+                    <div class="d-flex flex-row align-items-center mb-2">
+                        <span class="theme-icon-holder me-2">
+                            <i class="fa-solid fa-xl {{ topic.icon }}"></i>
+                        </span>
+                        <h5 class="mb-0">{{ topic.title }}</h5>
+                    </div>
+                    <div class="list-group {{ !$last ? 'mb-4' : '' }}">
+                        @for (section of topic.sections; track section.id) {
+                            <a routerLink="/documentation" [fragment]="section.slug" class="list-group-item list-group-item-action" aria-current="true" (click)="closeModal()">
+                                <small>{{ section.title }}</small>
+                            </a>
+                        }
+                    </div>
+                } @empty {
+                    <p>No results</p>
+                }
+            }
+        </div>
+	</div>
+	<div class="modal-footer">
+        <small>
+            <kbd>esc</kbd> to close
+        </small>
+	</div>
+</ng-template>
+
+<button class="btn btn-lg btn-outline-primary">Launch demo modal</button>
+
+<hr />
+
+<pre></pre>

@@ -1,0 +1,52 @@
+<app-top-bar></app-top-bar>
+<app-page-header
+    title="Documentation"
+    sub-title="IGDB PHP Wrapper"
+    [show-github-buttons]="true"
+></app-page-header>
+
+<div class="page-content">
+    <div class="container">
+        <div class="docs-overview py-5">
+            <div class="row justify-content-center">
+                @for(topic of topics; track topic.id) {
+                    <div class="col-12 col-lg-4 py-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">
+                                    <span class="theme-icon-holder card-icon-holder me-2">
+                                        <i class="fas {{ topic.icon }}"></i>
+                                    </span>
+                                    <span class="card-title-text">{{ topic.title }}</span>
+                                </h5>
+                                <div class="card-text">
+                                    {{ topic.overview }}
+                                </div>
+                                <a class="card-link-mask" routerLink="documentation" [fragment]="topic.slug"></a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="cta-section text-center py-5 theme-bg-dark position-relative">
+    <div class="theme-bg-shapes-right"></div>
+    <div class="theme-bg-shapes-left"></div>
+    <div class="container">
+        <h3 class="latest-commits mb-2 text-white mb-3">Latest Commits</h3>
+        <ul class="commits">
+            @for (commit of latestCommits | async; track $index) {
+                <li><small>{{ commit.commit.message }}</small></li>
+            }
+        </ul>
+        <!-- <div class="section-intro text-white mb-3 single-col-max mx-auto">Want to launch your software project and start getting traction from your target users? Check out our premium <a class="text-white" href="https://themes.3rdwavemedia.com/bootstrap-templates/startup/coderpro-bootstrap-5-startup-template-for-software-projects/">Bootstrap 5 startup template CoderPro</a>! It has everything you need to promote your product.</div>
+        <div class="pt-3 text-center">
+            <a class="btn btn-light" href="https://themes.3rdwavemedia.com/bootstrap-templates/startup/coderpro-bootstrap-5-startup-template-for-software-projects/">Get CoderPro<i class="fas fa-arrow-alt-circle-right ml-2"></i></a>
+        </div> -->
+    </div>
+</section>
+
+<app-page-footer></app-page-footer>

@@ -1,0 +1,21 @@
+@if (topic && sections) {
+    <article class="docs-article">
+        <header class="docs-header" [ngbScrollSpyFragment]="topic.slug">
+            <h1 [id]="topic.slug" class="docs-heading">{{ topic.title }} <span class="docs-time">Last updated: 2019-06-01 ({{ '1703464739114' | ago }})</span></h1>
+            <p [innerHTML]="topic.html"></p>
+        </header>
+
+        @for (section of sections; track section.id) {
+            <app-section [section-id]="section.id" [ngbScrollSpyFragment]="section.slug"></app-section>
+        }
+    </article>
+} @else {
+    <article class="placeholder-glow docs-article">
+        <div class="placeholder mb-4" style="width: 300px; height: 50px;"></div>
+        <div class="placeholder w-100"></div>
+        <div class="placeholder w-100"></div>
+        <div class="placeholder w-100"></div>
+        <div class="placeholder w-100"></div>
+        <div class="placeholder w-100"></div>
+    </article>
+}
