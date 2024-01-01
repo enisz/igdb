@@ -11,7 +11,7 @@
                 }
                 </span>
             </h1>
-            <p [innerHTML]="topic.html"></p>
+            <p [innerHTML]="topic.html | token"></p>
         </header>
 
         @for (section of sections; track section.id) {

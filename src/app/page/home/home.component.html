@@ -30,6 +30,105 @@
 <div class="page-content">
     <div class="container">
         <div class="docs-overview py-5">
+            <div class="row">
+                <div class="col text-center">
+                    <button
+                        class="btn btn-link mb-3"
+                        type="button"
+                        (click)="collapse.toggle()"
+                    >
+                        Add your tokens to the examples!
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div #collapse="ngbCollapse" [ngbCollapse]="true" class="mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">
+                                    <span class="theme-icon-holder card-icon-holder me-2">
+                                        <i class="fa-solid fa-user"></i>
+                                    </span>
+                                    <span class="card-title-text">Personalise the docs!</span>
+                                </h5>
+                                <p>
+                                    The documentation contains many example codes where your IGDB tokens are required for instantiate classes. Here you can provide your own tokens to have them replaced in these examples offering you copy-paste ready snippets.
+                                </p>
+
+                                <div class="callout-block callout-block-danger me-1">
+                                    <div class="content">
+                                        <h4 class="callout-title">
+                                            <span class="callout-icon-holder">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </span>
+                                            Important
+                                        </h4>
+                                        <p>Your tokens are not sent or saved anywhere else but your browser. These tokens will be used only to replace values in the documentation. You can delete your tokens anytime by pressing the button below.</p>
+                                        <p class="mb-0 d-flex flex-row-reverse">
+                                            <button class="btn btn-danger btn-sm" (click)="deleteTokens()">Delete my tokens!</button>
+                                        </p>
+                                    </div>
+                                </div>
+                                <form [formGroup]="tokenForm">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-12 mb-2">
+                                                <div class="input-group">
+                                                    <span class="input-group-text" id="client-id-addon">
+                                                        <i class="fa-solid fa-id-card"></i>
+                                                    </span>
+                                                    <input type="text" class="form-control" placeholder="Client ID" formControlName="clientId">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-12 mb-2">
+                                                <div class="input-group">
+                                                    <span class="input-group-text" id="client-id-addon">
+                                                        <i class="fa-solid fa-key"></i>
+                                                    </span>
+                                                    <input type="text" class="form-control" placeholder="Access Token" formControlName="accessToken">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 callout-block callout-block-info me-1">
+                                                <div class="content">
+                                                    <h4 class="callout-title">
+                                                        <span class="callout-icon-holder">
+                                                            <i class="fas fa-circle-info"></i>
+                                                        </span>
+                                                        Info
+                                                    </h4>
+                                                    <p>Checking "Remember my tokens!" means your tokens will be saved in the local storage of your browser and they will be available on your next visit. If unchecked, the toknes are stored in your browser's session storage, meaning your tokens will be erased when you close your browser.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" formControlName="remember">
+                                                    <label class="form-check-label" for="flexCheckChecked">
+                                                        Remember my tokens!
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <pre>
+                                                <code class="language-php hljs" data-highlighted="yes"><span class="hljs-variable">$igdb</span> = <span class="hljs-keyword">new</span> <span class="hljs-title function_ invoke__">IGDB</span>(<span class="hljs-string">"{{ getTokens().clientId || '{client_id}' }}"</span>, <span class="hljs-string">"{{ getTokens().accessToken || '{access_token}' }}"</span>);</code>
+                                            </pre>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mb-0 d-flex flex-row-reverse">
+                                    <button class="btn btn-success btn-sm ms-2" [disabled]="!tokenForm.valid" (click)="setTokens()">Save</button>
+                                    <button class="btn btn-light btn-sm ms-2" (click)="collapse.toggle()">Close</button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row justify-content-center">
                 @for(topic of topics; track topic.id) {
                     <div class="col-12 col-lg-4 py-3">

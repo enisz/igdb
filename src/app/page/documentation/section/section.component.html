@@ -13,6 +13,6 @@
         } @else {
             <h6 class="section-heading" [id]="section.slug">{{ section.title }}</h6>
         }
-        <p [innerHTML]="section.html"></p>
+        <p [innerHTML]="section.html | token"></p>
     </section>
 }

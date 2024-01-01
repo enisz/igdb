@@ -2,11 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DocumentationService } from '../../../service/documentation.service';
 import { RxDocument } from 'rxdb';
 import { SectionDocumentMethods, SectionDocumentType } from '../../../database/document/section.document';
+import { TokenPipe } from '../../../pipe/token.pipe';
 
 @Component({
   selector: 'app-section',
   standalone: true,
-  imports: [],
+  imports: [TokenPipe],
   templateUrl: './section.component.html',
   styleUrl: './section.component.scss'
 })

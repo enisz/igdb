@@ -7,11 +7,12 @@ import { SectionComponent } from '../section/section.component';
 import { NgbScrollSpyModule, NgbScrollSpyService } from '@ng-bootstrap/ng-bootstrap';
 import { AgoPipe } from '../../../pipe/ago.pipe';
 import { DatePipe } from '@angular/common';
+import { TokenPipe } from '../../../pipe/token.pipe';
 
 @Component({
   selector: 'app-topic',
   standalone: true,
-  imports: [SectionComponent, NgbScrollSpyModule, AgoPipe, DatePipe],
+  imports: [SectionComponent, NgbScrollSpyModule, AgoPipe, DatePipe, TokenPipe],
   templateUrl: './topic.component.html',
   styleUrl: './topic.component.scss'
 })

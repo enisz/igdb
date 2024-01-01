@@ -7,21 +7,27 @@ import { RouterLink } from '@angular/router';
 import { DocumentationService } from '../../service/documentation.service';
 import { ICommits } from '../../interface/git.interface';
 import { GitService } from '../../service/git.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, ViewportScroller } from '@angular/common';
 import { ViewportService } from '../../service/viewport.service';
 import { IViewportBreakpoint } from '../../interface/viewport.interface';
 import { Subscription } from 'rxjs';
 import { NtkmeButtonModule } from '@ctrl/ngx-github-buttons';
 import { SearchFieldDirective } from '../../directive/search-field.directive';
+import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { IToken } from '../../interface/token.interface';
+import { ToastrService } from 'ngx-toastr';
+import { TokenService } from '../../service/token.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [TopBarComponent, PageFooterComponent, RouterLink, CommonModule, NtkmeButtonModule, SearchFieldDirective],
+  imports: [TopBarComponent, PageFooterComponent, RouterLink, CommonModule, NtkmeButtonModule, SearchFieldDirective, NgbCollapse, ReactiveFormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  public isCollapsed = false;
   public topics: RxDocument<TopicDocumentType, TopicDocumentMethods>[] = [];
   public latestCommits!: Promise<ICommits[]>;
   public user = 'enisz';
@@ -29,12 +35,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   public count = true;
   public size: 'none' | 'large' = 'large';
   public types: ('star' | 'follow' | 'watch' | 'fork' | 'issue' | 'download')[] = ['follow', 'star', 'watch'];
+  public tokenForm: FormGroup;
   private subscriptions: Subscription[] = [];
   public constructor(
     private readonly documentationService: DocumentationService,
     private readonly gitService: GitService,
     private readonly viewportService: ViewportService,
-  ) { }
+    private readonly toastrService: ToastrService,
+    private readonly viewportScroller: ViewportScroller,
+    private readonly tokenService: TokenService,
+  ) {
+    const { clientId, accessToken } = this.getTokens();
+    this.tokenForm = new FormGroup({
+      clientId: new FormControl(clientId, [Validators.required, Validators.pattern('^[0-9a-z]{30}$')]),
+      accessToken: new FormControl(accessToken, [Validators.required, Validators.pattern('^[0-9a-z]{30}$')]),
+      remember: new FormControl(true),
+    });
+  }
 
   public async ngOnInit(): Promise<void> {
     this.topics = await this.documentationService.getAllTopics();
@@ -45,6 +62,28 @@ export class HomeComponent implements OnInit, OnDestroy {
         (breakpoint: IViewportBreakpoint) => this.size = breakpoint === 'xs' ? 'none' : 'large'
       )
     );
+  }
+
+  public getTokens(): IToken {
+    return this.tokenService.getTokens();
+  }
+
+  public setTokens(): void {
+    const tokens: IToken = {
+      clientId: this.tokenForm.get('clientId')?.value || '',
+      accessToken: this.tokenForm.get('accessToken')?.value || ''
+    }
+    const { value: remember } = this.tokenForm.get('remember')?.value;
+
+    this.tokenService.setTokens(tokens, remember);
+  }
+
+  public deleteTokens(): void {
+    this.tokenService.clearTokens();
+    this.tokenForm.get('clientId')?.setValue('');
+    this.tokenForm.get('accessToken')?.setValue('');
+    this.tokenForm.get('remember')?.setValue(true);
+    this.toastrService.success('Your tokens are deleted!');
   }
 
   public ngOnDestroy(): void {
