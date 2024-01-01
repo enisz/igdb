@@ -9,11 +9,12 @@ import { DocumentationService } from '../../../service/documentation.service';
 import { RouterLink } from '@angular/router';
 import { NgbScrollSpyModule, NgbScrollSpyService } from '@ng-bootstrap/ng-bootstrap';
 import { AsyncPipe } from '@angular/common';
+import { SearchFieldDirective } from '../../../directive/search-field.directive';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, NgbScrollSpyModule, AsyncPipe],
+  imports: [RouterLink, NgbScrollSpyModule, AsyncPipe, SearchFieldDirective],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })

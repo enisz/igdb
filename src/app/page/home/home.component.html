@@ -1,9 +1,31 @@
 <app-top-bar></app-top-bar>
-<app-page-header
-    title="Documentation"
-    sub-title="IGDB PHP Wrapper"
-    [show-github-buttons]="true"
-></app-page-header>
+
+<div class="page-header theme-bg-dark py-5 text-center position-relative">
+    <div class="theme-bg-shapes-right"></div>
+    <div class="theme-bg-shapes-left"></div>
+    <div class="container">
+        <h1 class="page-heading single-col-max mx-auto">Documentation</h1>
+        <div class="page-intro single-col-max mx-auto">IGDB PHP Wrapper</div>
+        <div class="main-search-box pt-3 d-block mx-auto">
+             <form class="search-form w-100">
+                <input type="text" name="search" class="form-control search-input" searchField>
+                <button type="button" class="btn search-btn" value="Search" disabled><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        <div class="github-button-container">
+            @for (type of types; track $index) {
+                <ntkme-github-button
+                    [user]="user"
+                    [repo]="repo"
+                    [count]="count"
+                    [size]="size"
+                    [type]="type"
+                    [target]="'_blank'"
+                ></ntkme-github-button>
+            }
+        </div>
+    </div>
+</div>
 
 <div class="page-content">
     <div class="container">

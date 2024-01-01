@@ -20,13 +20,12 @@
                 </div>
             </div>
             <div class="docs-top-utilities d-flex justify-content-end align-items-center">
-
-                <ul class="social-list list-inline mx-md-3 mx-lg-5 mb-0 d-none d-lg-flex">
-                    <li class="list-inline-item"><a href="#"><i class="fab fa-github fa-fw"></i></a></li>
-                    <li class="list-inline-item"><a href="#"><i class="fab fa-twitter fa-fw"></i></a></li>
-                    <li class="list-inline-item"><a href="#"><i class="fab fa-slack fa-fw"></i></a></li>
-                    <li class="list-inline-item"><a href="#"><i class="fab fa-product-hunt fa-fw"></i></a></li>
-                </ul>
+                <div class="top-search-box d-none d-lg-flex me-3">
+                    <form class="search-form">
+                        <input type="text" name="search" class="form-control search-input" searchField>
+                        <button type="submit" class="btn search-btn" value="Search"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
                 <div ngbDropdown class="d-inline-block">
                     <button type="button" class="btn btn-primary" id="download-dropdown" ngbDropdownToggle [disabled]="!isOnline">
                         Download

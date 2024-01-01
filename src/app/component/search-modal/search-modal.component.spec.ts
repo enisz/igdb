@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SearchModalComponent } from './SearchModalComponent';
+import { SearchModalComponent } from './search-modal.component';
 
 describe('SearchModalComponent', () => {
   let component: SearchModalComponent;
@@ -11,7 +11,7 @@ describe('SearchModalComponent', () => {
       imports: [SearchModalComponent]
     })
     .compileComponents();
-
+    
     fixture = TestBed.createComponent(SearchModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

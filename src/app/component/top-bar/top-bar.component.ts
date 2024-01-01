@@ -5,14 +5,13 @@ import { GitService } from '../../service/git.service';
 import { IRelease } from '../../interface/git.interface';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ViewportService } from '../../service/viewport.service';
-import { IViewportDimension } from '../../interface/viewport.interface';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { SearchFieldDirective } from '../../directive/search-field.directive';
 
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgbDropdownModule],
+  imports: [CommonModule, RouterLink, NgbDropdownModule, SearchFieldDirective],
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.scss'
 })

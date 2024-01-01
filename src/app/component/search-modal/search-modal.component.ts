@@ -1,110 +1,94 @@
-import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { SearchService } from '../../service/search.service';
+import { BehaviorSubject, Subscription, debounceTime, distinctUntilChanged, filter, isEmpty, take } from 'rxjs';
+import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DocumentationService } from '../../service/documentation.service';
+import { NgTemplateOutlet } from '@angular/common';
+import { ISearchResult } from '../../interface/search-modal.interface';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { RxDocument } from 'rxdb';
 import { SectionDocumentMethods, SectionDocumentType } from '../../database/document/section.document';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, Subscription, debounceTime, distinctUntilChanged, filter, take } from 'rxjs';
-import { TopicDocumentMethods, TopicDocumentType } from '../../database/document/topic.document';
-import { ISearchResult } from '../../interface/search-modal.interface';
-import { SearchService } from '../../service/search.service';
+import { EmphasizePipe } from '../../pipe/emphasize.pipe';
 
 @Component({
   selector: 'app-search-modal',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink, EmphasizePipe],
   templateUrl: './search-modal.component.html',
-  styleUrl: './search-modal.component.scss',
-  encapsulation: ViewEncapsulation.None,
+  styleUrl: './search-modal.component.scss'
 })
-export class SearchModalComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('content') public content!: TemplateRef<any>;
-  public modalRef!: NgbModalRef;
-  public loading = false;
+export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('content') public content!: TemplateRef<NgTemplateOutlet>;
+  public recentSearches: string[] = [];
   public results: ISearchResult[] = [];
+  public modalRef: NgbModalRef | null = null;
   public searchForm: FormGroup;
-  private searchSubject: BehaviorSubject<string>;
+  public searchCompactLength = 5;
+  public showAllHistory = false;
   private subscriptions: Subscription[] = [];
 
   public constructor(
-    private readonly ngbModalService: NgbModal,
     private readonly searchService: SearchService,
+    private readonly modalService: NgbModal,
     private readonly documentationService: DocumentationService,
   ) {
     this.searchForm = new FormGroup({
       term: new FormControl('')
     });
+  }
 
-    this.searchSubject = new BehaviorSubject('');
+  public ngOnInit(): void {
+    this.recentSearches = this.searchService.getRecentSearchTerms();
   }
 
   public ngAfterViewInit(): void {
     this.subscriptions.push(
-      this.searchSubject.pipe(
-        filter(x => !!x),
-        debounceTime(300),
-        distinctUntilChanged(),
-      ).subscribe((term: string) => this.find(term))
-    );
-
-    this.subscriptions.push(
       this.searchService.searchModalVisibleObservable().subscribe(
         (visible: boolean) => {
           if (visible) {
-            this.modalRef = this.ngbModalService.open(this.content, { scrollable: true });
+            const modalOptions: NgbModalOptions = {
+              scrollable: true,
+              keyboard: false,
+              backdrop: 'static',
+              backdropClass: 'custom-backdrop'
+            };
+
+            this.modalRef = this.modalService.open(this.content, modalOptions);
           } else {
-            this.closeModal();
+            this.modalRef?.close();
           }
         }
       )
     );
-
-    // this.subscriptions.push(
-    //   this.modalRef?.hidden.subscribe(
-    //     () => {
-    //       console.log('hidden subscription');
-    //       this.cleanup();
-    //     }
-    //   )
-    // )
   }
 
-  private cleanup(): void {
-    console.log('cleanup');
-    this.results = [];
-    this.searchService.addRecentSearchTerm(this.searchForm.get('term')?.value)
-    this.searchForm.get('term')?.setValue('');
-  }
-
-  public closeModal(): void {
-    this.modalRef?.hidden.pipe(take(1)).subscribe(() => this.cleanup());
-    const term = this.searchForm.get('term')?.value || null;
-    if (term) {
-      this.searchService.addRecentSearchTerm(term);
-    }
-    this.modalRef?.close();
-  }
-
-  private async find(term: string): Promise<void> {
-    console.log('find!');
-    this.loading = true;
+  public async handleSearch(event: Event): Promise<void> {
+    const { value: term } = (event.currentTarget as HTMLInputElement);
     const sections = await this.documentationService.findSections(term);
-    const topicIds = sections.map((section) => section.topicId).filter((topicId, index, array) => array.indexOf(topicId) === index);
-    const topics = await this.documentationService.getTopics(topicIds);
+
+    if(!sections.length) {
+      this.results = [];
+      return;
+    }
+
+    const topics = await this.documentationService.getTopics(
+      sections
+        .map((section: RxDocument<SectionDocumentType, SectionDocumentMethods>) => section.topicId)
+        .filter((id: string, index: number, array: string[]) => array.indexOf(id) === index)
+    );
 
     this.results = [];
-
     for (const topic of topics) {
       this.results.push({
         id: topic.id,
         icon: topic.icon,
         title: topic.title,
-        sections: sections.filter(section => section.topicId === topic.id).map(section => ({ id: section.id, slug: section.slug, title: section.title }))
+        sections: sections
+          .filter((section: RxDocument<SectionDocumentType, SectionDocumentMethods>) => section.topicId === topic.id)
+          .map((section: RxDocument<SectionDocumentType, SectionDocumentMethods>) => ({ id: section.id, slug: section.slug, title: section.title }))
       })
     }
-    console.log(this.results);
-    this.loading = false;
   }
 
   public ngOnDestroy(): void {
@@ -113,20 +97,50 @@ export class SearchModalComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  public handleSearch(event: SubmitEvent): void {
-    event.preventDefault();
+  public removeHistoryItem(term?: string): void {
+    if(term) {
+      this.searchService.removeRecentSearchTerm(term);
+    } else {
+      this.searchService.clearRecentSearchTerms();
+    }
+
+    this.recentSearches = this.searchService.getRecentSearchTerms();
   }
 
-  public handleInput(event: Event): void {
-    this.searchSubject.next((event.currentTarget as HTMLInputElement).value)
+  public setShowAllHistory(show: boolean): void {
+    this.showAllHistory = show;
   }
 
   @HostListener('document:keydown', ['$event'])
   private handleSearchModal(event: KeyboardEvent): void {
     const { key, ctrlKey } = event;
+
+    // open
     if (ctrlKey && key === 'k') {
       event.preventDefault();
-      this.searchService.setModalVisibility(this.ngbModalService.hasOpenModals() ? false : true);
+      this.searchService.setModalVisibility(this.modalService.hasOpenModals() ? false : true);
+    }
+
+    // close
+    if (key.toLowerCase() === 'escape') {
+      this.close();
+    }
+  }
+
+  public close(): void {
+    if (this.modalService.hasOpenModals()) {
+      this.searchService.setModalVisibility(false);
+      const term = this.searchForm.get('term')?.value;
+
+      if (term) {
+        this.searchService.addRecentSearchTerm(term);
+      }
+
+      setTimeout(() => {
+        this.results = [];
+        this.searchForm.get('term')?.setValue('');
+        this.recentSearches = this.searchService.getRecentSearchTerms();
+      }, 500);
     }
   }
 }

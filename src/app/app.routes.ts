@@ -10,10 +10,6 @@ export const routes: Routes = [
         loadComponent: () => import('./page/documentation/documentation.component').then(mod => mod.DocumentationComponent)
     },
     {
-        path: 'search',
-        loadComponent: () => import('./page/search/search.component').then(mod => mod.SearchComponent)
-    },
-    {
         path: '404',
         loadComponent: () => import('./page/not-found/not-found.component').then(mod => mod.NotFoundComponent)
     },
