@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { SearchService } from '../../service/search.service';
-import { BehaviorSubject, Subscription, debounceTime, distinctUntilChanged, filter, isEmpty, take } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DocumentationService } from '../../service/documentation.service';
 import { NgTemplateOutlet } from '@angular/common';
@@ -51,7 +51,6 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
               scrollable: true,
               keyboard: false,
               backdrop: 'static',
-              backdropClass: 'custom-backdrop'
             };
 
             this.modalRef = this.modalService.open(this.content, modalOptions);
@@ -63,8 +62,8 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  public async handleSearch(event: Event): Promise<void> {
-    const { value: term } = (event.currentTarget as HTMLInputElement);
+  public async handleSearch(): Promise<void> {
+    const { value: term } = this.searchForm.get('term') as FormControl;
     const sections = await this.documentationService.findSections(term);
 
     if(!sections.length) {
@@ -109,6 +108,11 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public setShowAllHistory(show: boolean): void {
     this.showAllHistory = show;
+  }
+
+  public searchRecent(term: string): void {
+    this.searchForm.get('term')?.setValue(term);
+    this.handleSearch();
   }
 
   @HostListener('document:keydown', ['$event'])
