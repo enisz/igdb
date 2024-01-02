@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { SearchService } from '../../service/search.service';
 import { Subscription } from 'rxjs';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -16,7 +16,8 @@ import { EmphasizePipe } from '../../pipe/emphasize.pipe';
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, EmphasizePipe],
   templateUrl: './search-modal.component.html',
-  styleUrl: './search-modal.component.scss'
+  styleUrl: './search-modal.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('content') public content!: TemplateRef<NgTemplateOutlet>;
