@@ -1,3 +1,4 @@
+import { ISearchResultSection } from './../../interface/search-modal.interface';
 import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { SearchService } from '../../service/search.service';
 import { Subscription } from 'rxjs';
@@ -6,7 +7,7 @@ import { DocumentationService } from '../../service/documentation.service';
 import { NgTemplateOutlet } from '@angular/common';
 import { ISearchResult } from '../../interface/search-modal.interface';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { RxDocument } from 'rxdb';
 import { SectionDocumentMethods, SectionDocumentType } from '../../database/document/section.document';
 import { EmphasizePipe } from '../../pipe/emphasize.pipe';
@@ -27,12 +28,15 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
   public searchForm: FormGroup;
   public searchCompactLength = 5;
   public showAllHistory = false;
+  public selectedRow = 0;
+  public sectionCount = 0;
   private subscriptions: Subscription[] = [];
 
   public constructor(
     private readonly searchService: SearchService,
     private readonly modalService: NgbModal,
     private readonly documentationService: DocumentationService,
+    private readonly router: Router,
   ) {
     this.searchForm = new FormGroup({
       term: new FormControl('')
@@ -63,7 +67,15 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  public ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription?.unsubscribe();
+    }
+  }
+
   public async handleSearch(): Promise<void> {
+    this.sectionCount = 0;
+    this.selectedRow = 0;
     const { value: term } = this.searchForm.get('term') as FormControl;
     const sections = await this.documentationService.findSections(term);
 
@@ -72,6 +84,8 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    this.sectionCount = sections.length;
+
     const topics = await this.documentationService.getTopics(
       sections
         .map((section: RxDocument<SectionDocumentType, SectionDocumentMethods>) => section.topicId)
@@ -79,6 +93,7 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     this.results = [];
+    let order = 0;
     for (const topic of topics) {
       this.results.push({
         id: topic.id,
@@ -86,14 +101,8 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
         title: topic.title,
         sections: sections
           .filter((section: RxDocument<SectionDocumentType, SectionDocumentMethods>) => section.topicId === topic.id)
-          .map((section: RxDocument<SectionDocumentType, SectionDocumentMethods>) => ({ id: section.id, slug: section.slug, title: section.title }))
+          .map((section: RxDocument<SectionDocumentType, SectionDocumentMethods>) => ({ id: section.id, slug: section.slug, title: section.title, order: order++ }))
       })
-    }
-  }
-
-  public ngOnDestroy(): void {
-    for (const subscription of this.subscriptions) {
-      subscription?.unsubscribe();
     }
   }
 
@@ -116,22 +125,6 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
     this.handleSearch();
   }
 
-  @HostListener('document:keydown', ['$event'])
-  private handleSearchModal(event: KeyboardEvent): void {
-    const { key, ctrlKey } = event;
-
-    // open
-    if (ctrlKey && key === 'k') {
-      event.preventDefault();
-      this.searchService.setModalVisibility(this.modalService.hasOpenModals() ? false : true);
-    }
-
-    // close
-    if (key.toLowerCase() === 'escape') {
-      this.close();
-    }
-  }
-
   public close(): void {
     if (this.modalService.hasOpenModals()) {
       this.searchService.setModalVisibility(false);
@@ -146,6 +139,79 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
         this.searchForm.get('term')?.setValue('');
         this.recentSearches = this.searchService.getRecentSearchTerms();
       }, 500);
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  private handleKeyboardEvents(event: KeyboardEvent): void {
+    const { key, ctrlKey } = event;
+
+    // open
+    if (ctrlKey && key.toLowerCase() === 'k') {
+      this.handleKeyK(event);
+    }
+
+    // close
+    if (key.toLowerCase() === 'escape') {
+      this.handleKeyEscape();
+    }
+
+    // up
+    if (key.toLowerCase() === 'arrowup') {
+      this.handleKeyArrowUp(event);
+    }
+
+    // down
+    if (key.toLowerCase() === 'arrowdown') {
+      this.handleKeyArrowDown(event);
+    }
+
+    // enter
+    if (key.toLowerCase() === 'enter') {
+      this.handleKeyEnter(event);
+    }
+  }
+
+  private handleKeyK(event: KeyboardEvent): void {
+    event.preventDefault();
+    this.searchService.setModalVisibility(this.modalService.hasOpenModals() ? false : true);
+  }
+
+  private handleKeyEscape(): void {
+    this.close();
+  }
+
+  private handleKeyArrowUp(event: KeyboardEvent): void {
+    event.preventDefault();
+    if (this.selectedRow > 0) {
+      this.selectedRow--;
+    }
+  }
+
+  private handleKeyArrowDown(event: KeyboardEvent): void {
+    event.preventDefault();
+    if (this.selectedRow < this.sectionCount - 1) {
+      this.selectedRow++;
+    }
+  }
+
+  private handleKeyEnter(event: KeyboardEvent): void {
+    event.preventDefault();
+
+    let selected: ISearchResultSection | null = null;
+
+    for (const topic of this.results) {
+      for (const section of topic.sections) {
+        if (section.order === this.selectedRow) {
+          selected = section;
+          break;
+        }
+      }
+    }
+
+    if (selected) {
+      this.router.navigate(['documentation'], { fragment: selected.slug });
+      this.close();
     }
   }
 }

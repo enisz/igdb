@@ -9,4 +9,5 @@ export interface ISearchResultSection {
     id: string;
     title: string;
     slug: string;
+    order: number;
 }
