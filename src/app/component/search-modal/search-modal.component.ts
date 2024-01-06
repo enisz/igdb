@@ -28,7 +28,7 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
   public searchForm: FormGroup;
   public searchCompactLength = 5;
   public showAllHistory = false;
-  public selectedRow = 0;
+  public selectedRow = -1;
   public sectionCount = 0;
   private subscriptions: Subscription[] = [];
 
@@ -75,7 +75,7 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public async handleSearch(): Promise<void> {
     this.sectionCount = 0;
-    this.selectedRow = 0;
+    this.selectedRow = -1;
     const { value: term } = this.searchForm.get('term') as FormControl;
     const sections = await this.documentationService.findSections(term);
 
