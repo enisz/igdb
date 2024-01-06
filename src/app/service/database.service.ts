@@ -1,8 +1,7 @@
-import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 import { getRxStorageMemory } from 'rxdb/plugins/storage-memory';
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { DocumentationDatabaseCollections, IGDBWrapperDatabase } from '../database/database';
-import { RxJsonSchema, createRxDatabase, addRxPlugin, RxDumpDatabaseAny, RxDocument } from 'rxdb';
+import { RxJsonSchema, createRxDatabase, addRxPlugin, RxDumpDatabaseAny } from 'rxdb';
 import { TopicDocumentType } from '../database/document/topic.document';
 import { SectionDocumentType } from '../database/document/section.document';
 import { RxDBJsonDumpPlugin } from 'rxdb/plugins/json-dump';
@@ -24,10 +23,6 @@ export class DatabaseService {
   }
 
   public async build(dump: RxDumpDatabaseAny<DocumentationDatabaseCollections>): Promise<void> {
-    if (isDevMode()) {
-      addRxPlugin(RxDBDevModePlugin);
-    }
-
     addRxPlugin(RxDBJsonDumpPlugin);
     this.rxdb = await createRxDatabase<DocumentationDatabaseCollections>({
       name: 'igdbwdb',
@@ -63,9 +58,6 @@ export class DatabaseService {
           type: 'string',
         },
         title: {
-          type: 'string',
-        },
-        body: {
           type: 'string',
         },
         stripped: {
@@ -116,9 +108,6 @@ export class DatabaseService {
           type: ['number', 'null'],
         },
         title: {
-          type: 'string',
-        },
-        body: {
           type: 'string',
         },
         stripped: {

@@ -5,8 +5,13 @@ icon: fa-map-signs
 
 # Getting Started
 
-## test
-asdf
+```php
+<?php
+
+    $igdb = new IGDB("{{client_id}}", "{{access_token}}");
+
+?>
+```
 
 ## welcome
 

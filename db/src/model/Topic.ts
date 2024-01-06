@@ -9,8 +9,6 @@ export default class Topic {
     private date: number | null;
     private title: string;
     private body: string;
-    private stripped = '';
-    private html = '';
     private sections: Section[] = [];
 
     constructor(id: number, icon: string, overview: string, title: string, body: string, date: number | null) {
@@ -21,9 +19,6 @@ export default class Topic {
         this.title = title;
         this.body = body;
         this.date = date;
-
-        this.html = StringR.toHtml(body);
-        this.stripped = StringR.toStripped(body);
     }
 
     public getId(): number {
@@ -46,14 +41,6 @@ export default class Topic {
         return this.body;
     }
 
-    public getHtml(): string {
-        return this.html;
-    }
-
-    public getStripped(): string {
-        return this.stripped;
-    }
-
     public addSection(section: Section): void {
         this.sections.push(section);
     }
@@ -64,6 +51,10 @@ export default class Topic {
 
     public getSlug(): string {
         return this.slug;
+    }
+
+    public setSlug(newSlug: string): void {
+        this.slug = newSlug;
     }
 
     public getDate(): number | null {

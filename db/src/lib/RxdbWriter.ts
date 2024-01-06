@@ -7,9 +7,27 @@ import { getRxStorageMemory } from 'rxdb/plugins/storage-memory';
 import { RxDBJsonDumpPlugin } from 'rxdb/plugins/json-dump';
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 import Md5 from 'md5';
+import Path from 'path';
 
 export default class RxdbWriter extends FileWriter {
     public extension = 'json';
+    private marked: Marked;
+
+    public constructor(path: string, filename: string) {
+      super(path, filename);
+      const markedExtension: MarkedExtension = {
+          async: false,
+          breaks: true,
+          gfm: true,
+          renderer: {
+            link: this.link,
+            image: this.image,
+            blockquote: this.blockquote,
+          }
+      };
+
+      this.marked = new Marked(markedExtension);
+    }
 
     public async write(document: Document): Promise<void> {
         let order = 1;
@@ -41,9 +59,8 @@ export default class RxdbWriter extends FileWriter {
                 overview: topic.getOverview(),
                 date: topic.getDate(),
                 title: topic.getTitle(),
-                body: topic.getBody(),
-                stripped: topic.getStripped(),
-                html: topic.getHtml(),
+                stripped: this.toStripped(topic.getBody()),
+                html: this.toHtml(topic.getBody()),
             });
 
             for (const section of topic.getSections()) {
@@ -60,9 +77,8 @@ export default class RxdbWriter extends FileWriter {
                     slug: section.getSlug(),
                     level: section.getLevel(),
                     title: section.getTitle(),
-                    body: section.getBody(),
-                    html: section.getHtml(),
-                    stripped: section.getStripped()
+                    html: this.toHtml(section.getBody()),
+                    stripped: this.toStripped(section.getBody()),
                 })
             }
         }
@@ -74,6 +90,86 @@ export default class RxdbWriter extends FileWriter {
         );
 
         await rxdb.remove();
+    }
+
+    private toHtml(markdown: string): string {
+      return this.marked.parse(markdown) as string;
+    }
+
+    private toStripped(markdown: string): string {
+      return RemoveMarkdown(markdown, { gfm: true })
+    }
+
+    private link(href: string, title: string | null | undefined, text: string): string {
+      const local = href.startsWith('#');
+
+      return `<a href="${local ? `documentation${href}` : href}" title="${title || text}${!local ? ' (external link)' : ''}" target="${local ? '_self' : '_blank'}" />${text}${!local ? ' <i class="fa-solid fa-arrow-up-right-from-square fa-2xs"></i>' : ''}</a>`;
+    }
+
+    private image(href: string, title: string | null, text: string): string {
+      const base64img = require('base64-img');
+      const src = Path.join(templatePath, href);
+      const base64src = base64img.base64Sync(src);
+
+      return `
+          <figure class="figure docs-figure py-3 w-100 text-center">
+              <img class="img-fluid" src="${base64src}" />
+              <figcaption class="figure-caption mt-3">${title || text}</figcaption>
+          </figure>
+      `;
+    }
+
+    private blockquote(quote: string): string {
+      const isSeverity = (string: string): boolean => string.startsWith(':');
+      const getSeverity = (string: string): string => isSeverity(string) ? string.substring(1) : 'info';
+      const getIcon = (severity: string): string => {
+          switch(getSeverity(severity)) {
+              case 'warning':
+                  return 'fa-bullhorn';
+                  break;
+              case 'success':
+                  return 'fa-thumbs-up';
+                  break;
+              case 'danger':
+                  return 'fa-triangle-exclamation';
+                  break;
+              default:
+                  return 'fa-circle-info'
+                  break;
+          }
+      }
+      const getTitle = (severity: string): string => {
+          switch(getSeverity(severity)) {
+              case 'warning':
+                  return 'Warning';
+                  break;
+              case 'success':
+                  return 'Tip';
+                  break;
+              case 'danger':
+                  return 'Danger';
+                  break;
+              default:
+                  return 'Info'
+                  break;
+          }
+      }
+      const stripped = quote.replace('<p>', '').replace('</p>', '');
+      const [severity, ...rest] = stripped.split(' ');
+
+      return `
+      <div class="callout-block callout-block-${getSeverity(severity)}">
+              <div class="content">
+                  <h4 class="callout-title">
+                      <span class="callout-icon-holder me-1">
+                          <i class="fas ${getIcon(severity)}"></i>
+                      </span>
+                      ${getTitle(severity)}
+                  </h4>
+                  ${isSeverity(severity) ? rest.join(' ') : stripped}
+              </div>
+          </div>
+      `;
     }
 
     private generateId(id: number, slug: string): string {
@@ -97,9 +193,6 @@ export default class RxdbWriter extends FileWriter {
               type: 'string',
             },
             title: {
-              type: 'string',
-            },
-            body: {
               type: 'string',
             },
             stripped: {
@@ -152,9 +245,6 @@ export default class RxdbWriter extends FileWriter {
             title: {
               type: 'string',
             },
-            body: {
-              type: 'string',
-            },
             stripped: {
               type: 'string',
             },
@@ -174,6 +264,10 @@ export type TopicCollection = RxCollection<TopicDocumentType, TopicDocumentMetho
 
 import { RxDocument } from "rxdb";
 import Section from "../model/Section";
+import { Marked, MarkedExtension } from "marked";
+import { templatePath } from "..";
+import StringR from "./StringR";
+import RemoveMarkdown from "remove-markdown";
 
 export type TopicDocumentType = {
     id: string;
@@ -183,7 +277,6 @@ export type TopicDocumentType = {
     overview: string;
     date: number | null;
     title: string;
-    body: string;
     stripped: string;
     html: string;
 }
@@ -206,7 +299,6 @@ export type SectionDocumentType = {
     slug: string;
     level: number;
     title: string;
-    body: string;
     html: string;
     stripped: string;
 }

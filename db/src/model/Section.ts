@@ -8,8 +8,6 @@ export default class Section {
     private level: number;
     private title: string;
     private body: string;
-    private html: string;
-    private stripped: string;
 
     constructor(id: number, topicId: number, parents: number[], level: number, title: string, body: string) {
         this.id = id;
@@ -19,9 +17,6 @@ export default class Section {
         this.level = level;
         this.title = title;
         this.body = body;
-
-        this.html = StringR.toHtml(body);
-        this.stripped = StringR.toStripped(body);
     }
 
     public getId(): number {
@@ -40,6 +35,10 @@ export default class Section {
         return this.slug;
     }
 
+    public setSlug(newSlug: string): void {
+        this.slug = newSlug;
+    }
+
     public getLevel(): number {
         return this.level;
     }
@@ -50,13 +49,5 @@ export default class Section {
 
     public getBody(): string {
         return this.body;
-    }
-
-    public getHtml(): string {
-        return this.html;
-    }
-
-    public getStripped(): string {
-        return this.stripped;
     }
 }

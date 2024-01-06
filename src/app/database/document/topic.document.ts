@@ -8,7 +8,6 @@ export type TopicDocumentType = {
     overview: string;
     date: number | null;
     title: string;
-    body: string;
     stripped: string;
     html: string;
 }

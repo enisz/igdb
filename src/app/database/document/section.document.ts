@@ -8,7 +8,6 @@ export type SectionDocumentType = {
     slug: string;
     level: number;
     title: string;
-    body: string;
     html: string;
     stripped: string;
 }
