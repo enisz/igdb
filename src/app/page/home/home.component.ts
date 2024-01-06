@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TopBarComponent } from '../../component/top-bar/top-bar.component';
 import { RxDocument } from 'rxdb';
 import { TopicDocumentType, TopicDocumentMethods } from '../../database/document/topic.document';
@@ -27,7 +27,8 @@ import { TokenService } from '../../service/token.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  public isCollapsed = false;
+  @ViewChild('collapse') private collapse!: ElementRef<HTMLDivElement>;
+  public isCollapsed = true;
   public topics: RxDocument<TopicDocumentType, TopicDocumentMethods>[] = [];
   public latestCommits!: Promise<ICommits[]>;
   public user = 'enisz';
@@ -42,8 +43,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly gitService: GitService,
     private readonly viewportService: ViewportService,
     private readonly toastrService: ToastrService,
-    private readonly viewportScroller: ViewportScroller,
     private readonly tokenService: TokenService,
+    private readonly viewportScroller: ViewportScroller,
   ) {
     const { clientId, accessToken } = this.getTokens();
     this.tokenForm = new FormGroup({
@@ -62,6 +63,18 @@ export class HomeComponent implements OnInit, OnDestroy {
         (breakpoint: IViewportBreakpoint) => this.size = breakpoint === 'xs' ? 'none' : 'large'
       )
     );
+  }
+
+  public toggleCollapse(): void {
+    this.isCollapsed = !this.isCollapsed;
+
+    if (this.isCollapsed) {
+      this.viewportScroller.scrollToPosition([0, 0]);
+    } else {
+      setTimeout(
+        () => this.viewportScroller.scrollToPosition([0, this.collapse.nativeElement.getBoundingClientRect().top - 80])
+      );
+    }
   }
 
   public getTokens(): IToken {
