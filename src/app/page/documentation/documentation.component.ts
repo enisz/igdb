@@ -1,60 +1,48 @@
-import { AfterViewInit, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { TopBarComponent } from '../../component/top-bar/top-bar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { DocumentationService } from '../../service/documentation.service';
 import { RxDocument } from 'rxdb';
 import { TopicDocumentMethods, TopicDocumentType } from '../../database/document/topic.document';
-import { AsyncPipe, ViewportScroller } from '@angular/common';
+import { ViewportScroller } from '@angular/common';
 import { TopicComponent } from './topic/topic.component';
 import HighlightJS from 'highlight.js';
 import { Subscription, take } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { NgbScrollSpy, NgbScrollSpyModule, NgbScrollSpyService } from '@ng-bootstrap/ng-bootstrap';
+import { SectionDocumentMethods, SectionDocumentType } from '../../database/document/section.document';
 
 @Component({
   selector: 'app-documentation',
   standalone: true,
-  imports: [TopBarComponent, SidebarComponent, AsyncPipe, TopicComponent, NgbScrollSpyModule, NgbScrollSpy],
+  imports: [TopBarComponent, SidebarComponent, TopicComponent],
   templateUrl: './documentation.component.html',
   styleUrl: './documentation.component.scss'
 })
 export class DocumentationComponent implements OnInit, AfterViewInit, OnDestroy {
   private body: HTMLBodyElement;
   public topics: RxDocument<TopicDocumentType, TopicDocumentMethods>[] = [];
+  public sections: RxDocument<SectionDocumentType, SectionDocumentMethods>[] = [];
+  public fragments: string[] = [];
   private subscriptions: Subscription[] = [];
 
   public constructor(
     private readonly documentationService: DocumentationService,
     private readonly viewportScroller: ViewportScroller,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly ngbScrollSpyService: NgbScrollSpyService,
   ) {
     this.body = document.getElementsByTagName('body')[0];
   }
   public async ngOnInit(): Promise<void> {
     this.body.classList.add('docs-page');
     this.topics = await this.documentationService.getAllTopics();
-    this.subscriptions.push(
-      // this.ngbScrollSpyService.active$.subscribe(
-      //   (id: string) => {
-      //     console.log('active changed');
-      //     console.log('id: ' + id);
-      //   }
-      // )
-    )
+    this.sections = await this.documentationService.getAllSections();
 
-    // this.ngbScrollSpyService.active$.subscribe(
-    //   (id: string) => {
-    //     console.log('active changed');
-    //     console.log('id: ' + id);
-    //   }
-    // )
-
-    // console.log('start()');
-    // this.ngbScrollSpyService.start();
+    this.fragments = [];
+    this.fragments = this.fragments.concat(this.topics.map((topic: RxDocument<TopicDocumentType, TopicDocumentMethods>) => topic.slug));
+    this.fragments = this.fragments.concat(this.sections.map((section: RxDocument<SectionDocumentType, SectionDocumentMethods>) => section.slug));
 
     setTimeout(() => HighlightJS.highlightAll());
-    this.viewportScroller.setOffset([0, 86]);
+    this.viewportScroller.setOffset([0, 70]);
   }
 
   public ngAfterViewInit(): void {
@@ -70,7 +58,6 @@ export class DocumentationComponent implements OnInit, AfterViewInit, OnDestroy 
   public ngOnDestroy(): void {
     this.body.classList.remove('docs-page');
 
-    this.ngbScrollSpyService.stop();
     for (const subscription of this.subscriptions) {
       subscription?.unsubscribe();
     }

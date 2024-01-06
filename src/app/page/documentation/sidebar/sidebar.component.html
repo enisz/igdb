@@ -1,4 +1,4 @@
-<div id="docs-sidebar" class="docs-sidebar" #sidebar>
+<div id="docs-sidebar" class="docs-sidebar shadow-lg" #sidebar>
     <div class="top-search-box d-lg-none p-3">
         <form class="search-form">
             <input type="text" name="search" class="form-control search-input" searchField>
@@ -11,7 +11,7 @@
             @if (sections && topics) {
                 @for (topic of topics; track topic.id) {
                     <li class="nav-item section-title">
-                        <a class="nav-link scrollto {{ activeId === topic.slug ? 'active' : ''}}" routerLink="/documentation" [fragment]="topic.slug" [ngbScrollSpyItem]="topic.slug">
+                        <a class="nav-link scrollto {{ activeIds.includes(topic.slug) ? 'active' : ''}}" routerLink="/documentation" [fragment]="topic.slug" (click)="closeSidebar()">
                             <span class="theme-icon-holder me-2">
                                 <i class="fas {{ topic.icon }}"></i>
                             </span>
@@ -20,7 +20,9 @@
                     </li>
 
                     @for (section of filterByTopic(topic.id); track section.id) {
-                        <li class="nav-item"><a class="nav-link scrollto {{ activeId === section.slug ? 'active' : ''}}" routerLink="/documentation" [fragment]="section.slug" [ngbScrollSpyItem]="section.slug">{{ section.title }}</a></li>
+                        <li class="nav-item">
+                            <a [ngStyle]="{ 'padding-left': (section.level * 10) + 'px' }" class="nav-link scrollto {{ activeIds.includes(section.slug) ? 'active' : ''}}" routerLink="/documentation" [fragment]="section.slug" (click)="closeSidebar()">{{ section.title }}</a>
+                        </li>
                     }
                 }
             }

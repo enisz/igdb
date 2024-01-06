@@ -1,7 +1,7 @@
 @if (topic && sections) {
-    <article class="docs-article">
-        <header class="docs-header" [ngbScrollSpyFragment]="topic.slug">
-            <h1 [id]="topic.slug" class="docs-heading">
+    <article class="docs-article" [id]="topic.slug" #element>
+        <header class="docs-header">
+            <h1 class="docs-heading">
                 {{ topic.title }}
                 <span class="docs-time">
                 @if (topic.date) {
@@ -15,7 +15,7 @@
         </header>
 
         @for (section of sections; track section.id) {
-            <app-section [section-id]="section.id" [ngbScrollSpyFragment]="section.slug"></app-section>
+            <app-section [section-id]="section.id"></app-section>
         }
     </article>
 } @else {

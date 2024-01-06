@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, merge, fromEvent } from 'rxjs';
+import { BehaviorSubject, Observable, fromEvent } from 'rxjs';
 import { IViewportBreakpoint, IViewportDimension } from '../interface/viewport.interface';
 
 @Injectable({
@@ -26,8 +26,16 @@ export class ViewportService {
     );
   }
 
+  public getViewportValue(): IViewportDimension {
+    return this.viewportSubject.value;
+  }
+
   public getViewportObserable(): Observable<IViewportDimension> {
     return this.viewportSubject.asObservable();
+  }
+
+  public getBreakpointValue(): IViewportBreakpoint {
+    return this.breakpointSubject.value;
   }
 
   public getBreakpointObservable(): Observable<IViewportBreakpoint> {
