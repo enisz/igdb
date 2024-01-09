@@ -1,13 +1,12 @@
-export interface ISearchResult {
-    id: string;
+export interface IModalListGroup {
     title: string;
     icon: string;
-    sections: ISearchResultSection[]
+    items: IModalListGroupItem[];
 }
 
-export interface ISearchResultSection {
-    id: string;
+export interface IModalListGroupItem {
+    id: number;
     title: string;
-    slug: string;
-    order: number;
+    slug?: string;
+    clearable?: boolean;
 }
