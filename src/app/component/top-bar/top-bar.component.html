@@ -28,15 +28,11 @@
                         </form>
                     </div>
                 }
-                <div ngbDropdown class="d-inline-block">
-                    <button type="button" class="btn btn-primary" id="download-dropdown" ngbDropdownToggle [disabled]="!isOnline">
-                        Download
-                    </button>
-                    <ul ngbDropdownMenu class="shadow" aria-labelledby="download-dropdown">
-                        @if (latestRelease) { <li><a ngbDropdownItem [href]="latestRelease.zipball_url">Latest release (<span>{{latestRelease.tag_name}}</span>)</a></li>}
-                        <li><a ngbDropdownItem href="#">Documentation (PDF)</a></li>
-                    </ul>
-                </div>
+                @if (latestRelease) {
+                    <a role="button" class="btn btn-primary" id="download-dropdown" [href]="latestRelease.zipball_url">
+                        Download {{ latestRelease.tag_name }}
+                    </a>
+                }
             </div>
         </div>
     </div>

@@ -3,15 +3,15 @@ import { NetworkService } from '../../service/network.service';
 import { Subscription } from 'rxjs';
 import { GitService } from '../../service/git.service';
 import { IRelease } from '../../interface/git.interface';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { SearchFieldDirective } from '../../directive/search-field.directive';
 
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgbDropdownModule, SearchFieldDirective],
+  imports: [CommonModule, RouterLink, NgbDropdownModule, SearchFieldDirective, NgbTooltipModule, DatePipe],
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.scss'
 })
