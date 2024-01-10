@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.viewportScroller.scrollToPosition([0, 0]);
     } else {
       setTimeout(
-        () => this.viewportScroller.scrollToPosition([0, this.collapse.nativeElement.getBoundingClientRect().top - 80])
+        () => this.viewportScroller.scrollToPosition([0, this.collapse.nativeElement.getBoundingClientRect().top - 90])
       );
     }
   }
