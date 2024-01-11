@@ -5,14 +5,13 @@ import Path from 'path';
 import { program, Option } from 'commander';
 import Fs from 'fs';
 import FileWriter from "./abstract/FileWriter";
-import PdfWriter from "./lib/PdfWriter";
 import RxdbWriter from "./lib/RxdbWriter";
 
 program
     .addOption(new Option('-p, --production', 'Generate production ready database file').default(false))
     .addOption(new Option('-f, --filename <filename>', 'Override output filename'))
     .addOption(new Option('-w, --watch', 'Executing the script in dev mode, restart when changes detected').default(false))
-    .addOption(new Option('-o, --output <format>', 'Output of the script').choices(['rxdb', 'pdf']).default('rxdb'));
+    .addOption(new Option('-o, --output <format>', 'Output of the script').choices(['rxdb']).default('rxdb'));
 program.parse(process.argv);
 
 const { output, watch, filename } = program.opts();
@@ -24,10 +23,6 @@ const processor = new Processor();
 let writer: FileWriter;
 
 switch(output) {
-    case 'pdf':
-        writer = new PdfWriter(exportPath, databaseName);
-        break;
-
     case 'rxdb':
         writer = new RxdbWriter(exportPath, databaseName);
         break;

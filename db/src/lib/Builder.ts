@@ -2,7 +2,6 @@ import FileReader from "../abstract/FileReader";
 import FileProcessor from "../abstract/FileProcessor";
 import FileWriter from "../abstract/FileWriter";
 import Fs from 'fs';
-import StringR from "./StringR";
 
 export default class Builder {
     private reader: FileReader;
@@ -21,11 +20,14 @@ export default class Builder {
         await this.writer.write(processed);
 
         const file = this.writer.getAbsolutePath();
-        const filesize = this.calculateFileSize(file);
 
-        console.log(`${this.writer.getExtension().toUpperCase()} exported succesfully!`);
-        console.log(`File: ${this.writer.getAbsolutePath()}`);
-        console.log(`Size: ${this.calculateFileSize(this.writer.getAbsolutePath())}\n`);
+        if (Fs.statSync(this.writer.getAbsolutePath()).isFile()) {
+            console.log(`${this.writer.getExtension().toUpperCase()} exported succesfully!`);
+            console.log(`File: ${this.writer.getAbsolutePath()}`);
+            console.log(`Size: ${this.calculateFileSize(this.writer.getAbsolutePath())}\n`);
+        }  else {
+            throw new Error('no file is exported!')
+        }
     }
 
     protected calculateFileSize(file: string): string {

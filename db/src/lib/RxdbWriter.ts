@@ -10,11 +10,10 @@ import Md5 from 'md5';
 import Path from 'path';
 
 export default class RxdbWriter extends FileWriter {
-    public extension = 'json';
     private marked: Marked;
 
     public constructor(path: string, filename: string) {
-      super(path, filename);
+      super(path, filename, 'json');
       const markedExtension: MarkedExtension = {
           async: false,
           breaks: true,

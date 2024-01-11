@@ -4,11 +4,12 @@ import Path from 'path';
 export default abstract class FileWriter {
     private path: string;
     private filename: string;
-    public abstract extension: string;
+    private extension: string;
 
-    public constructor(path: string, filename: string) {
+    public constructor(path: string, filename: string, extension: string) {
         this.path = path;
         this.filename = filename;
+        this.extension = extension;
     }
 
     public getPath(): string {
