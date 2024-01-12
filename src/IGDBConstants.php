@@ -1,5 +1,4 @@
 <?php
-    $sizes = array();
 
     define("IGDBW_ENDPOINTS", array(
         "age_rating" => "age_ratings",
@@ -85,6 +84,16 @@
         "create",
         "update",
         "delete"
+    ));
+
+    define('IGDBW_POSTFIXES', array(
+        "=",
+        "!=",
+        ">",
+        ">=",
+        "<",
+        "<=",
+        "~"
     ));
 
     define("IGDBW_API_URL", "https://api.igdb.com/v4");

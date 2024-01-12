@@ -5,12 +5,13 @@
      *
      * Building apicalypse query strings
      *
-     * @version 1.2.0
+     * @version 2.0.0
      * @author Enisz Abdalla <enisz87@gmail.com>
      * @link https://github.com/enisz/igdb
      */
 
     require_once "IGDBInvalidParameterException.php";
+    require_once "IGDBConstants.php";
 
     class IGDBQueryBuilder {
         /**
@@ -106,11 +107,11 @@
          */
         public function options($options) {
             foreach($options as $parameter => $value) {
-                if(method_exists($this, $parameter)) {
-                    $this->$parameter($value);
-                } else {
+                if(!method_exists($this, $parameter)) {
                     throw new IGDBInvalidParameterException("Invalid parameter found in passed query array. " . $parameter . " is not valid!");
                 }
+
+                $this->$parameter($value);
             }
 
             return $this;
@@ -164,12 +165,12 @@
             if(count($this->_sort) != 0) {
                 throw new IGDBInvalidParameterException("Your query has both search and sort. Search is sorting on relevancy and therefore sort is not applicable on search");
             }
-            if(is_string($search) || is_numeric($search)) {
-                $this->_search = $search;
-            } else {
+
+            if(!is_string($search) && !is_numeric($search)) {
                 throw new IGDBInvalidParameterException("Invalid type of parameter for search! String or numeric values are expected, " . gettype($search) . " passed!");
             }
 
+            $this->_search = $search;
             return $this;
         }
 
@@ -227,12 +228,13 @@
         public function limit($limit) {
             if(!is_numeric($limit)) {
                 throw new IGDBInvalidParameterException("Invalid type of parameter for limit! A numeric value is expected, " . gettype($limit) . " passed!");
-            } else if(intval($limit) < 1 || intval($limit) > 500) {
-                throw new IGDBInvalidParameterException("Invalid number for limit! The limit must be between 1 and 500, " . $limit . " passed!");
-            } else {
-                $this->_limit = intval($limit);
             }
 
+            if(intval($limit) < 1 || intval($limit) > 500) {
+                throw new IGDBInvalidParameterException("Invalid number for limit! The limit must be between 1 and 500, " . $limit . " passed!");
+            }
+
+            $this->_limit = intval($limit);
             return $this;
         }
 
@@ -261,16 +263,14 @@
          * @throws IGDBInvalidParameterException if passed as a string without the 3 segments or the passed array does not contain the 3 indexes field, postfix and value. Also if postfix is invalid
          */
         public function where($where) {
-            $available_postfixes = array('=', '!=', '>', '>=', '<', '<=', '~');
-
             if(is_string($where)) {
                 $segments = explode(" ", $where);
 
                 if(count($segments) == 3) {
                     $split = explode(" ", $where);
 
-                    if(array_search($split[1], $available_postfixes) === false) {
-                        throw new IGDBInvalidParameterException("Passed postfix $split[1] is invalid! Available postfixes: " . implode(", ", $available_postfixes));
+                    if(array_search($split[1], IGDBW_POSTFIXES) === false) {
+                        throw new IGDBInvalidParameterException("Passed postfix $split[1] is invalid! Available postfixes: " . implode(", ", IGDBW_POSTFIXES));
                     }
 
                     array_push($this->_where, array(
@@ -283,8 +283,8 @@
                 }
             } else if(is_array($where)) {
                 if(array_key_exists("field", $where) && array_key_exists("postfix", $where) && array_key_exists("value", $where)) {
-                    if(array_search($where["postfix"], $available_postfixes) === false) {
-                        throw new IGDBInvalidParameterException("Passed postfix " . $where["postfix"] . " is invalid! Available postfixes: " . implode(", ", $available_postfixes));
+                    if(array_search($where["postfix"], IGDBW_POSTFIXES) === false) {
+                        throw new IGDBInvalidParameterException("Passed postfix " . $where["postfix"] . " is invalid! Available postfixes: " . implode(", ", IGDBW_POSTFIXES));
                     }
 
                     array_push($this->_where, array(
@@ -358,12 +358,11 @@
          * @throws IGDBInvalidParameterException if a non-string value is passed to the method.
          */
         public function name($name) {
-            if(gettype($name) == "string") {
-                $this->_name = $name;
-            } else {
+            if(!is_string($name)) {
                 throw new IGDBInvalidParameterException("Invalid type of parameter for name! A string is expected, " . gettype($name) . " passed!");
             }
 
+            $this->_name = $name;
             return $this;
         }
 
@@ -374,51 +373,9 @@
          * @throws IGDBInvalidParameterException if a non-string value is passed to the method.
          */
         public function endpoint($endpoint) {
-            if(gettype($endpoint) == "string") {
-                $available_endpoints = array(
-                    "age_rating_content_description" => "age_rating_content_descriptions",
-                    "age_rating" => "age_ratings",
-                    "alternative_name" => "alternative_names",
-                    "artwork" => "artworks",
-                    "character_mug_shot" => "character_mug_shots",
-                    "character" => "characters",
-                    "collection" => "collections",
-                    "company_logo" => "company_logos",
-                    "company_website" => "company_websites",
-                    "company" => "companies",
-                    "cover" => "covers",
-                    "external_game" => "external_games",
-                    "franchise" => "franchises",
-                    "game_engine_logo" => "game_engine_logos",
-                    "game_engine" => "game_engines",
-                    "game_mode" => "game_modes",
-                    "game_version_feature_value" => "game_version_feature_values",
-                    "game_version_feature" => "game_version_features",
-                    "game_version" => "game_versions",
-                    "game_video" => "game_videos",
-                    "game" => "games",
-                    "genre" => "genres",
-                    "involved_company" => "involved_companies",
-                    "keyword" => "keywords",
-                    "multiplayer_mode" => "multiplayer_modes",
-                    "multiquery" => "multiquery",
-                    "platform_family" => "platform_families",
-                    "platform_logo" => "platform_logos",
-                    "platform_version_company" => "platform_version_companies",
-                    "platform_version_release_date" => "platform_version_release_dates",
-                    "platform_version" => "platform_versions",
-                    "platform_website" => "platform_websites",
-                    "platform" => "platforms",
-                    "player_perspective" => "player_perspectives",
-                    "release_date" => "release_dates",
-                    "screenshot" => "screenshots",
-                    "search" => "search",
-                    "theme" => "themes",
-                    "website" => "websites"
-                );
-
-                if(array_key_exists($endpoint, $available_endpoints)) {
-                    $this->_endpoint = $available_endpoints[$endpoint];
+            if(is_string($endpoint)) {
+                if(array_key_exists($endpoint, IGDBW_ENDPOINTS)) {
+                    $this->_endpoint = IGDBW_ENDPOINTS[$endpoint];
                 } else {
                     throw new IGDBInvalidParameterException("The passed endpoint \"$endpoint\" is invalid. Make sure to use the name of the endpoint, not it's path!");
                 }
@@ -436,34 +393,44 @@
          * @throws IGDBInvalidParameterException if a non-boolean value is passed to the method.
          */
         public function count($count = true) {
-            if(gettype($count) == "boolean") {
-                $this->_count = $count;
-            } else {
+            if(!is_bool($count)) {
                 throw new IGDBInvalidParameterException("Invalid type of parameter for endpoint! A boolean is expected, " . gettype($count) . " passed!");
             }
 
+            $this->_count = $count;
             return $this;
         }
 
         /**
-         * Building the apicalypse query from the configured object
-         * @param $multiquery - whether a multiquery string is required or a simple endpoint query
-         * @throws IGDBInavlidParameterException if a non-boolean parameter is passed to the method
-         * @return string the apicalpyse query string
+         * Building the apicalpyse query string for multiquery requests.
+         * @throws IGBDInvalidParameterException if the name or endpoint properties are not set in the builder configuration
+         * @return string Apicalypse formatted multiquery query string
          */
-        public function build($multiquery = false) {
-            if(gettype($multiquery) != "boolean") {
-                throw new IGDBInvalidParameterException("Invalid type of parameter for build! A boolean is expected, " . gettype($multiquery) . "passed!");
+        public function build_multiquery() {
+            if($this->_name == null) {
+                throw new IGDBInvalidParameterException("The name parameter for the multiquery is not set!");
             }
 
-            return $multiquery ? $this->multiquery() : $this->query();
+            if($this->_endpoint == null) {
+                throw new IGDBInvalidParameterException("The endpoint parameter for the multiquery is not set!");
+            }
+
+            $query = "query " . $this->_endpoint . ($this->_count ? "/count" : "") . " \"" . addslashes($this->_name) . "\" {\n";
+
+            foreach(explode("\n", $this->build()) as $line) {
+                $query .= "  $line\n";
+            }
+
+            $query .= "};";
+
+            return $query;
         }
 
         /**
-         * Building the Apicalypse query string from the configured object for endpoint query requests
-         * @return string Apicalypse formatted query string
+         * Building the apicalypse query from the configured object
+         * @return string the apicalpyse query string
          */
-        private function query() {
+        public function build() {
             $segments = array();
 
             foreach(array("fields", "search", "exclude", "limit", "offset", "where", "sort") as $parameter) {
@@ -531,31 +498,6 @@
             }
 
             return implode(";\n", $segments) . ";";
-        }
-
-        /**
-         * Building the apicalpyse query string for multiquery requests.
-         * @throws IGBDInvalidParameterException if the name or endpoint properties are not set in the builder configuration
-         * @return string Apicalypse formatted multiquery query string
-         */
-        private function multiquery() {
-            if($this->_name == null) {
-                throw new IGDBInvalidParameterException("The name parameter for the multiquery is not set!");
-            }
-
-            if($this->_endpoint == null) {
-                throw new IGDBInvalidParameterException("The endpoint parameter for the multiquery is not set!");
-            }
-
-            $query = "query " . $this->_endpoint . ($this->_count ? "/count" : "") . " \"" . addslashes($this->_name) . "\" {\n";
-
-            foreach(explode("\n", $this->query()) as $line) {
-                $query .= "  $line\n";
-            }
-
-            $query .= "};";
-
-            return $query;
         }
 
     }
