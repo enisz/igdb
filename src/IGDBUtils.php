@@ -30,10 +30,10 @@
             curl_setopt($ch, CURLOPT_URL, "https://id.twitch.tv/oauth2/token?client_id=$client_id&client_secret=$client_secret&grant_type=client_credentials");
 
             $response = json_decode(curl_exec($ch));
-            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
-            if($responseCode < 200 || $responseCode > 299) {
+            if($response_code < 200 || $response_code > 299) {
                 throw new Exception($response->message, $response->status);
             } else {
                 return $response;
@@ -92,11 +92,11 @@
             curl_setopt($ch, CURLOPT_POSTFIELDS, "url=$url&method=$method&secret=$secret");
 
             $response = json_decode(curl_exec($ch));
-            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
-            if($responseCode < 200 || $responseCode > 299) {
-                throw new Exception("Failed to create webhook!", $responseCode);
+            if($response_code < 200 || $response_code > 299) {
+                throw new Exception("Failed to create webhook!", $response_code);
             } else {
                 return $response;
             }
@@ -123,11 +123,11 @@
             ));
 
             $response = json_decode(curl_exec($ch));
-            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
-            if($responseCode < 200 || $responseCode > 299) {
-                throw new Exception("Failed to delete webhook!", $responseCode);
+            if($response_code < 200 || $response_code > 299) {
+                throw new Exception("Failed to delete webhook!", $response_code);
             } else {
                 return $response;
             }
