@@ -5,12 +5,13 @@
      *
      * A utility class for useful methods
      *
-     * @version 1.0.0
+     * @version 2.0.0
      * @author Enisz Abdalla <enisz87@gmail.com>
      * @link https://github.com/enisz/igdb
      */
 
     require_once "IGDBInvalidParameterException.php";
+    require_once "IGDBConstants.php";
 
     class IGDBUtils {
 
@@ -22,16 +23,15 @@
          * @throws Exception If a non-success response is returned
          */
         public static function authenticate($client_id, $client_secret) {
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_URL, "https://id.twitch.tv/oauth2/token?client_id=$client_id&client_secret=$client_secret&grant_type=client_credentials");
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_URL, "https://id.twitch.tv/oauth2/token?client_id=$client_id&client_secret=$client_secret&grant_type=client_credentials");
 
-            $info = curl_getinfo($curl);
-            $response = json_decode(curl_exec($curl));
-            $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            curl_close($curl);
+            $response = json_decode(curl_exec($ch));
+            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
 
             if($responseCode < 200 || $responseCode > 299) {
                 throw new Exception($response->message, $response->status);
@@ -49,34 +49,131 @@
          * @throws IGDBInvalidParameterException If the size parameter is not valid.
          */
         public static function image_url($image_id, $size) {
-            $possible_sizes = array(
-                "cover_small",
-                "cover_small_2x",
-                "screenshot_med",
-                "screenshot_med_2x",
-                "cover_big",
-                "cover_big_2x",
-                "logo_med",
-                "logo_med_2x",
-                "screenshot_big",
-                "screenshot_big_2x",
-                "screenshot_huge",
-                "screenshot_huge_2x",
-                "thumb",
-                "thumb_2x",
-                "micro",
-                "micro_2x",
-                "720p",
-                "720p_2x",
-                "1080p",
-                "1080p_2x"
-            );
-
-            if(array_search($size, $possible_sizes) === false) {
-                throw new IGDBInvalidParameterException("Invalid size parameter " . $size . " for image_url!");
+            if(array_search($size, IGDBW_IMAGE_SIZES) === false) {
+                throw new IGDBInvalidParameterException("Invalid size parameter $size for image_url!");
             }
 
             return "https://images.igdb.com/igdb/image/upload/t_$size/$image_id.jpg";
+        }
+
+        /**
+         * Create a webhook
+         * @param $client_id IGDB Client ID
+         * @param $access_token generated IGDB Access Token
+         * @param $endpoint name of the endpoint for the webhook
+         * @param $method type of the expected data
+         * @param $url the url expecting the webhook data
+         * @param $secret password for the webhook
+         * @see https://api-docs.igdb.com/#webhooks
+         * @return object registered webhook data
+         * @throws IGDBInvalidParameterException if the name of the endpoint is invalid
+         * @throws IGDBInvalidParameterException if the method parameter is invalid
+         * @throws Exception If a non-success response is returned
+         */
+        public static function create_webhook($client_id, $access_token, $endpoint, $method, $url, $secret) {
+            if(!array_key_exists($endpoint, IGDBW_ENDPOINTS)) {
+                throw new IGDBInvalidParameterException("Invalid Endpoint name $endpoint!");
+            }
+
+            if(!in_array(strtolower($method), IGDBW_WEBHOOK_ACTIONS)) {
+                throw new IGDBInvalidParameterException("Invalid method '$method'! It has to be one of " . implode(", ", IGDBW_WEBHOOK_ACTIONS) . "!");
+            }
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_URL, IGDBW_API_URL . "/" . IGDBW_ENDPOINTS[$endpoint] . "/webhooks");
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Client-ID: $client_id",
+                "Authorization: Bearer $access_token",
+                "Content-Type: application/x-www-form-urlencoded"
+            ));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, "url=$url&method=$method&secret=$secret");
+
+            $response = json_decode(curl_exec($ch));
+            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if($responseCode < 200 || $responseCode > 299) {
+                throw new Exception("Failed to create webhook!", $responseCode);
+            } else {
+                return $response;
+            }
+        }
+
+        /**
+         * Delete a webhook
+         * @param $client_id IGDB Client ID
+         * @param $access_token generated IGDB Access Token
+         * @param $id ID of the webhook
+         * @see https://api-docs.igdb.com/#webhooks
+         * @return object deleted webhook data
+         * @throws Exception If a non-success response is returned
+         */
+        public static function delete_webhook($client_id, $access_token, $id) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+            curl_setopt($ch, CURLOPT_URL, IGDBW_API_URL . "/webhooks/$id");
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Client-ID: $client_id",
+                "Authorization: Bearer $access_token"
+            ));
+
+            $response = json_decode(curl_exec($ch));
+            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if($responseCode < 200 || $responseCode > 299) {
+                throw new Exception("Failed to delete webhook!", $responseCode);
+            } else {
+                return $response;
+            }
+        }
+
+        /**
+         * Get a webhook
+         * @param $client_id IGDB Client ID
+         * @param $access_token generated IGDB Access Token
+         * @param $id ID of the webhook
+         * @see https://api-docs.igdb.com/#webhooks
+         * @return object webhook data
+         */
+        public static function get_webhook($client_id, $access_token, $id) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+            curl_setopt($ch, CURLOPT_URL, IGDBW_API_URL . "/webhooks/$id");
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Client-ID: $client_id",
+                "Authorization: Bearer $access_token"
+            ));
+
+            return json_decode(curl_exec($ch));
+        }
+
+        /**
+         * Get all webhooks
+         * @param $client_id IGDB Client ID
+         * @param $access_token generated IGDB Access Token
+         * @see https://api-docs.igdb.com/#webhooks
+         * @return array all webhooks
+         */
+        public static function get_webhooks($client_id, $access_token) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+            curl_setopt($ch, CURLOPT_URL, IGDBW_API_URL . "/webhooks");
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Client-ID: $client_id",
+                "Authorization: Bearer $access_token"
+            ));
+
+            return json_decode(curl_exec($ch));
         }
     }
 

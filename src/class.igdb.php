@@ -1,6 +1,7 @@
 <?php
 
     // Exposing all files for import from one file
+    require_once "IGDBConstants.php";
     require_once "IGDBEndpointException.php";
     require_once "IGDBInvalidParameterException.php";
     require_once "IGDBQueryBuilder.php";
