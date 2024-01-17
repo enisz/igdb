@@ -1,0 +1,13 @@
+div#toaster-container {
+    @media (max-width: 576px) {
+        width: calc(100% - 20px);
+    }
+
+    width: 400px;
+    margin-left: auto;
+    position: fixed;
+    right: 10px;
+    left: 10px;
+    bottom: 10px;
+    z-index: 999;
+}

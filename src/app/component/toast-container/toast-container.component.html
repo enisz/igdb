@@ -1,0 +1,10 @@
+<div id="toaster-container">
+    @for (toast of getToasts(); track toast.id) {
+        <app-toast
+            [id]="toast.id"
+            [message]="toast.message"
+            [type]="toast.type"
+            [timeout]="toast.timeout"
+        ></app-toast>
+    }
+</div>

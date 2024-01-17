@@ -29,6 +29,7 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
   public stepSize = 3;
   private subscriptions: Subscription[] = [];
   private removingHistoryItem = false;
+  private visible = false;
 
   public constructor(
     private readonly searchService: SearchService,
@@ -49,6 +50,7 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(
       this.searchService.searchModalVisibleObservable().subscribe(
         (visible: boolean) => {
+          this.visible = visible;
           if (visible) {
             const modalOptions: NgbModalOptions = {
               scrollable: true,
@@ -161,6 +163,7 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   private handleKeyboardEvents(event: KeyboardEvent): void {
+    if (!this.visible) return;
     const { key, ctrlKey } = event;
 
     // open
@@ -190,12 +193,12 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // home
     if (key.toLowerCase() === 'home') {
-      this.handleKeyHome();
+      this.handleKeyHome(event);
     }
 
     // end
     if (key.toLowerCase() === 'end') {
-      this.handleKeyEnd();
+      this.handleKeyEnd(event);
     }
 
     // page down
@@ -220,6 +223,14 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private handleKeyArrowUp(event: KeyboardEvent): void {
     event.preventDefault();
+    if (this.activeRow === -1) {
+      this.activeRow = this.groupItemCount;
+    }
+
+    if (this.activeRow === 0) {
+      this.activeRow = this.groupItemCount;
+    }
+
     if (this.activeRow > 0) {
       this.activeRow--;
     }
@@ -229,6 +240,11 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private handleKeyArrowDown(event: KeyboardEvent): void {
     event.preventDefault();
+
+    if (this.activeRow === this.groupItemCount - 1) {
+      this.activeRow = -1;
+    }
+
     if (this.activeRow < this.groupItemCount - 1) {
       this.activeRow++;
     }
@@ -254,13 +270,15 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private handleKeyHome(): void {
+  private handleKeyHome(event: KeyboardEvent): void {
+    event.preventDefault();
     this.activeRow = 0;
 
     this.scrollIfRequired();
   }
 
-  private handleKeyEnd(): void {
+  private handleKeyEnd(event: KeyboardEvent): void {
+    event.preventDefault();
     this.activeRow = this.groupItemCount - 1;
 
     this.scrollIfRequired();

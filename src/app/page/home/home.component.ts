@@ -12,17 +12,17 @@ import { ViewportService } from '../../service/viewport.service';
 import { IViewportBreakpoint } from '../../interface/viewport.interface';
 import { Subscription } from 'rxjs';
 import { NtkmeButtonModule } from '@ctrl/ngx-github-buttons';
-import { SearchFieldDirective } from '../../directive/search-field.directive';
-import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgbCollapse, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { IToken } from '../../interface/token.interface';
-import { ToastrService } from 'ngx-toastr';
 import { TokenService } from '../../service/token.service';
+import { SearchFormComponent } from '../../component/search-form/search-form.component';
+import { ToastService } from '../../service/toast.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [TopBarComponent, PageFooterComponent, RouterLink, CommonModule, NtkmeButtonModule, SearchFieldDirective, NgbCollapse, ReactiveFormsModule],
+  imports: [TopBarComponent, PageFooterComponent, RouterLink, CommonModule, NtkmeButtonModule, NgbCollapse, ReactiveFormsModule, NgbTooltipModule, SearchFormComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -36,20 +36,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   public count = true;
   public size: 'none' | 'large' = 'large';
   public types: ('star' | 'follow' | 'watch' | 'fork' | 'issue' | 'download')[] = ['follow', 'star', 'watch'];
+  private tokenValidatorPattern = '^[0-9a-z]*$';
   public tokenForm: FormGroup;
   private subscriptions: Subscription[] = [];
   public constructor(
     private readonly documentationService: DocumentationService,
     private readonly gitService: GitService,
     private readonly viewportService: ViewportService,
-    private readonly toastrService: ToastrService,
     private readonly tokenService: TokenService,
     private readonly viewportScroller: ViewportScroller,
+    private readonly toastService: ToastService,
   ) {
     const { clientId, accessToken } = this.getTokens();
     this.tokenForm = new FormGroup({
-      clientId: new FormControl(clientId, [Validators.required, Validators.pattern('^[0-9a-z]{30}$')]),
-      accessToken: new FormControl(accessToken, [Validators.required, Validators.pattern('^[0-9a-z]{30}$')]),
+      clientId: new FormControl(clientId, [Validators.required, Validators.minLength(30), Validators.maxLength(30), Validators.pattern(this.tokenValidatorPattern)]),
+      accessToken: new FormControl(accessToken, [Validators.required, Validators.minLength(30), Validators.maxLength(30), Validators.pattern(this.tokenValidatorPattern)]),
       remember: new FormControl(true),
     });
   }
@@ -65,15 +66,26 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
 
+  public getValidationErrors(controlName: string): string[] {
+    const control = this.tokenForm.get(controlName);
+
+    if (control && control.errors !== null) {
+      return Object.keys(control.errors);
+    }
+
+    return [];
+  }
+
   public toggleCollapse(): void {
     this.isCollapsed = !this.isCollapsed;
 
     if (this.isCollapsed) {
       this.viewportScroller.scrollToPosition([0, 0]);
+      this.resetTokenForm();
     } else {
-      setTimeout(
-        () => this.viewportScroller.scrollToPosition([0, this.collapse.nativeElement.getBoundingClientRect().top - 90])
-      );
+        setTimeout(
+          () => this.viewportScroller.scrollToPosition([0, this.collapse.nativeElement.getBoundingClientRect().top - 90])
+        );
     }
   }
 
@@ -82,26 +94,44 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   public setTokens(): void {
-    const tokens: IToken = {
-      clientId: this.tokenForm.get('clientId')?.value || '',
-      accessToken: this.tokenForm.get('accessToken')?.value || ''
-    }
-    const { value: remember } = this.tokenForm.get('remember')?.value;
+    const clientId = this.tokenForm.get('clientId')?.value || '';
+    const accessToken = this.tokenForm.get('accessToken')?.value || '';
+    const remember = this.tokenForm.get('remember')?.value;
 
-    this.tokenService.setTokens(tokens, remember);
+    this.tokenService.setTokens(clientId, accessToken, remember);
+    this.tokenForm.markAsUntouched();
+    this.toastService.success('Tokens saved succesfully!');
   }
 
   public deleteTokens(): void {
     this.tokenService.clearTokens();
-    this.tokenForm.get('clientId')?.setValue('');
-    this.tokenForm.get('accessToken')?.setValue('');
-    this.tokenForm.get('remember')?.setValue(true);
-    this.toastrService.success('Your tokens are deleted!');
+    this.resetTokenForm();
+    this.toastService.info('Tokens deleted successfuly!');
   }
 
   public ngOnDestroy(): void {
     for (const subscription of this.subscriptions) {
       subscription?.unsubscribe();
     }
+  }
+
+  private resetTokenForm(): void {
+    const { clientId, accessToken } = this.tokenService.getTokens();
+    const remember = this.tokenService.isRemembered() || true;
+    this.tokenForm.reset({ clientId, accessToken, remember });
+  }
+
+  private tokensAlreadySavedValidator(form: AbstractControl): ValidationErrors | null {
+    const error: ValidationErrors = {};
+
+    const fromClientId = form.get('clientId')?.value;
+    const formAccessToken = form.get('accessToken')?.value;
+    const { clientId, accessToken } = this.tokenService.getTokens();
+
+    if (fromClientId === clientId && formAccessToken === accessToken) {
+      error['alreadySaved'] = true;
+    }
+
+    return Object.keys(error).length ? error : null;
   }
 }

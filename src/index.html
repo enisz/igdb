@@ -12,7 +12,17 @@
   <app-root>
     <ng-container *ngIf="!(applicationInitStatus.donePromise | async)">
       <div id="app-loader">
-        <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <div class="lds-roller">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+
         <p>Loading Database...</p>
       </div>
     </ng-container>

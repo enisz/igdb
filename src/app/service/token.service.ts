@@ -6,31 +6,36 @@ import { IToken } from '../interface/token.interface';
 })
 export class TokenService {
 
+  private clientIdKey = 'clientId';
+  private accessTokenKey = 'accessToken';
+
   constructor() { }
+
+  public isRemembered(): boolean {
+    return !!localStorage.getItem(this.clientIdKey);
+  }
 
   public getTokens(): IToken {
     return {
-      clientId: localStorage.getItem('client-id') || sessionStorage.getItem('client-id') || '',
-      accessToken: localStorage.getItem('access-token') || sessionStorage.getItem('access-token') || '',
+      clientId: localStorage.getItem(this.clientIdKey) || sessionStorage.getItem(this.clientIdKey) || '',
+      accessToken: localStorage.getItem(this.accessTokenKey) || sessionStorage.getItem(this.accessTokenKey) || '',
     };
   }
 
-  public setTokens(token: IToken, remember: boolean): void {
-    const { clientId, accessToken } = token;
-
+  public setTokens(clientId: string, accessToken: string, remember: boolean): void {
     if (remember) {
-      localStorage.setItem('client-id', clientId);
-      localStorage.setItem('access-token', accessToken);
+      localStorage.setItem(this.clientIdKey, clientId);
+      localStorage.setItem(this.accessTokenKey, accessToken);
     } else {
-      sessionStorage.setItem('client-id', clientId);
-      sessionStorage.setItem('access-token', accessToken);
+      sessionStorage.setItem(this.clientIdKey, clientId);
+      sessionStorage.setItem(this.accessTokenKey, accessToken);
     }
   }
 
   public clearTokens(): void {
-    localStorage.removeItem('client-id');
-    localStorage.removeItem('access-token');
-    sessionStorage.removeItem('client-id');
-    sessionStorage.removeItem('access-token');
+    localStorage.removeItem(this.clientIdKey);
+    localStorage.removeItem(this.accessTokenKey);
+    sessionStorage.removeItem(this.clientIdKey);
+    sessionStorage.removeItem(this.accessTokenKey);
   }
 }

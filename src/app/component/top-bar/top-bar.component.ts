@@ -6,12 +6,13 @@ import { IRelease } from '../../interface/git.interface';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { NgbDropdownModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
-import { SearchFieldDirective } from '../../directive/search-field.directive';
+import { SearchFormComponent } from '../search-form/search-form.component';
+import { ToastService } from '../../service/toast.service';
 
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgbDropdownModule, SearchFieldDirective, NgbTooltipModule, DatePipe],
+  imports: [CommonModule, RouterLink, NgbDropdownModule, NgbTooltipModule, DatePipe, SearchFormComponent],
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.scss'
 })
@@ -21,10 +22,12 @@ export class TopBarComponent implements OnInit, OnDestroy {
   public latestRelease!: IRelease;
   private subscriptions: Subscription[] = [];
   public isOnline = true;
+  public percentage = 0;
 
   public constructor(
     private readonly networkService: NetworkService,
     private readonly gitService: GitService,
+    private readonly toastService: ToastService,
   ) { }
 
   public async ngOnInit(): Promise<void> {
@@ -42,10 +45,6 @@ export class TopBarComponent implements OnInit, OnDestroy {
     }
   }
 
-  public downloadLatestRelease(): any {
-    console.log(this.latestRelease);
-  }
-
   public toggleSidebar(): void {
     const sidebarElement = document.getElementById('docs-sidebar') as HTMLDivElement;
     const sidebarVisible = sidebarElement.classList.contains('sidebar-visible');
@@ -57,5 +56,9 @@ export class TopBarComponent implements OnInit, OnDestroy {
       sidebarElement.classList.remove('sidebar-hidden');
       sidebarElement.classList.add('sidebar-visible');
     }
+  }
+
+  public downloadNotification(): void {
+    this.toastService.info(`Downloading ${this.latestRelease.name}!`)
   }
 }

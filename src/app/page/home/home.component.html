@@ -7,10 +7,7 @@
         <h1 class="page-heading single-col-max mx-auto">Documentation</h1>
         <div class="page-intro single-col-max mx-auto">IGDB PHP Wrapper</div>
         <div class="main-search-box pt-3 d-block mx-auto">
-             <form class="search-form w-100">
-                <input type="text" name="search" class="form-control search-input" searchField>
-                <button type="button" class="btn search-btn" value="Search" disabled><i class="fas fa-search"></i></button>
-            </form>
+            <app-search-form></app-search-form>
         </div>
         <div class="github-button-container">
             @for (type of types; track $index) {
@@ -33,7 +30,7 @@
             <div class="row">
                 <div class="col text-center">
                     <button
-                        class="btn btn-link mb-3"
+                        class="btn btn-light mb-3"
                         type="button"
                         (click)="toggleCollapse()"
                     >
@@ -71,25 +68,56 @@
                                     </div>
                                 </div>
                                 <form [formGroup]="tokenForm">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-sm-6 col-12 mb-2">
-                                                <div class="input-group">
-                                                    <span class="input-group-text" id="client-id-addon">
-                                                        <i class="fa-solid fa-id-card"></i>
-                                                    </span>
-                                                    <input type="text" class="form-control" placeholder="Client ID" formControlName="clientId">
+                                    <div class="row">
+                                        <div class="col-md-6 col-12 mb-2">
+                                            <div class="input-group">
+                                                <span class="input-group-text" id="client-id-addon">
+                                                    <i class="fa-solid fa-id-card"></i>
+                                                </span>
+                                                <input type="text" class="form-control token-field" [ngClass]="{ 'is-valid': tokenForm.get('clientId')?.valid && tokenForm.dirty, 'is-invalid': !tokenForm.get('clientId')?.valid && tokenForm.dirty}" placeholder="Client ID" formControlName="clientId">
+                                                <div class="valid-feedback ms-5 mt-2">
+                                                    Looks like a valid client ID!
+                                                </div>
+                                                <div class="invalid-feedback ms-5 mt-2">
+                                                    @for (error of getValidationErrors('clientId'); track $index) {
+                                                        @if(error === 'pattern') { <span class="d-block">Doesn't seem to be a valid token!</span> }
+                                                        @if(error === 'minlength') { <span class="d-block">Token is not long enough!</span> }
+                                                        @if(error === 'maxlength') { <span class="d-block">Token is too long!</span> }
+                                                        @if(error === 'required') { <span class="d-block">This field cannot be empty!</span> }
+                                                    }
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 col-12 mb-2">
-                                                <div class="input-group">
-                                                    <span class="input-group-text" id="client-id-addon">
-                                                        <i class="fa-solid fa-key"></i>
-                                                    </span>
-                                                    <input type="text" class="form-control" placeholder="Access Token" formControlName="accessToken">
+                                        </div>
+                                        <div class="col-md-6 col-12 mb-2">
+                                            <div class="input-group">
+                                                <span class="input-group-text" id="client-id-addon">
+                                                    <i class="fa-solid fa-key"></i>
+                                                </span>
+                                                <input type="text" class="form-control token-field" [ngClass]="{ 'is-valid': tokenForm.get('accessToken')?.valid && tokenForm.dirty, 'is-invalid': !tokenForm.get('accessToken')?.valid && tokenForm.dirty}" placeholder="Access Token" formControlName="accessToken">
+                                                <div class="valid-feedback ms-5 mt-2">
+                                                    Looks like a valid access token!
+                                                </div>
+                                                <div class="invalid-feedback ms-5 mt-2">
+                                                    @for (error of getValidationErrors('accessToken'); track $index) {
+                                                        @if(error === 'pattern') { <span class="d-block">Doesn't seem to be a valid token!</span> }
+                                                        @if(error === 'minlength') { <span class="d-block">Token is not long enough!</span> }
+                                                        @if(error === 'maxlength') { <span class="d-block">Token is too long!</span> }
+                                                        @if(error === 'required') { <span class="d-block">This field cannot be empty!</span> }
+                                                    }
                                                 </div>
                                             </div>
-                                            <div class="col-12 callout-block callout-block-info me-1">
+                                        </div>
+                                        <!-- <div class="col-12 order-4 order-md-4">
+                                            @if(tokenForm.getError('alreadySaved') !== null && tokenForm.dirty) {
+                                                <div class="col-12 alert alert-danger mb-0" role="alert">
+                                                    These tokens are already saved!
+                                                </div>
+                                            }
+                                        </div> -->
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="callout-block callout-block-info me-1">
                                                 <div class="content">
                                                     <h4 class="callout-title">
                                                         <span class="callout-icon-holder">
@@ -100,13 +128,13 @@
                                                     <p>Checking "Remember my tokens!" means your tokens will be saved in the local storage of your browser and they will be available on your next visit. If unchecked, the toknes are stored in your browser's session storage, meaning your tokens will be erased when you close your browser.</p>
                                                 </div>
                                             </div>
-                                            <div class="col-12">
-                                                <div class="form-check mb-3">
-                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" formControlName="remember">
-                                                    <label class="form-check-label" for="flexCheckChecked">
-                                                        Remember my tokens!
-                                                    </label>
-                                                </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="flexCheckChecked" formControlName="remember">
+                                                <label class="form-check-label" for="flexCheckChecked">
+                                                    Remember my tokens!
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -120,10 +148,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                @if(tokenForm.dirty && tokenForm.getError('alreadySaved')) {
+                                    <div class="d-flex flex-row-reverse">
+                                        <small>
+                                            Tokens are already saved!
+                                        </small>
+                                    </div>
+                                }
                                 <p class="mb-0 d-flex flex-row-reverse">
-                                    <button class="btn btn-success btn-sm ms-2" [disabled]="!tokenForm.valid" (click)="setTokens()">Save</button>
+                                    <button class="btn btn-success btn-sm ms-2" [disabled]="!tokenForm.valid" (click)="setTokens()">{{ getTokens().clientId === '' ? 'Save' : 'Update' }}</button>
                                     <button class="btn btn-light btn-sm ms-2" (click)="toggleCollapse()">Close</button>
                                 </p>
+
                             </div>
                         </div>
                     </div>

@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { NetworkService } from './service/network.service';
 import { Subscription } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
 import { SearchModalComponent } from './component/search-modal/search-modal.component';
+import { ToastContainerComponent } from './component/toast-container/toast-container.component';
+import { ToastService } from './service/toast.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, SearchModalComponent],
+  imports: [CommonModule, RouterOutlet, SearchModalComponent, ToastContainerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -19,7 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public constructor(
     @Inject(APP_INITIALIZER) public applicationInitStatus: ApplicationInitStatus,
     private readonly networkService: NetworkService,
-    private readonly toastrService: ToastrService,
+    private readonly toastService: ToastService,
   ) {}
 
   public ngOnInit(): void {
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.networkService.getStatusObservable().subscribe(
         (online: boolean) => {
           if (!online) {
-            this.toastrService.warning('No network connection detected!');
+            this.toastService.warning('Network connection lost!');
           }
         }
       )

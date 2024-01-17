@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ViewportService } from '../../../service/viewport.service';
 import { Subscription } from 'rxjs';
 import { IViewportDimension } from '../../../interface/viewport.interface';
@@ -7,16 +7,17 @@ import { TopicDocumentMethods, TopicDocumentType } from '../../../database/docum
 import { SectionDocumentMethods, SectionDocumentType } from '../../../database/document/section.document';
 import { DocumentationService } from '../../../service/documentation.service';
 import { RouterLink } from '@angular/router';
-import { SearchFieldDirective } from '../../../directive/search-field.directive';
 import { ScrollSpyService } from '../../../service/scroll-spy.service';
 import { CommonModule } from '@angular/common';
+import { SearchFormComponent } from '../../../component/search-form/search-form.component';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, SearchFieldDirective, CommonModule],
+  imports: [RouterLink, CommonModule, SearchFormComponent],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss'
+  styleUrl: './sidebar.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class SidebarComponent implements OnInit, AfterViewInit, OnDestroy {
   public topics: RxDocument<TopicDocumentType, TopicDocumentMethods>[] = [];
