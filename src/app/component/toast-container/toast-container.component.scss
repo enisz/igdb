@@ -3,6 +3,11 @@ div#toaster-container {
         width: calc(100% - 20px);
     }
 
+    // & > app-toast {
+    //     position: relative;
+    //     top: 56px;
+    // }
+
     width: 400px;
     margin-left: auto;
     position: fixed;

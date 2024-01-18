@@ -3,20 +3,37 @@ import { ToastComponent } from './toast/toast.component';
 import { IToast } from '../../interface/toast.interface';
 import { ToastService } from '../../service/toast.service';
 import { Subscription } from 'rxjs';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { ViewportService } from '../../service/viewport.service';
+import { IViewportBreakpoint } from '../../interface/viewport.interface';
 
 @Component({
   selector: 'app-toast-container',
   standalone: true,
   imports: [ToastComponent],
   templateUrl: './toast-container.component.html',
-  styleUrl: './toast-container.component.scss'
+  styleUrl: './toast-container.component.scss',
+  animations: [
+    trigger('fade', [
+      transition(':enter', [
+        style({ position: 'relative', top: '56px' }),
+        animate(150, style({ top: '0px', minHeight: '50px' })),
+      ]),
+      transition(':leave', [
+        style({ position: 'relative', left: '0%' }),
+        animate(150, style({ left: '100%' }))
+      ]),
+    ])
+  ],
 })
 export class ToastContainerComponent implements OnInit, OnDestroy {
+  public isSm = false;
   public toasts: {[key: number]: IToast} = {};
   private subscriptions: Subscription[] = [];
 
   public constructor(
     private readonly toastService: ToastService,
+    private readonly viewportService: ViewportService,
   ) {}
 
   public ngOnInit(): void {
@@ -24,7 +41,13 @@ export class ToastContainerComponent implements OnInit, OnDestroy {
       this.toastService.getToastObservable().subscribe(
         (toast: {[key: number]: IToast}) => this.toasts = toast
       )
-    )
+    );
+
+    this.subscriptions.push(
+      this.viewportService.getBreakpointObservable().subscribe(
+        (breakpoint: IViewportBreakpoint) => this.isSm = breakpoint === 'sm'
+      )
+    );
   }
 
   public ngOnDestroy(): void {
