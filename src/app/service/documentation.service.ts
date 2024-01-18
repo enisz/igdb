@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { DatabaseService } from './database.service';
-import { TopicDocumentMethods, TopicDocumentType } from '../database/document/topic.document';
 import { MangoQuery, RxDocument } from 'rxdb';
 import { SectionDocumentMethods, SectionDocumentType } from '../database/document/section.document';
+import { TopicDocumentMethods, TopicDocumentType } from '../database/document/topic.document';
+import { DatabaseService } from './database.service';
 
 @Injectable({
   providedIn: 'root'

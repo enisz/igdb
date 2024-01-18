@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { ACCESS_TOKEN_REGEXP, CLIENT_ID_REGEXP } from '../app.constant';
 import { TokenService } from '../service/token.service';
-import { CLIENT_ID_REGEXP, ACCESS_TOKEN_REGEXP } from '../app.constant';
 
 @Pipe({
   name: 'token',

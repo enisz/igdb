@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ToastComponent } from './toast/toast.component';
-import { IToast } from '../../interface/toast.interface';
-import { ToastService } from '../../service/toast.service';
-import { Subscription } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { ViewportService } from '../../service/viewport.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { IToast } from '../../interface/toast.interface';
 import { IViewportBreakpoint } from '../../interface/viewport.interface';
+import { ToastService } from '../../service/toast.service';
+import { ViewportService } from '../../service/viewport.service';
+import { ToastComponent } from './toast/toast.component';
 
 @Component({
   selector: 'app-toast-container',

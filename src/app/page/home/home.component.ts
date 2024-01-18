@@ -1,23 +1,23 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { TopBarComponent } from '../../component/top-bar/top-bar.component';
-import { RxDocument } from 'rxdb';
-import { TopicDocumentType, TopicDocumentMethods } from '../../database/document/topic.document';
-import { PageFooterComponent } from '../../component/page-footer/page-footer.component';
-import { RouterLink } from '@angular/router';
-import { DocumentationService } from '../../service/documentation.service';
-import { ICommits } from '../../interface/git.interface';
-import { GitService } from '../../service/git.service';
 import { CommonModule, ViewportScroller } from '@angular/common';
-import { ViewportService } from '../../service/viewport.service';
-import { IViewportBreakpoint } from '../../interface/viewport.interface';
-import { Subscription } from 'rxjs';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { NtkmeButtonModule } from '@ctrl/ngx-github-buttons';
 import { NgbCollapse, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { IToken } from '../../interface/token.interface';
-import { TokenService } from '../../service/token.service';
+import { RxDocument } from 'rxdb';
+import { Subscription } from 'rxjs';
+import { PageFooterComponent } from '../../component/page-footer/page-footer.component';
 import { SearchFormComponent } from '../../component/search-form/search-form.component';
+import { TopBarComponent } from '../../component/top-bar/top-bar.component';
+import { TopicDocumentMethods, TopicDocumentType } from '../../database/document/topic.document';
+import { ICommits } from '../../interface/git.interface';
+import { IToken } from '../../interface/token.interface';
+import { IViewportBreakpoint } from '../../interface/viewport.interface';
+import { DocumentationService } from '../../service/documentation.service';
+import { GitService } from '../../service/git.service';
 import { ToastService } from '../../service/toast.service';
+import { TokenService } from '../../service/token.service';
+import { ViewportService } from '../../service/viewport.service';
 
 @Component({
   selector: 'app-home',

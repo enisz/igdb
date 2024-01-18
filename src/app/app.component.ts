@@ -1,10 +1,10 @@
-  import { APP_INITIALIZER, ApplicationInitStatus, Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+  import { CommonModule } from '@angular/common';
+import { APP_INITIALIZER, ApplicationInitStatus, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NetworkService } from './service/network.service';
 import { Subscription } from 'rxjs';
 import { SearchModalComponent } from './component/search-modal/search-modal.component';
 import { ToastContainerComponent } from './component/toast-container/toast-container.component';
+import { NetworkService } from './service/network.service';
 import { ToastService } from './service/toast.service';
 
 @Component({

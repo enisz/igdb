@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DocumentationService } from '../../../service/documentation.service';
 import { RxDocument } from 'rxdb';
 import { SectionDocumentMethods, SectionDocumentType } from '../../../database/document/section.document';
 import { TokenPipe } from '../../../pipe/token.pipe';
+import { DocumentationService } from '../../../service/documentation.service';
 import { ScrollSpyService } from '../../../service/scroll-spy.service';
 
 @Component({

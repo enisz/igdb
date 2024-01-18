@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { TopBarComponent } from '../../component/top-bar/top-bar.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { DocumentationService } from '../../service/documentation.service';
-import { RxDocument } from 'rxdb';
-import { TopicDocumentMethods, TopicDocumentType } from '../../database/document/topic.document';
 import { ViewportScroller } from '@angular/common';
-import { TopicComponent } from './topic/topic.component';
-import HighlightJS from 'highlight.js';
-import { Subscription, take } from 'rxjs';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import HighlightJS from 'highlight.js';
+import { RxDocument } from 'rxdb';
+import { Subscription, take } from 'rxjs';
+import { TopBarComponent } from '../../component/top-bar/top-bar.component';
 import { SectionDocumentMethods, SectionDocumentType } from '../../database/document/section.document';
+import { TopicDocumentMethods, TopicDocumentType } from '../../database/document/topic.document';
+import { DocumentationService } from '../../service/documentation.service';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { TopicComponent } from './topic/topic.component';
 
 @Component({
   selector: 'app-documentation',

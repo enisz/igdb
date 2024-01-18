@@ -1,13 +1,13 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { NetworkService } from '../../service/network.service';
-import { Subscription } from 'rxjs';
-import { GitService } from '../../service/git.service';
-import { IRelease } from '../../interface/git.interface';
 import { CommonModule, DatePipe } from '@angular/common';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgbDropdownModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
-import { SearchFormComponent } from '../search-form/search-form.component';
+import { Subscription } from 'rxjs';
+import { IRelease } from '../../interface/git.interface';
+import { GitService } from '../../service/git.service';
+import { NetworkService } from '../../service/network.service';
 import { ToastService } from '../../service/toast.service';
+import { SearchFormComponent } from '../search-form/search-form.component';
 
 @Component({
   selector: 'app-top-bar',

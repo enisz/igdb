@@ -1,14 +1,14 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DocumentationService } from '../../../service/documentation.service';
-import { RxDocument } from 'rxdb';
-import { TopicDocumentMethods, TopicDocumentType } from '../../../database/document/topic.document';
-import { SectionDocumentMethods, SectionDocumentType } from '../../../database/document/section.document';
-import { SectionComponent } from '../section/section.component';
-import { AgoPipe } from '../../../pipe/ago.pipe';
 import { DatePipe } from '@angular/common';
-import { TokenPipe } from '../../../pipe/token.pipe';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgbScrollSpyModule } from '@ng-bootstrap/ng-bootstrap';
+import { RxDocument } from 'rxdb';
+import { SectionDocumentMethods, SectionDocumentType } from '../../../database/document/section.document';
+import { TopicDocumentMethods, TopicDocumentType } from '../../../database/document/topic.document';
+import { AgoPipe } from '../../../pipe/ago.pipe';
+import { TokenPipe } from '../../../pipe/token.pipe';
+import { DocumentationService } from '../../../service/documentation.service';
 import { ScrollSpyService } from '../../../service/scroll-spy.service';
+import { SectionComponent } from '../section/section.component';
 
 @Component({
   selector: 'app-topic',

@@ -1,6 +1,6 @@
-import { RxDatabase } from "rxdb"
-import { SectionCollection } from "./collection/section.collection"
-import { TopicCollection } from "./collection/topic.collection."
+import { RxDatabase } from "rxdb";
+import { SectionCollection } from "./collection/section.collection";
+import { TopicCollection } from "./collection/topic.collection.";
 
 export type DocumentationDatabaseCollections = {
     topics: TopicCollection,

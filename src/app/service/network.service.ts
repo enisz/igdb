@@ -1,4 +1,4 @@
-import { HostListener, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, fromEvent, merge } from 'rxjs';
 
 @Injectable({

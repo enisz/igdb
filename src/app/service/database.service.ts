@@ -1,12 +1,12 @@
-import { getRxStorageMemory } from 'rxdb/plugins/storage-memory';
 import { Injectable } from '@angular/core';
-import { DocumentationDatabaseCollections, IGDBWrapperDatabase } from '../database/database';
-import { RxJsonSchema, createRxDatabase, addRxPlugin, RxDumpDatabaseAny } from 'rxdb';
-import { TopicDocumentType } from '../database/document/topic.document';
-import { SectionDocumentType } from '../database/document/section.document';
+import { RxDumpDatabaseAny, RxJsonSchema, addRxPlugin, createRxDatabase } from 'rxdb';
 import { RxDBJsonDumpPlugin } from 'rxdb/plugins/json-dump';
-import { TopicCollection } from '../database/collection/topic.collection.';
+import { getRxStorageMemory } from 'rxdb/plugins/storage-memory';
 import { SectionCollection } from '../database/collection/section.collection';
+import { TopicCollection } from '../database/collection/topic.collection.';
+import { DocumentationDatabaseCollections, IGDBWrapperDatabase } from '../database/database';
+import { SectionDocumentType } from '../database/document/section.document';
+import { TopicDocumentType } from '../database/document/topic.document';
 
 @Injectable({
   providedIn: 'root'

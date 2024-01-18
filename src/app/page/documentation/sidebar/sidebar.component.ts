@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ViewportService } from '../../../service/viewport.service';
-import { Subscription } from 'rxjs';
-import { IViewportDimension } from '../../../interface/viewport.interface';
-import { RxDocument } from 'rxdb';
-import { TopicDocumentMethods, TopicDocumentType } from '../../../database/document/topic.document';
-import { SectionDocumentMethods, SectionDocumentType } from '../../../database/document/section.document';
-import { DocumentationService } from '../../../service/documentation.service';
-import { RouterLink } from '@angular/router';
-import { ScrollSpyService } from '../../../service/scroll-spy.service';
 import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { RxDocument } from 'rxdb';
+import { Subscription } from 'rxjs';
 import { SearchFormComponent } from '../../../component/search-form/search-form.component';
+import { SectionDocumentMethods, SectionDocumentType } from '../../../database/document/section.document';
+import { TopicDocumentMethods, TopicDocumentType } from '../../../database/document/topic.document';
+import { IViewportDimension } from '../../../interface/viewport.interface';
+import { DocumentationService } from '../../../service/documentation.service';
+import { ScrollSpyService } from '../../../service/scroll-spy.service';
+import { ViewportService } from '../../../service/viewport.service';
 
 @Component({
   selector: 'app-sidebar',

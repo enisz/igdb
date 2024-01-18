@@ -1,5 +1,5 @@
 import { RxCollection } from "rxdb";
-import { SectionDocumentType, SectionDocumentMethods } from "../document/section.document";
+import { SectionDocumentMethods, SectionDocumentType } from "../document/section.document";
 
 export type SectionCollectionMethods = {
     count: () => Promise<number>;

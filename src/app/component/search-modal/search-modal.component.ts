@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { SearchService } from '../../service/search.service';
-import { Subscription } from 'rxjs';
-import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { DocumentationService } from '../../service/documentation.service';
 import { CommonModule, NgTemplateOutlet } from '@angular/common';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RxDocument } from 'rxdb';
+import { Subscription } from 'rxjs';
 import { SectionDocumentMethods, SectionDocumentType } from '../../database/document/section.document';
-import { EmphasizePipe } from '../../pipe/emphasize.pipe';
 import { IModalListGroup, IModalListGroupItem } from '../../interface/search-modal.interface';
+import { EmphasizePipe } from '../../pipe/emphasize.pipe';
+import { DocumentationService } from '../../service/documentation.service';
+import { SearchService } from '../../service/search.service';
 
 @Component({
   selector: 'app-search-modal',
@@ -163,13 +163,14 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   private handleKeyboardEvents(event: KeyboardEvent): void {
-    if (!this.visible) return;
     const { key, ctrlKey } = event;
 
     // open
     if (ctrlKey && key.toLowerCase() === 'k') {
       this.handleKeyK(event);
     }
+
+    if (!this.visible) return;
 
     // escape
     if (key.toLowerCase() === 'escape') {

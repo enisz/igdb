@@ -1,13 +1,13 @@
-import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom, isDevMode } from '@angular/core';
-import { provideRouter, withInMemoryScrolling, withRouterConfig } from '@angular/router';
-import { routes } from './app.routes';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { APP_INITIALIZER, ApplicationConfig, isDevMode } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter, withInMemoryScrolling, withRouterConfig } from '@angular/router';
+import { provideServiceWorker } from '@angular/service-worker';
 import { RxDumpDatabaseAny } from 'rxdb';
-import { firstValueFrom, of } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
+import { routes } from './app.routes';
 import { DocumentationDatabaseCollections } from './database/database';
 import { DatabaseService } from './service/database.service';
-import { provideServiceWorker } from '@angular/service-worker';
-import { provideAnimations } from '@angular/platform-browser/animations';
 
 
 export const appConfig: ApplicationConfig = {
