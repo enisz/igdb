@@ -98,4 +98,9 @@
 
     define("IGDBW_API_URL", "https://api.igdb.com/v4");
 
+    define("IGDBW_BUILDER_DEFAULTS", array(
+        "limit" => 10,
+        "offset" => 0
+    ));
+
 ?>

@@ -65,16 +65,6 @@
         private $_count;
 
         /**
-         * Default value of the limit parameter
-         */
-        private $limit_default = 10;
-
-        /**
-         * Default value of the offset parameter
-         */
-        private $offset_default = 0;
-
-        /**
          * Setting up the builder with default values
          */
         public function __construct() {
@@ -88,8 +78,8 @@
             $this->_search = "";
             $this->_fields = array("*");
             $this->_exclude = array();
-            $this->_limit = $this->limit_default;
-            $this->_offset = $this->offset_default;
+            $this->_limit = IGDBW_BUILDER_DEFAULTS["limit"];
+            $this->_offset = IGDBW_BUILDER_DEFAULTS["offset"];
             $this->_where = array();
             $this->_sort = array();
             $this->_name = null;
@@ -450,7 +440,7 @@
 
                     case "limit":
                     case "offset":
-                        if($this->{"_" . $parameter} != $this->{$parameter . "_default"}) {
+                        if($this->{"_" . $parameter} != IGDBW_BUILDER_DEFAULTS[$parameter]) {
                             array_push($segments, $parameter . " " . $this->{"_" . $parameter});
                         }
                     break;
