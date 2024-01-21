@@ -9,6 +9,7 @@
      * @version 5.0.0
      * @author Enisz Abdalla <enisz87@gmail.com>
      * @link https://github.com/enisz/igdb
+     * @link https://enisz.github.io/igdb
      */
 
     require_once "IGDBEndpointException.php";
@@ -82,7 +83,7 @@
             if(array_key_exists($endpoint, IGDBW_ENDPOINTS)) {
                 return rtrim(IGDBW_API_URL, "/") . "/" . IGDBW_ENDPOINTS[$endpoint] . ($count ? "/count" : "");
             } else {
-                throw new IGDBInvalidParameterException("Invalid Endpoint name " . $endpoint . "!");
+                throw new IGDBInvalidParameterException("Invalid Endpoint name $endpoint!");
             }
         }
 
@@ -171,7 +172,7 @@
          *
          * @link https://api-docs.igdb.com/#multi-query
          *
-         * @param $queries ( array of strings ) The queries to send to the multiquery endpoint as an array of multiquery formatted apicalypse strings.
+         * @param $queries ( string[] | IGDBQueryBuilder[] ) The queries to send to the multiquery endpoint as an array of multiquery formatted apicalypse strings or configured IGDBQueryBuilder instances
          * @return $result ( mixed ) The result of the query.
          * @throws IGDBEndpointException if the response code is non successful (successful range is from 200 to 299)
          * @throws IGDBInvalidParameterException If not array of strings or IGDBQueryBuilder instances are passed as a parameter
@@ -182,7 +183,7 @@
             if(is_array($queries)) {
                 foreach($queries as $index => $query) {
                     if(!is_string($query) && !($query instanceof IGDBQueryBuilder)) {
-                        throw new IGDBInvalidParameterException("Invalid type of parameter for multiquery! An array of strings or IGDBQueryBuilder instances are expected, " . gettype($query) . " passed at index " . $index . "!");
+                        throw new IGDBInvalidParameterException("Invalid type of parameter for multiquery! An array of strings or IGDBQueryBuilder instances are expected, " . gettype($query) . " passed at index $index!");
                     }
 
                     array_push($prepared, is_string($query) ? $query : $query->build_multiquery());
@@ -205,7 +206,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function age_rating($query) {
-            return $this->_exec_query($this->construct_url('age_rating', false), $query);
+            return $this->_exec_query($this->construct_url("age_rating", false), $query);
         }
 
         /**
@@ -218,8 +219,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function age_rating_count($query) {
-            return $this->_exec_query($this->construct_url('age_rating', true), $query)->count;
+        public function age_rating_count($query = "") {
+            return $this->_exec_query($this->construct_url("age_rating", true), $query)->count;
         }
 
         /**
@@ -233,7 +234,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function age_rating_content_description($query) {
-            return $this->_exec_query($this->construct_url('age_rating_content_description', false), $query);
+            return $this->_exec_query($this->construct_url("age_rating_content_description", false), $query);
         }
 
         /**
@@ -246,8 +247,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function age_rating_content_description_count($query) {
-            return $this->_exec_query($this->construct_url('age_rating_content_description', true), $query)->count;
+        public function age_rating_content_description_count($query = "") {
+            return $this->_exec_query($this->construct_url("age_rating_content_description", true), $query)->count;
         }
 
         /**
@@ -261,7 +262,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function alternative_name($query) {
-            return $this->_exec_query($this->construct_url('alternative_name', false), $query);
+            return $this->_exec_query($this->construct_url("alternative_name", false), $query);
         }
 
         /**
@@ -274,8 +275,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function alternative_name_count($query) {
-            return $this->_exec_query($this->construct_url('alternative_name', true), $query)->count;
+        public function alternative_name_count($query = "") {
+            return $this->_exec_query($this->construct_url("alternative_name", true), $query)->count;
         }
 
         /**
@@ -289,7 +290,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function artwork($query) {
-            return $this->_exec_query($this->construct_url('artwork', false), $query);
+            return $this->_exec_query($this->construct_url("artwork", false), $query);
         }
 
         /**
@@ -302,8 +303,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function artwork_count($query) {
-            return $this->_exec_query($this->construct_url('artwork', true), $query)->count;
+        public function artwork_count($query = "") {
+            return $this->_exec_query($this->construct_url("artwork", true), $query)->count;
         }
 
         /**
@@ -317,7 +318,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function character($query) {
-            return $this->_exec_query($this->construct_url('character', false), $query);
+            return $this->_exec_query($this->construct_url("character", false), $query);
         }
 
         /**
@@ -330,8 +331,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function character_count($query) {
-            return $this->_exec_query($this->construct_url('character', true), $query)->count;
+        public function character_count($query = "") {
+            return $this->_exec_query($this->construct_url("character", true), $query)->count;
         }
 
         /**
@@ -345,7 +346,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function character_mug_shot($query) {
-            return $this->_exec_query($this->construct_url('character_mug_shot', false), $query);
+            return $this->_exec_query($this->construct_url("character_mug_shot", false), $query);
         }
 
         /**
@@ -358,8 +359,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function character_mug_shot_count($query) {
-            return $this->_exec_query($this->construct_url('character_mug_shot', true), $query)->count;
+        public function character_mug_shot_count($query = "") {
+            return $this->_exec_query($this->construct_url("character_mug_shot", true), $query)->count;
         }
 
         /**
@@ -373,7 +374,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function collection($query) {
-            return $this->_exec_query($this->construct_url('collection', false), $query);
+            return $this->_exec_query($this->construct_url("collection", false), $query);
         }
 
         /**
@@ -386,8 +387,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function collection_count($query) {
-            return $this->_exec_query($this->construct_url('collection', true), $query)->count;
+        public function collection_count($query = "") {
+            return $this->_exec_query($this->construct_url("collection", true), $query)->count;
         }
 
         /**
@@ -401,7 +402,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function collection_membership($query) {
-            return $this->_exec_query($this->construct_url('collection_membership', false), $query);
+            return $this->_exec_query($this->construct_url("collection_membership", false), $query);
         }
 
         /**
@@ -414,8 +415,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function collection_membership_count($query) {
-            return $this->_exec_query($this->construct_url('collection_membership', true), $query)->count;
+        public function collection_membership_count($query = "") {
+            return $this->_exec_query($this->construct_url("collection_membership", true), $query)->count;
         }
 
         /**
@@ -429,7 +430,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function collection_membership_type($query) {
-            return $this->_exec_query($this->construct_url('collection_membership_type', false), $query);
+            return $this->_exec_query($this->construct_url("collection_membership_type", false), $query);
         }
 
         /**
@@ -442,8 +443,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function collection_membership_type_count($query) {
-            return $this->_exec_query($this->construct_url('collection_membership_type', true), $query)->count;
+        public function collection_membership_type_count($query = "") {
+            return $this->_exec_query($this->construct_url("collection_membership_type", true), $query)->count;
         }
 
         /**
@@ -457,7 +458,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function collection_relation($query) {
-            return $this->_exec_query($this->construct_url('collection_relation', false), $query);
+            return $this->_exec_query($this->construct_url("collection_relation", false), $query);
         }
 
         /**
@@ -470,8 +471,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function collection_relation_count($query) {
-            return $this->_exec_query($this->construct_url('collection_relation', true), $query)->count;
+        public function collection_relation_count($query = "") {
+            return $this->_exec_query($this->construct_url("collection_relation", true), $query)->count;
         }
 
         /**
@@ -485,7 +486,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function collection_relation_type($query) {
-            return $this->_exec_query($this->construct_url('collection_relation_type', false), $query);
+            return $this->_exec_query($this->construct_url("collection_relation_type", false), $query);
         }
 
         /**
@@ -498,8 +499,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function collection_relation_type_count($query) {
-            return $this->_exec_query($this->construct_url('collection_relation_type', true), $query)->count;
+        public function collection_relation_type_count($query = "") {
+            return $this->_exec_query($this->construct_url("collection_relation_type", true), $query)->count;
         }
 
         /**
@@ -513,7 +514,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function collection_type($query) {
-            return $this->_exec_query($this->construct_url('collection_type', false), $query);
+            return $this->_exec_query($this->construct_url("collection_type", false), $query);
         }
 
         /**
@@ -526,8 +527,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function collection_type_count($query) {
-            return $this->_exec_query($this->construct_url('collection_type', true), $query)->count;
+        public function collection_type_count($query = "") {
+            return $this->_exec_query($this->construct_url("collection_type", true), $query)->count;
         }
 
         /**
@@ -541,7 +542,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function company($query) {
-            return $this->_exec_query($this->construct_url('company', false), $query);
+            return $this->_exec_query($this->construct_url("company", false), $query);
         }
 
         /**
@@ -554,8 +555,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function company_count($query) {
-            return $this->_exec_query($this->construct_url('company', true), $query)->count;
+        public function company_count($query = "") {
+            return $this->_exec_query($this->construct_url("company", true), $query)->count;
         }
 
         /**
@@ -569,7 +570,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function company_logo($query) {
-            return $this->_exec_query($this->construct_url('company_logo', false), $query);
+            return $this->_exec_query($this->construct_url("company_logo", false), $query);
         }
 
         /**
@@ -582,8 +583,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function company_logo_count($query) {
-            return $this->_exec_query($this->construct_url('company_logo', true), $query)->count;
+        public function company_logo_count($query = "") {
+            return $this->_exec_query($this->construct_url("company_logo", true), $query)->count;
         }
 
         /**
@@ -597,7 +598,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function company_website($query) {
-            return $this->_exec_query($this->construct_url('company_website', false), $query);
+            return $this->_exec_query($this->construct_url("company_website", false), $query);
         }
 
         /**
@@ -610,8 +611,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function company_website_count($query) {
-            return $this->_exec_query($this->construct_url('company_website', true), $query)->count;
+        public function company_website_count($query = "") {
+            return $this->_exec_query($this->construct_url("company_website", true), $query)->count;
         }
 
         /**
@@ -625,7 +626,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function cover($query) {
-            return $this->_exec_query($this->construct_url('cover', false), $query);
+            return $this->_exec_query($this->construct_url("cover", false), $query);
         }
 
         /**
@@ -638,8 +639,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function cover_count($query) {
-            return $this->_exec_query($this->construct_url('cover', true), $query)->count;
+        public function cover_count($query = "") {
+            return $this->_exec_query($this->construct_url("cover", true), $query)->count;
         }
 
         /**
@@ -653,7 +654,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function event($query) {
-            return $this->_exec_query($this->construct_url('event', false), $query);
+            return $this->_exec_query($this->construct_url("event", false), $query);
         }
 
         /**
@@ -666,8 +667,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function event_count($query) {
-            return $this->_exec_query($this->construct_url('event', true), $query)->count;
+        public function event_count($query = "") {
+            return $this->_exec_query($this->construct_url("event", true), $query)->count;
         }
 
         /**
@@ -681,7 +682,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function event_logo($query) {
-            return $this->_exec_query($this->construct_url('event_logo', false), $query);
+            return $this->_exec_query($this->construct_url("event_logo", false), $query);
         }
 
         /**
@@ -694,8 +695,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function event_logo_count($query) {
-            return $this->_exec_query($this->construct_url('event_logo', true), $query)->count;
+        public function event_logo_count($query = "") {
+            return $this->_exec_query($this->construct_url("event_logo", true), $query)->count;
         }
 
         /**
@@ -709,7 +710,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function event_network($query) {
-            return $this->_exec_query($this->construct_url('event_network', false), $query);
+            return $this->_exec_query($this->construct_url("event_network", false), $query);
         }
 
         /**
@@ -722,8 +723,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function event_network_count($query) {
-            return $this->_exec_query($this->construct_url('event_network', true), $query)->count;
+        public function event_network_count($query = "") {
+            return $this->_exec_query($this->construct_url("event_network", true), $query)->count;
         }
 
         /**
@@ -737,7 +738,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function external_game($query) {
-            return $this->_exec_query($this->construct_url('external_game', false), $query);
+            return $this->_exec_query($this->construct_url("external_game", false), $query);
         }
 
         /**
@@ -750,8 +751,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function external_game_count($query) {
-            return $this->_exec_query($this->construct_url('external_game', true), $query)->count;
+        public function external_game_count($query = "") {
+            return $this->_exec_query($this->construct_url("external_game", true), $query)->count;
         }
 
         /**
@@ -765,7 +766,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function franchise($query) {
-            return $this->_exec_query($this->construct_url('franchise', false), $query);
+            return $this->_exec_query($this->construct_url("franchise", false), $query);
         }
 
         /**
@@ -778,8 +779,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function franchise_count($query) {
-            return $this->_exec_query($this->construct_url('franchise', true), $query)->count;
+        public function franchise_count($query = "") {
+            return $this->_exec_query($this->construct_url("franchise", true), $query)->count;
         }
 
         /**
@@ -793,7 +794,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function game($query) {
-            return $this->_exec_query($this->construct_url('game', false), $query);
+            return $this->_exec_query($this->construct_url("game", false), $query);
         }
 
         /**
@@ -806,8 +807,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function game_count($query) {
-            return $this->_exec_query($this->construct_url('game', true), $query)->count;
+        public function game_count($query = "") {
+            return $this->_exec_query($this->construct_url("game", true), $query)->count;
         }
 
         /**
@@ -821,7 +822,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function game_engine($query) {
-            return $this->_exec_query($this->construct_url('game_engine', false), $query);
+            return $this->_exec_query($this->construct_url("game_engine", false), $query);
         }
 
         /**
@@ -834,8 +835,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function game_engine_count($query) {
-            return $this->_exec_query($this->construct_url('game_engine', true), $query)->count;
+        public function game_engine_count($query = "") {
+            return $this->_exec_query($this->construct_url("game_engine", true), $query)->count;
         }
 
         /**
@@ -849,7 +850,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function game_engine_logo($query) {
-            return $this->_exec_query($this->construct_url('game_engine_logo', false), $query);
+            return $this->_exec_query($this->construct_url("game_engine_logo", false), $query);
         }
 
         /**
@@ -862,8 +863,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function game_engine_logo_count($query) {
-            return $this->_exec_query($this->construct_url('game_engine_logo', true), $query)->count;
+        public function game_engine_logo_count($query = "") {
+            return $this->_exec_query($this->construct_url("game_engine_logo", true), $query)->count;
         }
 
         /**
@@ -877,7 +878,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function game_localization($query) {
-            return $this->_exec_query($this->construct_url('game_localization', false), $query);
+            return $this->_exec_query($this->construct_url("game_localization", false), $query);
         }
 
         /**
@@ -890,8 +891,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function game_localization_count($query) {
-            return $this->_exec_query($this->construct_url('game_localization', true), $query)->count;
+        public function game_localization_count($query = "") {
+            return $this->_exec_query($this->construct_url("game_localization", true), $query)->count;
         }
 
         /**
@@ -905,7 +906,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function game_mode($query) {
-            return $this->_exec_query($this->construct_url('game_mode', false), $query);
+            return $this->_exec_query($this->construct_url("game_mode", false), $query);
         }
 
         /**
@@ -918,8 +919,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function game_mode_count($query) {
-            return $this->_exec_query($this->construct_url('game_mode', true), $query)->count;
+        public function game_mode_count($query = "") {
+            return $this->_exec_query($this->construct_url("game_mode", true), $query)->count;
         }
 
         /**
@@ -933,7 +934,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function game_version($query) {
-            return $this->_exec_query($this->construct_url('game_version', false), $query);
+            return $this->_exec_query($this->construct_url("game_version", false), $query);
         }
 
         /**
@@ -946,8 +947,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function game_version_count($query) {
-            return $this->_exec_query($this->construct_url('game_version', true), $query)->count;
+        public function game_version_count($query = "") {
+            return $this->_exec_query($this->construct_url("game_version", true), $query)->count;
         }
 
         /**
@@ -961,7 +962,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function game_version_feature($query) {
-            return $this->_exec_query($this->construct_url('game_version_feature', false), $query);
+            return $this->_exec_query($this->construct_url("game_version_feature", false), $query);
         }
 
         /**
@@ -974,8 +975,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function game_version_feature_count($query) {
-            return $this->_exec_query($this->construct_url('game_version_feature', true), $query)->count;
+        public function game_version_feature_count($query = "") {
+            return $this->_exec_query($this->construct_url("game_version_feature", true), $query)->count;
         }
 
         /**
@@ -989,7 +990,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function game_version_feature_value($query) {
-            return $this->_exec_query($this->construct_url('game_version_feature_value', false), $query);
+            return $this->_exec_query($this->construct_url("game_version_feature_value", false), $query);
         }
 
         /**
@@ -1002,8 +1003,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function game_version_feature_value_count($query) {
-            return $this->_exec_query($this->construct_url('game_version_feature_value', true), $query)->count;
+        public function game_version_feature_value_count($query = "") {
+            return $this->_exec_query($this->construct_url("game_version_feature_value", true), $query)->count;
         }
 
         /**
@@ -1017,7 +1018,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function game_video($query) {
-            return $this->_exec_query($this->construct_url('game_video', false), $query);
+            return $this->_exec_query($this->construct_url("game_video", false), $query);
         }
 
         /**
@@ -1030,8 +1031,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function game_video_count($query) {
-            return $this->_exec_query($this->construct_url('game_video', true), $query)->count;
+        public function game_video_count($query = "") {
+            return $this->_exec_query($this->construct_url("game_video", true), $query)->count;
         }
 
         /**
@@ -1045,7 +1046,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function genre($query) {
-            return $this->_exec_query($this->construct_url('genre', false), $query);
+            return $this->_exec_query($this->construct_url("genre", false), $query);
         }
 
         /**
@@ -1058,8 +1059,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function genre_count($query) {
-            return $this->_exec_query($this->construct_url('genre', true), $query)->count;
+        public function genre_count($query = "") {
+            return $this->_exec_query($this->construct_url("genre", true), $query)->count;
         }
 
         /**
@@ -1073,7 +1074,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function involved_company($query) {
-            return $this->_exec_query($this->construct_url('involved_company', false), $query);
+            return $this->_exec_query($this->construct_url("involved_company", false), $query);
         }
 
         /**
@@ -1086,8 +1087,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function involved_company_count($query) {
-            return $this->_exec_query($this->construct_url('involved_company', true), $query)->count;
+        public function involved_company_count($query = "") {
+            return $this->_exec_query($this->construct_url("involved_company", true), $query)->count;
         }
 
         /**
@@ -1101,7 +1102,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function keyword($query) {
-            return $this->_exec_query($this->construct_url('keyword', false), $query);
+            return $this->_exec_query($this->construct_url("keyword", false), $query);
         }
 
         /**
@@ -1114,8 +1115,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function keyword_count($query) {
-            return $this->_exec_query($this->construct_url('keyword', true), $query)->count;
+        public function keyword_count($query = "") {
+            return $this->_exec_query($this->construct_url("keyword", true), $query)->count;
         }
 
         /**
@@ -1129,7 +1130,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function language_support($query) {
-            return $this->_exec_query($this->construct_url('language_support', false), $query);
+            return $this->_exec_query($this->construct_url("language_support", false), $query);
         }
 
         /**
@@ -1142,8 +1143,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function language_support_count($query) {
-            return $this->_exec_query($this->construct_url('language_support', true), $query)->count;
+        public function language_support_count($query = "") {
+            return $this->_exec_query($this->construct_url("language_support", true), $query)->count;
         }
 
         /**
@@ -1157,7 +1158,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function language_support_type($query) {
-            return $this->_exec_query($this->construct_url('language_support_type', false), $query);
+            return $this->_exec_query($this->construct_url("language_support_type", false), $query);
         }
 
         /**
@@ -1170,8 +1171,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function language_support_type_count($query) {
-            return $this->_exec_query($this->construct_url('language_support_type', true), $query)->count;
+        public function language_support_type_count($query = "") {
+            return $this->_exec_query($this->construct_url("language_support_type", true), $query)->count;
         }
 
         /**
@@ -1185,7 +1186,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function language($query) {
-            return $this->_exec_query($this->construct_url('language', false), $query);
+            return $this->_exec_query($this->construct_url("language", false), $query);
         }
 
         /**
@@ -1198,8 +1199,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function language_count($query) {
-            return $this->_exec_query($this->construct_url('language', true), $query)->count;
+        public function language_count($query = "") {
+            return $this->_exec_query($this->construct_url("language", true), $query)->count;
         }
 
         /**
@@ -1213,7 +1214,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function multiplayer_mode($query) {
-            return $this->_exec_query($this->construct_url('multiplayer_mode', false), $query);
+            return $this->_exec_query($this->construct_url("multiplayer_mode", false), $query);
         }
 
         /**
@@ -1226,8 +1227,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function multiplayer_mode_count($query) {
-            return $this->_exec_query($this->construct_url('multiplayer_mode', true), $query)->count;
+        public function multiplayer_mode_count($query = "") {
+            return $this->_exec_query($this->construct_url("multiplayer_mode", true), $query)->count;
         }
 
         /**
@@ -1241,7 +1242,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function network_type($query) {
-            return $this->_exec_query($this->construct_url('network_type', false), $query);
+            return $this->_exec_query($this->construct_url("network_type", false), $query);
         }
 
         /**
@@ -1254,8 +1255,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function network_type_count($query) {
-            return $this->_exec_query($this->construct_url('network_type', true), $query)->count;
+        public function network_type_count($query = "") {
+            return $this->_exec_query($this->construct_url("network_type", true), $query)->count;
         }
 
         /**
@@ -1269,7 +1270,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function platform($query) {
-            return $this->_exec_query($this->construct_url('platform', false), $query);
+            return $this->_exec_query($this->construct_url("platform", false), $query);
         }
 
         /**
@@ -1282,8 +1283,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function platform_count($query) {
-            return $this->_exec_query($this->construct_url('platform', true), $query)->count;
+        public function platform_count($query = "") {
+            return $this->_exec_query($this->construct_url("platform", true), $query)->count;
         }
 
         /**
@@ -1297,7 +1298,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function platform_family($query) {
-            return $this->_exec_query($this->construct_url('platform_family', false), $query);
+            return $this->_exec_query($this->construct_url("platform_family", false), $query);
         }
 
         /**
@@ -1310,8 +1311,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function platform_family_count($query) {
-            return $this->_exec_query($this->construct_url('platform_family', true), $query)->count;
+        public function platform_family_count($query = "") {
+            return $this->_exec_query($this->construct_url("platform_family", true), $query)->count;
         }
 
         /**
@@ -1325,7 +1326,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function platform_logo($query) {
-            return $this->_exec_query($this->construct_url('platform_logo', false), $query);
+            return $this->_exec_query($this->construct_url("platform_logo", false), $query);
         }
 
         /**
@@ -1338,8 +1339,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function platform_logo_count($query) {
-            return $this->_exec_query($this->construct_url('platform_logo', true), $query)->count;
+        public function platform_logo_count($query = "") {
+            return $this->_exec_query($this->construct_url("platform_logo", true), $query)->count;
         }
 
         /**
@@ -1353,7 +1354,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function platform_version($query) {
-            return $this->_exec_query($this->construct_url('platform_version', false), $query);
+            return $this->_exec_query($this->construct_url("platform_version", false), $query);
         }
 
         /**
@@ -1366,8 +1367,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function platform_version_count($query) {
-            return $this->_exec_query($this->construct_url('platform_version', true), $query)->count;
+        public function platform_version_count($query = "") {
+            return $this->_exec_query($this->construct_url("platform_version", true), $query)->count;
         }
 
         /**
@@ -1381,7 +1382,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function platform_version_company($query) {
-            return $this->_exec_query($this->construct_url('platform_version_company', false), $query);
+            return $this->_exec_query($this->construct_url("platform_version_company", false), $query);
         }
 
         /**
@@ -1394,8 +1395,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function platform_version_company_count($query) {
-            return $this->_exec_query($this->construct_url('platform_version_company', true), $query)->count;
+        public function platform_version_company_count($query = "") {
+            return $this->_exec_query($this->construct_url("platform_version_company", true), $query)->count;
         }
 
         /**
@@ -1409,7 +1410,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function platform_version_release_date($query) {
-            return $this->_exec_query($this->construct_url('platform_version_release_date', false), $query);
+            return $this->_exec_query($this->construct_url("platform_version_release_date", false), $query);
         }
 
         /**
@@ -1422,8 +1423,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function platform_version_release_date_count($query) {
-            return $this->_exec_query($this->construct_url('platform_version_release_date', true), $query)->count;
+        public function platform_version_release_date_count($query = "") {
+            return $this->_exec_query($this->construct_url("platform_version_release_date", true), $query)->count;
         }
 
         /**
@@ -1437,7 +1438,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function platform_website($query) {
-            return $this->_exec_query($this->construct_url('platform_website', false), $query);
+            return $this->_exec_query($this->construct_url("platform_website", false), $query);
         }
 
         /**
@@ -1450,8 +1451,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function platform_website_count($query) {
-            return $this->_exec_query($this->construct_url('platform_website', true), $query)->count;
+        public function platform_website_count($query = "") {
+            return $this->_exec_query($this->construct_url("platform_website", true), $query)->count;
         }
 
         /**
@@ -1465,7 +1466,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function player_perspective($query) {
-            return $this->_exec_query($this->construct_url('player_perspective', false), $query);
+            return $this->_exec_query($this->construct_url("player_perspective", false), $query);
         }
 
         /**
@@ -1478,8 +1479,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function player_perspective_count($query) {
-            return $this->_exec_query($this->construct_url('player_perspective', true), $query)->count;
+        public function player_perspective_count($query = "") {
+            return $this->_exec_query($this->construct_url("player_perspective", true), $query)->count;
         }
 
         /**
@@ -1493,7 +1494,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function region($query) {
-            return $this->_exec_query($this->construct_url('region', false), $query);
+            return $this->_exec_query($this->construct_url("region", false), $query);
         }
 
         /**
@@ -1506,8 +1507,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function region_count($query) {
-            return $this->_exec_query($this->construct_url('region', true), $query)->count;
+        public function region_count($query = "") {
+            return $this->_exec_query($this->construct_url("region", true), $query)->count;
         }
 
         /**
@@ -1521,7 +1522,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function release_date($query) {
-            return $this->_exec_query($this->construct_url('release_date', false), $query);
+            return $this->_exec_query($this->construct_url("release_date", false), $query);
         }
 
         /**
@@ -1534,8 +1535,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function release_date_count($query) {
-            return $this->_exec_query($this->construct_url('release_date', true), $query)->count;
+        public function release_date_count($query = "") {
+            return $this->_exec_query($this->construct_url("release_date", true), $query)->count;
         }
 
         /**
@@ -1549,7 +1550,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function release_date_status($query) {
-            return $this->_exec_query($this->construct_url('release_date_status', false), $query);
+            return $this->_exec_query($this->construct_url("release_date_status", false), $query);
         }
 
         /**
@@ -1562,8 +1563,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function release_date_status_count($query) {
-            return $this->_exec_query($this->construct_url('release_date_status', true), $query)->count;
+        public function release_date_status_count($query = "") {
+            return $this->_exec_query($this->construct_url("release_date_status", true), $query)->count;
         }
 
         /**
@@ -1577,7 +1578,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function screenshot($query) {
-            return $this->_exec_query($this->construct_url('screenshot', false), $query);
+            return $this->_exec_query($this->construct_url("screenshot", false), $query);
         }
 
         /**
@@ -1590,8 +1591,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function screenshot_count($query) {
-            return $this->_exec_query($this->construct_url('screenshot', true), $query)->count;
+        public function screenshot_count($query = "") {
+            return $this->_exec_query($this->construct_url("screenshot", true), $query)->count;
         }
 
         /**
@@ -1605,7 +1606,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function search($query) {
-            return $this->_exec_query($this->construct_url('search', false), $query);
+            return $this->_exec_query($this->construct_url("search", false), $query);
         }
 
         /**
@@ -1618,8 +1619,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function search_count($query) {
-            return $this->_exec_query($this->construct_url('search', true), $query)->count;
+        public function search_count($query = "") {
+            return $this->_exec_query($this->construct_url("search", true), $query)->count;
         }
 
         /**
@@ -1633,7 +1634,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function theme($query) {
-            return $this->_exec_query($this->construct_url('theme', false), $query);
+            return $this->_exec_query($this->construct_url("theme", false), $query);
         }
 
         /**
@@ -1646,8 +1647,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function theme_count($query) {
-            return $this->_exec_query($this->construct_url('theme', true), $query)->count;
+        public function theme_count($query = "") {
+            return $this->_exec_query($this->construct_url("theme", true), $query)->count;
         }
 
         /**
@@ -1661,7 +1662,7 @@
          * @return $result array entities from IGDB matching the query
          */
         public function website($query) {
-            return $this->_exec_query($this->construct_url('website', false), $query);
+            return $this->_exec_query($this->construct_url("website", false), $query);
         }
 
         /**
@@ -1674,8 +1675,8 @@
          * @throws IGDBInvalidParameterException if $query is not a string or an IGDBQueryBuilder instance
          * @return $result integer number of entities from IGDB matching the query
          */
-        public function website_count($query) {
-            return $this->_exec_query($this->construct_url('website', true), $query)->count;
+        public function website_count($query = "") {
+            return $this->_exec_query($this->construct_url("website", true), $query)->count;
         }
     }
 ?>
