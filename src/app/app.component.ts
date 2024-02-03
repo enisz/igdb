@@ -1,4 +1,4 @@
-  import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { APP_INITIALIZER, ApplicationInitStatus, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';

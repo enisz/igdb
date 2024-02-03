@@ -1,17 +1,34 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
-  private recentSearches: string[] = [];
+  private searchHistoryKey = 'search-history';
   private searchModalVisibleSubject: BehaviorSubject<boolean>;
+  private searchHistorySubject: BehaviorSubject<string[]>;
+  private historyChangeSubscription: Subscription;
 
   constructor() {
+    this.searchHistorySubject = new BehaviorSubject<string[]>([]);
     this.searchModalVisibleSubject = new BehaviorSubject(false);
-    const history = window.localStorage.getItem('search-history') || null;
-    this.recentSearches = typeof history === 'string' ? JSON.parse(history) : [];
+    const history = localStorage.getItem(this.searchHistoryKey);
+
+    if (history) {
+      try {
+        this.searchHistorySubject.next(JSON.parse(history));
+      } catch {
+        console.error('Search history is corrupted!');
+        this.clearHistory();
+      }
+    }
+
+    this.historyChangeSubscription = this.searchHistorySubject.subscribe(
+      (history: string[]) => {
+        localStorage.setItem(this.searchHistoryKey, JSON.stringify(history));
+      },
+    );
   }
 
   public setModalVisibility(visible: boolean): void {
@@ -22,49 +39,38 @@ export class SearchService {
     return this.searchModalVisibleSubject.asObservable();
   }
 
-  public getRecentSearchTerms(): string[] {
-    const history = window.localStorage.getItem('search-history');
-    let content = [];
-
-    if (history) {
-      try {
-        content = JSON.parse(history).reverse();
-      } catch {
-        console.error('Search history is corrupted!');
-      }
-    }
-
-    return content;
+  public getHistory(): string[] {
+    return this.searchHistorySubject.value;
   }
 
-  public addRecentSearchTerm(term: string): void {
-    if (!this.recentSearches.includes(term)) {
-      this.recentSearches.push(term);
+  public searchHistoryObservable(): Observable<string[]> {
+    return this.searchHistorySubject.asObservable();
+  }
+
+  public addHistoryItem(term: string): void {
+    const history = this.searchHistorySubject.value;
+
+    if (!history.includes(term)) {
+      history.push(term);
     } else {
-      this.recentSearches.push(
-        this.recentSearches.splice(
-          this.recentSearches.indexOf(term), 1
+      history.push(
+        history.splice(
+          history.indexOf(term), 1
         )[0]
-      );
+      )
     }
 
-    this.synchronize();
+    this.searchHistorySubject.next(history);
   }
 
-  public removeRecentSearchTerm(term: string): void {
-    this.recentSearches.splice(
-      this.recentSearches.indexOf(term), 1
-    )
+  public removeHistoryItem(term: string): void {
+    const history = this.searchHistorySubject.value;
+    history.splice(history.indexOf(term), 1)
 
-    this.synchronize();
+    this.searchHistorySubject.next(history);
   }
 
-  public clearRecentSearchTerms(): void {
-    this.recentSearches = [];
-    this.synchronize();
-  }
-
-  private synchronize(): void {
-    window.localStorage.setItem('search-history', JSON.stringify(this.recentSearches));
+  public clearHistory(): void {
+    this.searchHistorySubject.next([]);
   }
 }

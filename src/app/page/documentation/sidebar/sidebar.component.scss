@@ -6,6 +6,9 @@
     }
 }
 
-app-search-form {
-    width: 100%;
+ul.section-items > li.nav-item.section-title {
+    &:first-child {
+        margin-top: 0px;
+    }
+    margin-top: 16px;
 }

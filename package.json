@@ -9,7 +9,8 @@
     "test": "ng test",
     "dev:db": "ts-node db/src/index.ts -w",
     "dev:client": "wait-on src/assets/database.json && ng serve",
-    "dev": "concurrently -n database,client -c \"blue,yellow\" -p name npm:dev:db npm:dev:client"
+    "dev": "concurrently -n database,client -c \"blue,yellow\" -p name npm:dev:db npm:dev:client",
+    "prod:db": "ts-node db/src/index.ts -p"
   },
   "private": true,
   "dependencies": {
@@ -33,6 +34,7 @@
     "rxdb": "^14.17.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "underscore": "^1.13.6",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {
@@ -43,8 +45,10 @@
     "@types/bootstrap": "^5.2.10",
     "@types/jasmine": "~5.1.0",
     "@types/md5": "^2.3.5",
+    "@types/mustache": "^4.2.5",
     "@types/remove-markdown": "^0.3.4",
     "@types/slug": "^5.0.7",
+    "@types/underscore": "^1.11.15",
     "@types/wait-on": "^5.3.4",
     "base64-img": "^1.0.4",
     "commander": "^11.1.0",
@@ -58,6 +62,7 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "marked": "^11.1.0",
     "md5": "^2.3.0",
+    "mustache": "^4.2.0",
     "remove-markdown": "^0.5.0",
     "slug": "^8.2.3",
     "typescript": "~5.2.2",

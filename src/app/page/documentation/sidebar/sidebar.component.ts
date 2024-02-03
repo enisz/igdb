@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RxDocument } from 'rxdb';
 import { Subscription } from 'rxjs';
@@ -17,7 +17,6 @@ import { ViewportService } from '../../../service/viewport.service';
   imports: [RouterLink, CommonModule, SearchFormComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
-  encapsulation: ViewEncapsulation.None,
 })
 export class SidebarComponent implements OnInit, AfterViewInit, OnDestroy {
   public topics: RxDocument<TopicDocumentType, TopicDocumentMethods>[] = [];

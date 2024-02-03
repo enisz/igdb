@@ -11,7 +11,7 @@ export class TokenPipe implements PipeTransform {
     private readonly tokenService: TokenService,
   ) {}
 
-  transform(value: string, ...args: unknown[]): unknown {
+  transform(value: string, ...args: unknown[]): string {
     const { clientId, accessToken } = this.tokenService.getTokens();
 
     if (clientId && accessToken) {

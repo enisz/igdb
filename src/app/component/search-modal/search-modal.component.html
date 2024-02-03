@@ -30,7 +30,7 @@
                         [ngClass]="{ 'active': activeRow === groupItem.id}"
                         toViewport
                     >
-                        {{ groupItem.title }}
+                        <span [innerHTML]="groupItem.title | escape | emphasize: searchForm.get('term')?.value"></span>
                         @if (groupItem.clearable) {
                             <button type="button" class="btn-close" aria-label="Close" (click)="removeHistoryItem(groupItem.title)"></button>
                         }

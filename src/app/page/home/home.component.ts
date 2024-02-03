@@ -6,6 +6,7 @@ import { NtkmeButtonModule } from '@ctrl/ngx-github-buttons';
 import { NgbCollapse, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { RxDocument } from 'rxdb';
 import { Subscription } from 'rxjs';
+import { TOKEN_VALIDATOR_PATTERN } from '../../app.constant';
 import { PageFooterComponent } from '../../component/page-footer/page-footer.component';
 import { SearchFormComponent } from '../../component/search-form/search-form.component';
 import { TopBarComponent } from '../../component/top-bar/top-bar.component';
@@ -36,9 +37,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   public count = true;
   public size: 'none' | 'large' = 'large';
   public types: ('star' | 'follow' | 'watch' | 'fork' | 'issue' | 'download')[] = ['follow', 'star', 'watch'];
-  private tokenValidatorPattern = '^[0-9a-z]*$';
   public tokenForm: FormGroup;
   private subscriptions: Subscription[] = [];
+
   public constructor(
     private readonly documentationService: DocumentationService,
     private readonly gitService: GitService,
@@ -48,9 +49,26 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
   ) {
     const { clientId, accessToken } = this.getTokens();
+
     this.tokenForm = new FormGroup({
-      clientId: new FormControl(clientId, [Validators.required, Validators.minLength(30), Validators.maxLength(30), Validators.pattern(this.tokenValidatorPattern)]),
-      accessToken: new FormControl(accessToken, [Validators.required, Validators.minLength(30), Validators.maxLength(30), Validators.pattern(this.tokenValidatorPattern)]),
+      clientId: new FormControl(
+        clientId,
+        [
+          Validators.required,
+          Validators.minLength(30),
+          Validators.maxLength(30),
+          Validators.pattern(TOKEN_VALIDATOR_PATTERN)
+        ],
+      ),
+      accessToken: new FormControl(
+        accessToken,
+        [
+          Validators.required,
+          Validators.minLength(30),
+          Validators.maxLength(30),
+          Validators.pattern(TOKEN_VALIDATOR_PATTERN)
+        ],
+      ),
       remember: new FormControl(true),
     });
   }
@@ -101,6 +119,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.tokenService.setTokens(clientId, accessToken, remember);
     this.tokenForm.markAsUntouched();
     this.toastService.success('Tokens saved succesfully!');
+  }
+
+  public isDeleteTokensDisabled(): boolean {
+    const { clientId, accessToken } = this.tokenService.getTokens();
+    return Math.max(clientId.length, accessToken.length) === 0;
   }
 
   public deleteTokens(): void {

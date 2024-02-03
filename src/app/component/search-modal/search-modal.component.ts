@@ -5,16 +5,18 @@ import { Router, RouterLink } from '@angular/router';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RxDocument } from 'rxdb';
 import { Subscription } from 'rxjs';
+import Underscore from 'underscore';
 import { SectionDocumentMethods, SectionDocumentType } from '../../database/document/section.document';
 import { IModalListGroup, IModalListGroupItem } from '../../interface/search-modal.interface';
 import { EmphasizePipe } from '../../pipe/emphasize.pipe';
+import { EscapePipe } from '../../pipe/escape.pipe';
 import { DocumentationService } from '../../service/documentation.service';
 import { SearchService } from '../../service/search.service';
 
 @Component({
   selector: 'app-search-modal',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, EmphasizePipe, CommonModule],
+  imports: [ReactiveFormsModule, RouterLink, EmphasizePipe, CommonModule, EscapePipe],
   templateUrl: './search-modal.component.html',
   styleUrl: './search-modal.component.scss',
   encapsulation: ViewEncapsulation.None,
@@ -43,7 +45,7 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.modalListGroup = this.processSearchHistory(this.searchService.getRecentSearchTerms());
+    this.modalListGroup = this.processSearchHistory(this.searchService.getHistory());
   }
 
   public ngAfterViewInit(): void {
@@ -80,7 +82,7 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
       this.router.navigate(['/documentation'], { fragment: group.slug });
       this.close();
     } else {
-      this.searchForm.get('term')?.setValue(group.title);
+      this.searchForm.get('term')?.setValue(Underscore.unescape(group.title));
       this.handleSearch();
     }
   }
@@ -89,7 +91,8 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
     const term = this.searchForm.get('term')?.value;
 
     if (term.length) {
-      this.searchService.addRecentSearchTerm(term);
+      this.searchService.addHistoryItem(term);
+      this.modalListGroup = this.processSearchHistory(this.searchService.getHistory());
     }
     this.searchForm.get('term')?.setValue('');
     this.handleSearch();
@@ -97,8 +100,8 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public removeHistoryItem(item: string): void {
     this.removingHistoryItem = true;
-    this.searchService.removeRecentSearchTerm(item);
-    this.modalListGroup = this.processSearchHistory(this.searchService.getRecentSearchTerms());
+    this.searchService.removeHistoryItem(item);
+    this.modalListGroup = this.processSearchHistory(this.searchService.getHistory());
   }
 
   public async handleSearch(): Promise<void> {
@@ -108,7 +111,7 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
     const { value: term } = this.searchForm.get('term') as FormControl;
 
     if (!term.length) {
-      this.modalListGroup = this.processSearchHistory(this.searchService.getRecentSearchTerms());
+      this.modalListGroup = this.processSearchHistory(this.searchService.getHistory());
       return;
     }
 
@@ -151,12 +154,12 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
       const term = this.searchForm.get('term')?.value;
 
       if (term) {
-        this.searchService.addRecentSearchTerm(term);
+        this.searchService.addHistoryItem(term);
       }
 
       setTimeout(() => {
         this.searchForm.get('term')?.setValue('');
-        this.modalListGroup = this.processSearchHistory(this.searchService.getRecentSearchTerms());
+        this.modalListGroup = this.processSearchHistory(this.searchService.getHistory());
       }, 500);
     }
   }
@@ -330,7 +333,7 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     let idCounter = 0;
-    for (const item of history) {
+    for (const item of history.slice().reverse()) {
       this.groupItemCount++;
       listGroup.items.push({
         id: idCounter++,

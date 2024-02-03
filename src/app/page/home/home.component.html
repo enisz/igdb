@@ -63,7 +63,7 @@
                                         </h4>
                                         <p>Your tokens are not sent or saved anywhere else but your browser. These tokens will be used only to replace values in the documentation. You can delete your tokens anytime by pressing the button below.</p>
                                         <p class="mb-0 d-flex flex-row-reverse">
-                                            <button class="btn btn-danger btn-sm" (click)="deleteTokens()">Delete my tokens!</button>
+                                            <button class="btn btn-danger btn-sm" (click)="deleteTokens()" [disabled]="isDeleteTokensDisabled()">Delete my tokens!</button>
                                         </p>
                                     </div>
                                 </div>

@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { RxDocument } from 'rxdb';
 import { SectionDocumentMethods, SectionDocumentType } from '../../../database/document/section.document';
+import { SafeHtmlPipe } from '../../../pipe/safe-html.pipe';
 import { TokenPipe } from '../../../pipe/token.pipe';
 import { DocumentationService } from '../../../service/documentation.service';
 import { ScrollSpyService } from '../../../service/scroll-spy.service';
@@ -8,9 +9,10 @@ import { ScrollSpyService } from '../../../service/scroll-spy.service';
 @Component({
   selector: 'app-section',
   standalone: true,
-  imports: [TokenPipe],
+  imports: [TokenPipe, SafeHtmlPipe],
   templateUrl: './section.component.html',
-  styleUrl: './section.component.scss'
+  styleUrl: './section.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class SectionComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input('section-id') public sectionId = '';
