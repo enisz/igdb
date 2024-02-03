@@ -3,7 +3,7 @@ overview: Utility tools for making the job easier with the IGDB API
 icon: fa-tools
 ---
 
-# IGDB Utils
+# Utilities
 
 A utility class to help with some tasks.
 
@@ -24,6 +24,8 @@ A helper method to generate your `access_token`. This method will send a post re
 
 If a non-successful response is recieved from Twitch, an `Exception` is thrown.
 
+## Example {.tabset}
+### Source
 ```php
 <?php
 
@@ -39,7 +41,7 @@ If a non-successful response is recieved from Twitch, an `Exception` is thrown.
 ?>
 ```
 
-The output of the method will contain your new `access_token`:
+### Result
 
 ```text
 object(stdClass)[1]
@@ -48,6 +50,9 @@ object(stdClass)[1]
   public 'token_type' => string 'bearer' (length=6)
 ```
 
+## {-}
+
+The output of the method will contain your new `access_token`:
 
 ## Image URL
 ```php
@@ -82,6 +87,8 @@ Get the URL of a specific sized image for a record.
 
 If an invalid second parameter is passed, an `IGDBInvalidParameterException` will be thrown.
 
+## Example {.tabset}
+### Source
 ```php
 <?php
 
@@ -114,7 +121,7 @@ If an invalid second parameter is passed, an `IGDBInvalidParameterException` wil
 ?>
 ```
 
-The script above will produce the output below:
+### Result
 
 ```text
 array (size=1)
@@ -182,4 +189,224 @@ array (size=1)
 720p version: https://images.igdb.com/igdb/image/upload/t_720p/ar4v3.jpg
 ```
 
-On the last line you can see the 720p version of the image which is a valid url.
+## {-}
+
+On the last line of the result you can see the 720p version of the image which is a valid url.
+
+## Webhooks
+
+There are multiple helper methods to work with webhooks.
+
+### Create a webhook
+```php
+public static function create_webhook(string $client_id, string $access_token, string $endpoint, string $method, string $url, string $secret) throws IGDBInvalidParameterException, Exception: mixed
+```
+
+This method will create a webhook.
+
+**Parameters:**
+ - `$client_id`: your client id
+ - `$access_token`: your generated access token
+ - `$endpoint`: the name of the endpoint where you expect new data from (it's name, not the url!)
+ - `$method`: the type of method. Can be:
+   - `create`: sends new items from the API
+   - `delete`: sends deleted items from the API
+   - `update`: sends updated items from the API
+ - `$url`: your url where you expect the data to be sent
+ - `$secret`: the password for your webhook
+
+**Returns:** the details of the created webhook
+
+The method will throw `IGDBInvalidParameterException` if:
+ - `$endpoint` is invalid
+ - `$method` is invalid
+
+The method will throw `Exception` if non-successful response code is recieved from IGDB API.
+
+### Example {.tabset}
+#### Source
+
+```php
+<?php
+
+  var_dump(
+    IGDBUtils::create_webhook(
+      "{client_id}",
+      "{access_token}",
+      "game",
+      "create",
+      "http://my-url.com/my-endpoint",
+      "very secret password"
+    )
+  );
+
+?>
+```
+
+#### Result
+
+```text
+object(stdClass)[1]
+  public 'id' => int 9034
+  public 'url' => string 'http://my-url.com/my-endpoint' (length=29)
+  public 'category' => int 625691411
+  public 'sub_category' => int 0
+  public 'active' => boolean true
+  public 'number_of_retries' => int 0
+  public 'api_key' => string 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' (length=30)
+  public 'secret' => string 'very secret password' (length=20)
+  public 'created_at' => int 1705802392
+  public 'updated_at' => int 1705802392
+```
+### {-}
+
+### Get a webhook
+```php
+public static function get_webhook(string $client_id, string $access_token, string $id): mixed
+```
+
+Get a single webhook by its ID.
+
+**Parameters:**
+ - `$client_id`: your client id
+ - `$access_token`: your generated access token
+ - `$id`: the ID of the webhook
+
+**Returns:** details of the requested webhook
+
+### Example {.tabset}
+#### Source
+
+```php
+<?php
+
+  var_dump(
+    IGDBUtils::get_webhook("{client_id}", "{access_token}", 9034)
+  );
+
+?>
+```
+
+#### Result
+
+```text
+object(stdClass)[1]
+  public 'id' => int 9034
+  public 'url' => string 'http://my-url.com/my-endpoint' (length=29)
+  public 'category' => int 625691411
+  public 'sub_category' => int 0
+  public 'active' => boolean true
+  public 'number_of_retries' => int 0
+  public 'api_key' => string 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' (length=30)
+  public 'secret' => string 'very secret password' (length=20)
+  public 'created_at' => int 1705802392
+  public 'updated_at' => int 1705802392
+```
+
+### {-}
+
+### Get all webhooks
+```php
+public static function get_webhooks(string $client_id, string $access_token): array
+```
+
+Get all registered webhooks.
+
+**Parameters:**
+ - `$client_id`: your client id
+ - `$access_token`: your generated access token
+
+**Returns:** details of all registered webhooks
+
+### Example {.tabset}
+#### Source
+```php
+
+<?php
+  var_dump(
+    IGDBUtils::get_webhooks("{client_id}", "{access_token}")
+  );
+
+?>
+```
+
+#### Result
+
+```text
+array (size=2)
+  0 =>
+    object(stdClass)[2]
+      public 'id' => int 9034
+      public 'url' => string 'http://my-url.com/my-endpoint' (length=29)
+      public 'category' => int 625691411
+      public 'sub_category' => int 0
+      public 'active' => boolean true
+      public 'number_of_retries' => int 0
+      public 'api_key' => string 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' (length=30)
+      public 'secret' => string 'very secret password' (length=20)
+      public 'created_at' => int 1705802392
+      public 'updated_at' => int 1705802392
+  1 =>
+    object(stdClass)[4]
+      public 'id' => int 9035
+      public 'url' => string 'http://my-url.com/my-other-endpoint' (length=35)
+      public 'category' => int 625691411
+      public 'sub_category' => int 2
+      public 'active' => boolean true
+      public 'number_of_retries' => int 0
+      public 'api_key' => string 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' (length=30)
+      public 'secret' => string 'very secret password' (length=20)
+      public 'created_at' => int 1705803591
+      public 'updated_at' => int 1705803745
+```
+### {-}
+
+### Delete a webhook
+```php
+public static function delete_webhook($client_id, $access_token, $id)
+```
+
+Delete a webhook by its ID.
+
+**Parameters:**
+ - `$client_id`: your client id
+ - `$access_token`: your generated access token
+ - `$endpoint`: the name of the endpoint where you expect new data from (it's name, not the url!)
+ - `$method`: the type of method. Can be:
+   - `create`: sends new items from the API
+   - `delete`: sends deleted items from the API
+   - `update`: sends updated items from the API
+ - `$url`: your url where you expect the data to be sent
+ - `$secret`: the password for your webhook
+
+**Returns:** the details of the deleted webhook
+
+### Example {.tabset}
+#### Source
+
+```php
+<?php
+
+  var_dump(
+    IGDBUtils::delete_webhook("{client_id}", "{access_token}", 9034)
+  );
+
+?>
+```
+
+#### Result
+
+```text
+object(stdClass)[1]
+  public 'id' => int 9034
+  public 'url' => string 'http://my-url.com/my-endpoint' (length=29)
+  public 'category' => int 625691411
+  public 'sub_category' => int 0
+  public 'active' => boolean true
+  public 'number_of_retries' => int 0
+  public 'api_key' => string 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' (length=30)
+  public 'secret' => string 'very secret password' (length=20)
+  public 'created_at' => int 1705802392
+  public 'updated_at' => int 1705802392
+```
+### {-}

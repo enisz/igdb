@@ -1,4 +1,6 @@
+import { LINK_REGEXP, TABSET_REGEXP } from "../constant";
 import StringR from "../lib/StringR";
+import { Tabset } from "./Tabset";
 
 export default class Section {
     private id: number;
@@ -8,6 +10,7 @@ export default class Section {
     private level: number;
     private title: string;
     private body: string;
+    private tabsets: Tabset[] = [];
 
     constructor(id: number, topicId: number, parents: number[], level: number, title: string, body: string) {
         this.id = id;
@@ -49,5 +52,32 @@ export default class Section {
 
     public getBody(): string {
         return this.body;
+    }
+
+    public setBody(body: string): void {
+        this.body = body;
+    }
+
+    public hasLinks(): boolean {
+        return !!this.body.match(LINK_REGEXP);
+    }
+
+    public getLinks(): RegExpMatchArray | null {
+        return this.body.match(LINK_REGEXP);
+    }
+
+    public hasTabset(): boolean {
+        return !!this.body.match(TABSET_REGEXP);
+    }
+
+    public addTabset(id: string, name: string): Tabset {
+        const tabset = new Tabset(id, name);
+        this.tabsets.push(tabset);
+
+        return tabset;
+    }
+
+    public getTabsets(): Tabset[] {
+        return this.tabsets;
     }
 }

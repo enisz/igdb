@@ -1,3 +1,4 @@
+import { LINK_REGEXP } from "../constant";
 import StringR from "../lib/StringR";
 import Section from "./Section";
 
@@ -59,5 +60,13 @@ export default class Topic {
 
     public getDate(): number | null {
         return this.date;
+    }
+
+    public hasLinks(): boolean {
+        return !!this.body.match(LINK_REGEXP);
+    }
+
+    public getLinks(): RegExpMatchArray | null {
+        return this.body.match(LINK_REGEXP);
     }
 }

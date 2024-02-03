@@ -1,13 +1,14 @@
+import { program } from 'commander';
+import Fs from 'fs';
+import Md5 from 'md5';
+import Mustache from 'mustache';
+import Path from 'path';
+import { RxCollection, RxDatabase, RxJsonSchema, addRxPlugin, createRxDatabase } from 'rxdb';
+import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
+import { RxDBJsonDumpPlugin } from 'rxdb/plugins/json-dump';
+import { getRxStorageMemory } from 'rxdb/plugins/storage-memory';
 import FileWriter from "../abstract/FileWriter";
 import Document from "../model/Document";
-import Fs from 'fs';
-import { program } from 'commander';
-import { RxCollection, RxDatabase, RxJsonSchema, addRxPlugin, createRxDatabase } from 'rxdb';
-import { getRxStorageMemory } from 'rxdb/plugins/storage-memory';
-import { RxDBJsonDumpPlugin } from 'rxdb/plugins/json-dump';
-import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
-import Md5 from 'md5';
-import Path from 'path';
 
 export default class RxdbWriter extends FileWriter {
     private marked: Marked;
@@ -33,6 +34,8 @@ export default class RxdbWriter extends FileWriter {
         addRxPlugin(RxDBJsonDumpPlugin);
         addRxPlugin(RxDBDevModePlugin);
 
+        this.processTabsets(document);
+
         const rxdb: IGDBWrapperDatabase = await createRxDatabase<DocumentationDatabaseCollections>({
             name: 'igdbwdb',
             storage: getRxStorageMemory(),
@@ -49,36 +52,59 @@ export default class RxdbWriter extends FileWriter {
 
         for (const topic of document.getTopics()) {
             const topicId = this.generateId(topic.getId(), topic.getSlug());
+            const topicDocument = {
+              id: topicId,
+              order: order++,
+              icon: topic.getIcon(),
+              slug: topic.getSlug(),
+              overview: topic.getOverview(),
+              date: topic.getDate(),
+              title: topic.getTitle(),
+              stripped: this.toStripped(topic.getBody()),
+              html: this.toHtml(topic.getBody()),
+            };
 
-            await collections.topics.insert({
-                id: topicId,
-                order: order++,
-                icon: topic.getIcon(),
-                slug: topic.getSlug(),
-                overview: topic.getOverview(),
-                date: topic.getDate(),
-                title: topic.getTitle(),
-                stripped: this.toStripped(topic.getBody()),
-                html: this.toHtml(topic.getBody()),
-            });
+            await collections.topics.insert(topicDocument);
 
             for (const section of topic.getSections()) {
-                await collections.sections.insert({
-                    id: this.generateId(section.getId(), section.getSlug()),
-                    order: order++,
-                    topicId,
-                    parents: section.getParents().map(
-                        (parentId: number) => {
-                            const s: Section | undefined = topic.getSections().find((section: Section) => section.getId() === parentId);
-                            return s ? this.generateId(s.getId(), s.getSlug()) : null;
-                        }
-                    ),
-                    slug: section.getSlug(),
-                    level: section.getLevel(),
-                    title: section.getTitle(),
-                    html: this.toHtml(section.getBody()),
-                    stripped: this.toStripped(section.getBody()),
-                })
+              const sectionDocument = {
+                id: this.generateId(section.getId(), section.getSlug()),
+                order: order++,
+                topicId,
+                parents: section.getParents().map(
+                    (parentId: number) => {
+                        const s: Section | undefined = topic.getSections().find((section: Section) => section.getId() === parentId);
+                        return s ? this.generateId(s.getId(), s.getSlug()) : null;
+                    }
+                ),
+                slug: section.getSlug(),
+                level: section.getLevel(),
+                title: section.getTitle(),
+                html: this.toHtml(section.getBody()),
+                stripped: this.toStripped(section.getBody()),
+              };
+
+              const tabsets = section.getTabsets();
+
+              if (tabsets) {
+                for (const tabset of tabsets) {
+
+                  const context = {
+                    id: tabset.getId(),
+                    name: tabset.getName(),
+                    tabs: tabset.getTabs().map((tab: Tab) => ({ id: tab.getId(), title: tab.getTitle(), content: this.toHtml(tab.getContent()), active: tab.getActive() })),
+                  };
+
+                  const template = Mustache.render(
+                    Fs.readFileSync(Path.join(__dirname, '..', '..', 'assets', 'tabset.mustache'), { encoding: 'utf-8'} ),
+                    context,
+                  );
+
+                  sectionDocument.html = sectionDocument.html.replace(`[.tabset#${tabset.getId()}]`, template);
+                }
+              }
+
+              await collections.sections.insert(sectionDocument);
             }
         }
 
@@ -89,6 +115,56 @@ export default class RxdbWriter extends FileWriter {
         );
 
         await rxdb.remove();
+    }
+
+    private processTabsets(document: Document): void {
+      for (const topic of document.getTopics()) {
+        for (const section of topic.getSections()) {
+          let tabsetCounter = 0;
+          while (section.hasTabset()) {
+            const match = section.getBody().match(TABSET_REGEXP);
+            const tabsetName = match![1].trim();
+            const tabsetId = Md5(`${topic.getId()}-${section.getId()}-${tabsetName}-${tabsetCounter++}`).substring(0, 10);
+            const tabset = section.addTabset(tabsetId, tabsetName);
+
+            let start = 0;
+            let end = 0;
+            let lineCounter = 0;
+            let tabIdCounter = 0;
+            const body = section.getBody().split('\n').map((line: string) => line.trimEnd());
+            let tab;
+            for (const line of body) {
+              if (line.includes('#') && line.includes(tabset.getName()) && line.includes('{.tabset}')) {
+                start = lineCounter;
+                continue;
+              }
+
+              if (line.includes('#') && line.includes('{-}')) {
+                end = lineCounter;
+                break;
+              }
+
+              const headingMatcher = line.match(HEADING_REGEXP);
+
+              if (headingMatcher) {
+                const tabTitle = headingMatcher[2].trim();
+                const tabId = Md5(`${tabsetId}-${tabIdCounter++}-${tabTitle}`).substring(0, 10);
+
+                tab = tabset.addTab(tabId, tabTitle);
+              } else {
+                if (tab) {
+                  tab.addContentLine(line);
+                }
+              }
+
+              lineCounter++;
+            }
+
+            body.splice(start, end - start + 2, `[.tabset#${tabset.getId()}]`);
+            section.setBody(body.join('\n'));
+          }
+        }
+      }
     }
 
     private toHtml(markdown: string): string {
@@ -261,12 +337,13 @@ export type TopicCollectionMethods = {
 
 export type TopicCollection = RxCollection<TopicDocumentType, TopicDocumentMethods, TopicCollectionMethods>;
 
-import { RxDocument } from "rxdb";
-import Section from "../model/Section";
 import { Marked, MarkedExtension } from "marked";
-import { templatePath } from "..";
-import StringR from "./StringR";
 import RemoveMarkdown from "remove-markdown";
+import { RxDocument } from "rxdb";
+import { templatePath } from "..";
+import { HEADING_REGEXP, TABSET_REGEXP } from '../constant';
+import Section from "../model/Section";
+import { Tab } from '../model/Tab';
 
 export type TopicDocumentType = {
     id: string;

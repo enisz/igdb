@@ -1,10 +1,10 @@
+import { Option, program } from 'commander';
+import Fs from 'fs';
+import Path from 'path';
+import FileWriter from "./abstract/FileWriter";
 import Builder from "./lib/Builder";
 import Processor from "./lib/Processor";
 import Reader from "./lib/Reader";
-import Path from 'path';
-import { program, Option } from 'commander';
-import Fs from 'fs';
-import FileWriter from "./abstract/FileWriter";
 import RxdbWriter from "./lib/RxdbWriter";
 
 program
@@ -15,7 +15,7 @@ program
 program.parse(process.argv);
 
 const { output, watch, filename } = program.opts();
-export const templatePath = Path.join(__dirname, '..', 'templates');
+export const templatePath = Path.join(__dirname, '..', 'assets', 'templates');
 export const exportPath = Path.join(__dirname, '..', '..', 'src', 'assets');
 export const databaseName = filename || 'database';
 const reader = new Reader(templatePath);
@@ -44,7 +44,6 @@ if(watch) {
             }, 100);
 
             console.log(`${Path.join(templatePath, filename)} ${event}d!`);
-
             builder.build();
         }
     });

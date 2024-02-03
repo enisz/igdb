@@ -1,8 +1,8 @@
-import FileReader from '../abstract/FileReader'
-import File from '../model/File';
+import ChildProcess from 'child_process';
 import Fs from 'fs';
 import Path from 'path';
-import ChildProcess from 'child_process';
+import FileReader from '../abstract/FileReader';
+import File from '../model/File';
 
 export default class Reader extends FileReader {
     public constructor(path: string) {

@@ -1,0 +1,18 @@
+<strong>{{name}}</strong>
+
+<ul class="nav nav-tabs" id="tablist-{{id}}" role="tablist">
+{{#tabs}}
+    <li class="nav-item" role="presentation">
+        <button class="nav-link{{#active}} active{{/active}}" id="tab-{{id}}" data-bs-toggle="tab" data-bs-target="#pane-{{id}}" type="button" role="tab" aria-controls="pane-{{id}}">
+            {{ title }}
+        </button>
+    </li>
+{{/tabs}}
+</ul>
+<div class="tab-content border-start border-end border-bottom" id="content-{{id}}">
+{{#tabs}}
+    <div class="tab-pane fade show{{#active}} active{{/active}}" id="pane-{{id}}" role="tabpanel" aria-labelledby="tab-{{id}}" tabindex="0">
+        {{{ content }}}
+    </div>
+{{/tabs}}
+</div>

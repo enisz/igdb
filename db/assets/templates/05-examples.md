@@ -1,5 +1,5 @@
 ---
-overview: Working examples, covering most of the functionalities of the wrapper
+overview: Working examples, covering most of the functionalities of the wrapper and the additional classes
 icon: fa-code
 ---
 
@@ -7,7 +7,7 @@ icon: fa-code
 
 The examples in this section will try to cover most of the use cases of the wrapper.
 
->:success To see your own tokens in the example codes set them up on the home page as described in [Using the documentation section](#using-the-documentation)!
+> To see your own tokens in the example codes set them up on the home page as described in [Using the documentation section](#using-the-documentation)!
 
 ## Basic Example
 
@@ -15,7 +15,8 @@ A basic example to send your apicalypse query to the IGDB API.
 
 > Make sure to place your [endpoint method](#endpoints) calls in a try...catch block to be able to catch errors!
 
-**Code**
+## Example {.tabset}
+### Source
 
 ```php
 <?php
@@ -43,7 +44,7 @@ A basic example to send your apicalypse query to the IGDB API.
 ?>
 ```
 
-**Result**
+### Result
 
 ```text
 array (size=5)
@@ -74,13 +75,16 @@ array (size=5)
       public 'name' => string 'Uncharted 4: A Thief's End' (length=26)
 ```
 
+## {-}
+
 ## Using the Query Builder
 
 An example to see how to use the [IGDB Query Builder](#igdb-query-builder) to build the query strings.
 
 > Make sure to place your [query builder configuration](#configuring-methods) and [endpoint method](#endpoints) calls in a try...catch block to be able to catch errors!
 
-**Code**
+## Example {.tabset}
+### Source
 
 ```php
 <?php
@@ -124,7 +128,7 @@ An example to see how to use the [IGDB Query Builder](#igdb-query-builder) to bu
 ?>
 ```
 
-**Result**
+### Result
 
 ```text
 array (size=5)
@@ -155,13 +159,16 @@ array (size=5)
       public 'name' => string 'Uncharted 4: A Thief's End' (length=26)
 ```
 
+## {-}
+
 ## Query Builder with Options
 
 The [IGDB Query Builder](#igdb-query-builder) still supports the legacy `$options` array to parameterize the query.
 
 >:warning Using the Builder this way is not recommended as this functionality may be removed in future versions. Use the [builder approach](#builder-approach) instead.
 
-**Code**
+## Example {.tabset}
+### Source
 
 ```php
 <?php
@@ -210,7 +217,7 @@ The [IGDB Query Builder](#igdb-query-builder) still supports the legacy `$option
 ?>
 ```
 
-**Result**
+### Result
 
 ```text
 array (size=5)
@@ -240,6 +247,7 @@ array (size=5)
       public 'cover' => int 81917
       public 'name' => string 'Uncharted 4: A Thief's End' (length=26)
 ```
+## {-}
 
 ## Counting Results
 
@@ -247,7 +255,8 @@ An example to count the matched records.
 
 > When `true` is passed as the second parameter, the return value will be an object with a single property called `count`. For more details on the return values of the endpoint methods please refer to the [return values section](#return-values).
 
-**Code**
+## Example {.tabset}
+### Source
 
 ```php
 <?php
@@ -292,18 +301,21 @@ An example to count the matched records.
 ?>
 ```
 
-**Result**
+### Result
 
 ```text
 object(stdClass)[3]
   public 'count' => int 8081
 ```
 
+## {-}
+
 ## Expander
 
 Some fields are actually ids pointing to other endpoints. The expander feature is a convenient way to go into these other endpoints and access more information from them in the same query, instead of having to do multiple queries.
 
-**Code**
+## Example {.tabset}
+### Source
 
 ```php
 <?php
@@ -343,7 +355,7 @@ Some fields are actually ids pointing to other endpoints. The expander feature i
 ?>
 ```
 
-**Result**
+### Result
 
 ```text
 array (size=2)
@@ -391,13 +403,16 @@ array (size=2)
               public 'url' => string 'https://www.igdb.com/themes/stealth' (length=35)
 ```
 
+## {-}
+
 ## MultiQuery
 
 Using multiquery multiple queries can be executed against the IGDB database using a single query. The multiquery method expects an array of multiquery query strings.
 
 >:info Using the [`build`](#building-the-query) method with a boolean `true` parameter, a query will be returned with a multiquery syntax.
 
-**Code**
+## Example {.tabset}
+### Source
 
 ```php
 <?php
@@ -448,7 +463,7 @@ Using multiquery multiple queries can be executed against the IGDB database usin
 ?>
 ```
 
-**Result**
+### Result
 
 ```text
 array (size=2)
@@ -485,3 +500,4 @@ array (size=2)
               public 'name' => string 'Red dead Redemption 2: Ultimate Edition' (length=39)
               public 'version_parent' => int 25076
 ```
+## {-}

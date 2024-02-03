@@ -1,11 +1,12 @@
+import FrontMatter from 'front-matter';
 import FileProcessor from "../abstract/FileProcessor";
+import { HEADING_REGEXP } from "../constant";
 import { IMarkdownAttributes } from "../interface/IMarkdownAttributes";
 import Document from "../model/Document";
 import File from '../model/File';
-import FrontMatter from 'front-matter';
 import Paragraph from "../model/Paragraph";
-import Topic from "../model/Topic";
 import Section from "../model/Section";
+import Topic from "../model/Topic";
 import StringR from "./StringR";
 
 export default class Processor extends FileProcessor {
@@ -19,18 +20,21 @@ export default class Processor extends FileProcessor {
 
         for (const file of files) {
             const { attributes, body } = FrontMatter<IMarkdownAttributes>(file.getContent());
-            const lines = body.split('\n');
+            let tabset = false;
 
-            for (const line of lines) {
-                const match = line.match(new RegExp('^(\#{1,6})(.*)'));
+            for (const line of body.split('\n').map((line: string) => line.trimEnd())) {
+                const match = line.match(HEADING_REGEXP);
 
-                if (match) {
+                if (line.endsWith('{.tabset}')) tabset = true;
+
+                if (match && !tabset) {
                     const id = paragraphId++;
                     const paragraph = new Paragraph(id, match[2].trim(), match[1].length);
                     paragraph.setDate(file.getDate());
                     paragraphs.push(paragraph);
                     attributeMap[id] = attributes;
                 } else {
+                    if (line.endsWith('{-}')) tabset = false;
                     paragraphs[paragraphs.length - 1].addLine(line);
                 }
             }
@@ -54,7 +58,38 @@ export default class Processor extends FileProcessor {
             }
         }
 
+        // this.validateAnchors(document);
+
         return document;
+    }
+
+    private validateAnchors(document: Document): void {
+        const headings: string[] = [];
+
+        for (const topic of document.getTopics()) {
+            const topicTitle = topic.getTitle();
+
+            if (!headings.includes(topicTitle)) {
+                headings.push(topicTitle);
+            }
+
+            for (const section of topic.getSections()) {
+                const sectionTitle = section.getTitle();
+
+                if (!headings.includes(sectionTitle)) {
+                    headings.push(sectionTitle);
+                }
+            }
+        }
+
+        for (const topic of document.getTopics()) {
+            if (topic.hasLinks()) {
+
+            }
+            for (const section of topic.getSections()) {
+            }
+        }
+
     }
 
     private makeSlugUnique(item: Topic | Section): void {
