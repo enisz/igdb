@@ -407,7 +407,7 @@ array (size=2)
 
 ## MultiQuery
 
-Using multiquery multiple queries can be executed against the IGDB database using a single query. The multiquery method expects an array of multiquery query strings.
+Using multiquery multiple queries can be executed against the IGDB database using a single query. The multiquery method expects an array of multiquery query strings or `IGDBQueryBuilder` instances.
 
 >:info Using the [`build`](#building-the-query) method with a boolean `true` parameter, a query will be returned with a multiquery syntax.
 
@@ -447,10 +447,15 @@ Using multiquery multiple queries can be executed against the IGDB database usin
 
         var_dump(
             $igdb->multiquery(
-                array(
-                    $main->build(true),
-                    $bundle->build(true)
-                )
+                // either the builder objects in an array
+                array($main, $bundle)
+
+                // or the query strings built from then
+                // or your custom queries as string
+                // array(
+                //   $main->build_multiquery(),
+                //   $bundle->build_multiquery()
+                // )
             )
         );
     } catch (IGDBInvaliParameterException $e) {

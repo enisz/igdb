@@ -979,9 +979,10 @@ If a multiquery is required, a few extra fields has to be set for the builder:
             ->name("Game with ID of 25076")
             ->endpoint("game")
             ->fields("id,name")
-            ->where("id = 25076")
-            // note the true parameter
-            ->build(true);
+            ->where("id = 25076");
+
+        echo $builder->build_multiquery();
+
     } catch (IGDBInvaliParameterException $e) {
         // invalid key or value found in the $options array
         echo $e->getMessage();
