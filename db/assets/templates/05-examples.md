@@ -451,7 +451,6 @@ Using multiquery multiple queries can be executed against the IGDB database usin
                 array($main, $bundle)
 
                 // or the query strings built from then
-                // or your custom queries as string
                 // array(
                 //   $main->build_multiquery(),
                 //   $bundle->build_multiquery()
