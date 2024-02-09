@@ -16,6 +16,7 @@ program.parse(process.argv);
 
 const { output, watch, filename } = program.opts();
 export const templatePath = Path.join(__dirname, '..', 'assets', 'templates');
+export const mustachePath = Path.join(__dirname, '..', 'assets', 'mustache');
 export const exportPath = Path.join(__dirname, '..', '..', 'src', 'assets');
 export const databaseName = filename || 'database';
 const reader = new Reader(templatePath);

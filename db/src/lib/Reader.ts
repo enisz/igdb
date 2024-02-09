@@ -1,8 +1,8 @@
 import ChildProcess from 'child_process';
-import Fs from 'fs';
 import Path from 'path';
 import FileReader from '../abstract/FileReader';
 import File from '../model/File';
+import FileHandler from './FileHandler';
 
 export default class Reader extends FileReader {
     public constructor(path: string) {
@@ -10,11 +10,11 @@ export default class Reader extends FileReader {
     }
 
     public read(): File[] {
-        return Fs
-            .readdirSync(this.getPath(), { encoding: 'utf-8'})
+        return FileHandler
+            .readDir(this.getPath())
             .filter((filename: string) => filename.endsWith('.md'))
             .map((filename: string) => {
-                const content = Fs.readFileSync(Path.join(this.getPath(), filename), { encoding: 'utf-8'});
+                const content = FileHandler.readFile(Path.join(this.getPath(), filename));
                 const path = Path.join(this.getPath(), filename);
                 const timestamp = ChildProcess.execSync(`git log --format=%ct "${path}"`, { encoding: 'utf-8'}).trim();
 

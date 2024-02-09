@@ -1,7 +1,5 @@
 import { program } from 'commander';
-import Fs from 'fs';
 import Md5 from 'md5';
-import Mustache from 'mustache';
 import Path from 'path';
 import { RxCollection, RxDatabase, RxJsonSchema, addRxPlugin, createRxDatabase } from 'rxdb';
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
@@ -9,6 +7,8 @@ import { RxDBJsonDumpPlugin } from 'rxdb/plugins/json-dump';
 import { getRxStorageMemory } from 'rxdb/plugins/storage-memory';
 import FileWriter from "../abstract/FileWriter";
 import Document from "../model/Document";
+
+const base64img = require('base64-img');
 
 export default class RxdbWriter extends FileWriter {
     private marked: Marked;
@@ -95,12 +95,7 @@ export default class RxdbWriter extends FileWriter {
                     tabs: tabset.getTabs().map((tab: Tab) => ({ id: tab.getId(), title: tab.getTitle(), content: this.toHtml(tab.getContent()), active: tab.getActive() })),
                   };
 
-                  const template = Mustache.render(
-                    Fs.readFileSync(Path.join(__dirname, '..', '..', 'assets', 'tabset.mustache'), { encoding: 'utf-8'} ),
-                    context,
-                  );
-
-                  sectionDocument.html = sectionDocument.html.replace(`[.tabset#${tabset.getId()}]`, template);
+                  sectionDocument.html = sectionDocument.html.replace(`[.tabset#${tabset.getId()}]`, MustacheHandler.render('tabset', context));
                 }
               }
 
@@ -108,10 +103,9 @@ export default class RxdbWriter extends FileWriter {
             }
         }
 
-        Fs.writeFileSync(
-            this.getAbsolutePath(),
-            program.opts().production ? JSON.stringify(await rxdb.exportJSON()) : JSON.stringify(await rxdb.exportJSON(), null, 2),
-            { encoding: 'utf-8' },
+        FileHandler.writeFile(
+          this.getAbsolutePath(),
+          program.opts().production ? JSON.stringify(await rxdb.exportJSON()) : JSON.stringify(await rxdb.exportJSON(), null, 2),
         );
 
         await rxdb.remove();
@@ -176,75 +170,80 @@ export default class RxdbWriter extends FileWriter {
     }
 
     private link(href: string, title: string | null | undefined, text: string): string {
-      const local = href.startsWith('#');
+      const context = {
+        local: href.startsWith('#'),
+        href,
+        title: text.replace(/(<([^>]+)>)/gi, ''),
+        // title: this.stripHtmlTags(text),
+        text,
+      };
 
-      return `<a href="${local ? `documentation${href}` : href}" title="${title || text}${!local ? ' (external link)' : ''}" target="${local ? '_self' : '_blank'}" />${text}${!local ? ' <i class="fa-solid fa-arrow-up-right-from-square fa-2xs"></i>' : ''}</a>`;
+      return MustacheHandler.render('link', context);
     }
 
     private image(href: string, title: string | null, text: string): string {
-      const base64img = require('base64-img');
-      const src = Path.join(templatePath, href);
-      const base64src = base64img.base64Sync(src);
+      const context = {
+        src: base64img.base64Sync(Path.join(templatePath, href)),
+        text,
+      };
 
-      return `
-          <figure class="figure docs-figure py-3 w-100 text-center">
-              <img class="img-fluid" src="${base64src}" />
-              <figcaption class="figure-caption mt-3">${title || text}</figcaption>
-          </figure>
-      `;
+      return MustacheHandler.render('image', context);
     }
 
     private blockquote(quote: string): string {
-      const isSeverity = (string: string): boolean => string.startsWith(':');
-      const getSeverity = (string: string): string => isSeverity(string) ? string.substring(1) : 'info';
-      const getIcon = (severity: string): string => {
-          switch(getSeverity(severity)) {
-              case 'warning':
-                  return 'fa-bullhorn';
-                  break;
-              case 'success':
-                  return 'fa-thumbs-up';
-                  break;
-              case 'danger':
-                  return 'fa-triangle-exclamation';
-                  break;
-              default:
-                  return 'fa-circle-info'
-                  break;
-          }
-      }
-      const getTitle = (severity: string): string => {
-          switch(getSeverity(severity)) {
-              case 'warning':
-                  return 'Warning';
-                  break;
-              case 'success':
-                  return 'Tip';
-                  break;
-              case 'danger':
-                  return 'Danger';
-                  break;
-              default:
-                  return 'Info'
-                  break;
-          }
-      }
-      const stripped = quote.replace('<p>', '').replace('</p>', '');
-      const [severity, ...rest] = stripped.split(' ');
+      const getSeverity = (content: string): string => {
+        const [severity, ...rest] = content.split(' ');
+        return severity.startsWith(':') ? severity.substring(1) : 'info';
+      };
 
-      return `
-      <div class="callout-block callout-block-${getSeverity(severity)}">
-              <div class="content">
-                  <h4 class="callout-title">
-                      <span class="callout-icon-holder me-1">
-                          <i class="fas ${getIcon(severity)}"></i>
-                      </span>
-                      ${getTitle(severity)}
-                  </h4>
-                  ${isSeverity(severity) ? rest.join(' ') : stripped}
-              </div>
-          </div>
-      `;
+      const getTitle = (severity: string): string => {
+        switch(severity.toLowerCase()) {
+          case 'warning':
+              return 'Warning';
+              break;
+          case 'success':
+              return 'Tip';
+              break;
+          case 'danger':
+              return 'Danger';
+              break;
+          default:
+              return 'Info'
+              break;
+        }
+      }
+
+      const getIcon = (severity: string): string => {
+        switch(severity.toLowerCase()) {
+            case 'warning':
+                return 'fa-bullhorn';
+                break;
+            case 'success':
+                return 'fa-thumbs-up';
+                break;
+            case 'danger':
+                return 'fa-triangle-exclamation';
+                break;
+            default:
+                return 'fa-circle-info'
+                break;
+        }
+      }
+
+      if (quote.startsWith('<p>')) {
+        quote = quote.trim().substring(3, quote.length - 5);
+      }
+
+      const severity = getSeverity(quote);
+
+      const context = {
+        severity,
+        icon: getIcon(severity),
+        title: getTitle(severity),
+        quote
+      };
+
+      return MustacheHandler.render('blockquote', context);
     }
 
     private generateId(id: number, slug: string): string {
@@ -344,6 +343,8 @@ import { templatePath } from "..";
 import { HEADING_REGEXP, TABSET_REGEXP } from '../constant';
 import Section from "../model/Section";
 import { Tab } from '../model/Tab';
+import FileHandler from './FileHandler';
+import MustacheHandler from './MustacheHandler';
 
 export type TopicDocumentType = {
     id: string;
