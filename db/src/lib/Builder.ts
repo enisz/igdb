@@ -1,9 +1,11 @@
-import FileReader from "../abstract/FileReader";
-import FileProcessor from "../abstract/FileProcessor";
-import FileWriter from "../abstract/FileWriter";
 import Fs from 'fs';
+import FileProcessor from "../abstract/FileProcessor";
+import FileReader from "../abstract/FileReader";
+import FileWriter from "../abstract/FileWriter";
+import Logger from "./Logger";
 
 export default class Builder {
+    protected logger = Logger.getLogger(Builder.name);
     private reader: FileReader;
     private processor: FileProcessor;
     private writer: FileWriter;

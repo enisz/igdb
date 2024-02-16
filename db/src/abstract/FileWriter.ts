@@ -1,7 +1,9 @@
-import Document from "../model/Document";
 import Path from 'path';
+import Logger from "../lib/Logger";
+import Document from "../model/Document";
 
 export default abstract class FileWriter {
+    protected logger = Logger.getLogger(FileWriter.name);
     private path: string;
     private filename: string;
     private extension: string;

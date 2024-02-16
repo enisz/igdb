@@ -3,6 +3,7 @@ import Fs from 'fs';
 import Path from 'path';
 import FileWriter from "./abstract/FileWriter";
 import Builder from "./lib/Builder";
+import Logger from './lib/Logger';
 import Processor from "./lib/Processor";
 import Reader from "./lib/Reader";
 import RxdbWriter from "./lib/RxdbWriter";
@@ -19,9 +20,13 @@ export const templatePath = Path.join(__dirname, '..', 'assets', 'templates');
 export const mustachePath = Path.join(__dirname, '..', 'assets', 'mustache');
 export const exportPath = Path.join(__dirname, '..', '..', 'src', 'assets');
 export const databaseName = filename || 'database';
+const logger = Logger.getLogger(__filename);
 const reader = new Reader(templatePath);
 const processor = new Processor();
 let writer: FileWriter;
+
+logger.info('Building database');
+logger.debug({ output, watch, filename, templatePath, mustachePath, exportPath, databaseName });
 
 switch(output) {
     case 'rxdb':

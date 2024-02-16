@@ -1,6 +1,8 @@
 import Slug from 'slug';
+import Logger from './Logger';
 
 export default class StringR {
+    private static logger = Logger.getLogger(StringR.name);
     public static capitalize(string: string): string {
         return string.charAt(0).toUpperCase() + string.substring(1);
     }
