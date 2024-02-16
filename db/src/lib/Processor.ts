@@ -58,38 +58,61 @@ export default class Processor extends FileProcessor {
             }
         }
 
-        // this.validateAnchors(document);
-
+        this.validateAnchors(document);
         return document;
     }
 
     private validateAnchors(document: Document): void {
-        const headings: string[] = [];
+        this.logger.info('Validating anchors');
+        const slugs: string[] = [];
 
         for (const topic of document.getTopics()) {
-            const topicTitle = topic.getTitle();
-
-            if (!headings.includes(topicTitle)) {
-                headings.push(topicTitle);
-            }
+            slugs.push(topic.getSlug());
 
             for (const section of topic.getSections()) {
-                const sectionTitle = section.getTitle();
+                slugs.push(section.getSlug());
+            }
+        }
 
-                if (!headings.includes(sectionTitle)) {
-                    headings.push(sectionTitle);
+        for (const topic of document.getTopics()) {
+            const links = topic.getLinks();
+
+            this.logger.info(`${topic.getTitle()}: ${links.length} link${links.length > 1 ? 's' : ''}`);
+            for (const link of links) {
+                const [match, title, href] = link;
+
+                if (href.startsWith('#')) {
+                    if (slugs.includes(href.substring(1))) {
+                        this.logger.info(`  ${match} | VALID`);
+                    } else {
+                        this.logger.error(` ${match} | INVALID`);
+                    }
+                } else {
+                    this.logger.info(`  ${match} | EXTERNAL`)
+                }
+            }
+            for (const section of topic.getSections()) {
+                const route: string[] = [topic.getTitle()]
+                    .concat(document.getSectionsById(section.getParents()).map((section: Section) => section.getTitle()))
+                    .concat([ section.getTitle() ]);
+                const links = section.getLinks();
+
+                this.logger.info(`${route.join(' > ')}: ${links.length} link${links.length > 1 ? 's' : ''}`);
+                for (const link of links) {
+                    const [match, title, href] = link;
+
+                    if (href.startsWith('#')) {
+                        if (slugs.includes(href.substring(1))) {
+                            this.logger.info(`  ${match} | VALID`);
+                        } else {
+                            this.logger.error(` ${match} | INVALID`);
+                        }
+                    } else {
+                        this.logger.info(`  ${match} | EXTERNAL`)
+                    }
                 }
             }
         }
-
-        for (const topic of document.getTopics()) {
-            if (topic.hasLinks()) {
-
-            }
-            for (const section of topic.getSections()) {
-            }
-        }
-
     }
 
     private makeSlugUnique(item: Topic | Section): void {

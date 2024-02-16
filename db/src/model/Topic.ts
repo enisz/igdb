@@ -66,7 +66,13 @@ export default class Topic {
         return !!this.body.match(LINK_REGEXP);
     }
 
-    public getLinks(): RegExpMatchArray | null {
-        return this.body.match(LINK_REGEXP);
+    public getLinks(): string[][] {
+        const result: string[][] = [];
+        let match;
+        while(match = LINK_REGEXP.exec(this.body)) {
+            result.push(match.splice(0, 3));
+        }
+
+        return result;
     }
 }
