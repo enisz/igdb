@@ -53,7 +53,7 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnDestroy {
       this.scrollSpyService.getActiveObservable().subscribe(
         (fragments: string[]) => {
           this.activeIds = fragments;
-          this.keepLinkInView(fragments[fragments.length - 1]);
+          this.keepLinkInViewport(fragments[fragments.length - 1]);
         }
       )
     );
@@ -85,22 +85,21 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sidebar.nativeElement.classList.add('sidebar-hidden');
   }
 
-  private keepLinkInView(id: string): void {
+  private keepLinkInViewport(id: string): void {
     const activeNav = document.getElementById('nav-link-' + id);
 
-    if (activeNav) {
-      const isInViewport = (element: HTMLElement) => {
-        const rect = element.getBoundingClientRect();
-        return (
-            rect.top >= 69 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-    }
-
-    if (!isInViewport(activeNav))
+    if (activeNav && !this.isInViewport(activeNav)) {
       activeNav.scrollIntoView({ block: 'nearest' });
     }
+  }
+
+  private isInViewport(element: HTMLElement): boolean {
+    const rect = element.getBoundingClientRect();
+    return (
+        rect.top >= 69 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
   }
 }
