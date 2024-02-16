@@ -3,7 +3,6 @@ import HtmlMinifier from 'html-minifier';
 import Md5 from 'md5';
 import Path from 'path';
 import { RxCollection, RxDatabase, RxJsonSchema, addRxPlugin, createRxDatabase } from 'rxdb';
-import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 import { RxDBJsonDumpPlugin } from 'rxdb/plugins/json-dump';
 import { getRxStorageMemory } from 'rxdb/plugins/storage-memory';
 import FileWriter from "../abstract/FileWriter";
@@ -31,18 +30,17 @@ export default class RxdbWriter extends FileWriter {
       this.marked = new Marked(markedExtension);
 
       this.htmlMinifierOptions = {
-        // collapseWhitespace: true,
-        // collapseInlineTagWhitespace: true,
-        // conservativeCollapse: true,
-        // removeEmptyAttributes: true,
-        // removeRedundantAttributes: true,
+        collapseWhitespace: true,
+        collapseInlineTagWhitespace: true,
+        conservativeCollapse: true,
+        removeEmptyAttributes: true,
+        removeRedundantAttributes: true,
       };
     }
 
     public async write(document: Document): Promise<void> {
         let order = 1;
         addRxPlugin(RxDBJsonDumpPlugin);
-        addRxPlugin(RxDBDevModePlugin);
 
         this.processTabsets(document);
 
@@ -72,7 +70,6 @@ export default class RxdbWriter extends FileWriter {
               title: topic.getTitle(),
               stripped: this.toStripped(topic.getBody()),
               html: program.opts().production ? HtmlMinifier.minify(this.toHtml(topic.getBody()), this.htmlMinifierOptions) : this.toHtml(topic.getBody()),
-              // html: this.toHtml(topic.getBody()),
             };
 
             await collections.topics.insert(topicDocument);
@@ -92,7 +89,6 @@ export default class RxdbWriter extends FileWriter {
                 level: section.getLevel(),
                 title: section.getTitle(),
                 html: program.opts().production ? HtmlMinifier.minify(this.toHtml(section.getBody()), this.htmlMinifierOptions) : this.toHtml(section.getBody()),
-                // html: this.toHtml(section.getBody()),
                 stripped: this.toStripped(section.getBody()),
               };
 
