@@ -52,8 +52,8 @@ icon: fa-clipboard-list
 
 ## v4.1.0 - May 15, 2021
  - The wrapper got a brand new documentation!
- - Introduced the [IGDBQueryBuilder](#igdb-query-builder) class
- - Introduced the [IGDB Utils](#igdb-utils) class
+ - Introduced the [IGDBQueryBuilder](#the-query-builder) class
+ - Introduced the [IGDB Utils](#utilities) class
  - Introduced `IGDBEndpointException` and `IGDBInvalidParameterException` classes
  - The wrapper [endpoint methods](#endpoints) no longer accepts `$options`, only [apicalypse query strings](https://api-docs.igdb.com/#apicalypse-1)
 
@@ -84,7 +84,7 @@ icon: fa-clipboard-list
 
 ## v2.0.1 - January 27, 2020
  - Minor changes / fixes in the Readme
- - Added method [`_construct_url`](#constructing-urls)
+ - Added method [`_construct_url`](#construct-url)
  - Updated every endpoint method to construct the endpoint url's different
 
 ## v2.0.0 - December 04, 2019

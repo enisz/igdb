@@ -288,7 +288,7 @@ These methods will return **an array of objects** decoded from IGDB response. Pl
 
 `IGDBEndpointException` is thrown if a non-successful response code is recieved from the IGDB API. To find out how to handle request errors, head to the [Handle Request Errors](#handling-request-errors) section.
 
->:success To build your queries, give [IGDB Query Builder](#igdb-query-builder) a try!
+>:success To build your queries, give [IGDB Query Builder](#the-query-builder) a try!
 
 For the endpoint specific fields that the API returns please refer to the IGDB documentation's respective paragraph. Each endpoint has a direct link!
 
@@ -3046,7 +3046,7 @@ public function multiquery(array $queries) throws IGDBEndpointException, IGDBInv
 
 This method executes a query against the `multiquery` endpoint. With this functionality one is able to execute multiple queries in a single request.
 
-> :warning If you are using the [Query Builder](#igdb-query-builder) to construct your queries, the parameters [`name`](#name) and [`endpoint`](#endpoint) are **mandatory**! There is also a third optional parameter [`count`](#count). If any of the mandatory parameters are missing for the multiquery, an `IGDBInvalidParameterException` is thrown! Please refer to the [`build`](#building-the-query) method for more information!
+> :warning If you are using the [Query Builder](#the-query-builder) to construct your queries, the parameters [`name`](#name) and [`endpoint`](#endpoint) are **mandatory**! There is also a third optional parameter [`count`](#count). If any of the mandatory parameters are missing for the multiquery, an `IGDBInvalidParameterException` is thrown! Please refer to the [`build`](#building-the-query) method for more information!
 
 **Parameters**
  - `$queries`: an array of apicalypse formatted multiquery query strings.

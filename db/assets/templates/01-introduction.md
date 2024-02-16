@@ -56,7 +56,7 @@ $igdb = new IGDB("{client_id}", "{access_token}");
 
 ## Building Queries
 
-There is a helper class to build apicalypse queries called [`IGDBQueryBuilder`](#query-builder). With this class you can easily build parameterized queries. The parameters in the example below are valid, so the `$query` variable will hold the valid apicalypse string.
+There is a helper class to build apicalypse queries called [`IGDBQueryBuilder`](#the-query-builder). With this class you can easily build parameterized queries. The parameters in the example below are valid, so the `$query` variable will hold the valid apicalypse string.
 
 ### Example {.tabset}
 #### Source
@@ -88,13 +88,13 @@ limit 1;
 ```
 ### {-}
 
-> For more details on the Query Builder refer to the [Query Builder section](#query-builder) of this documentation.
+> For more details on the Query Builder refer to the [Query Builder section](#the-query-builder) of this documentation.
 
 ## Sending Queries to IGDB
 
 When your `$igdb` object is created you can send your queries to the IGDB API right away. There are multiple [endpoint methods](#endpoints) which will allow you to fetch data from the respective [IGDB Endpoint](https://api-docs.igdb.com/#endpoints). These endpoint methods in the wrapper will accept
  - [apicalypse](https://api-docs.igdb.com/#apicalypse-1) formatted query string
- - configured [`IGDBQueryBuilder`](#query-builder) instance
+ - configured [`IGDBQueryBuilder`](#the-query-builder) instance
 
 ## Example {.tabset}
 ### Source
@@ -140,6 +140,6 @@ array (size=1)
 ## Handling errors
 
 There are two main type of errors which could occur when using the wrapper:
- - **"local" errors**: when using the [Query Builder](#query-builder) to build your queries you may pass invalid parameters to the [configuring methods](#configuring-methods). These methods could throw `IGDBInvalidParameterException` if an invalid parameter or invalid type of parameter is passed. Head to the [Handling Builder Errors](#handling-builder-errors) section to find out more.
+ - **"local" errors**: when using the [Query Builder](#the-query-builder) to build your queries you may pass invalid parameters to the [configuring methods](#configuring-methods). These methods could throw `IGDBInvalidParameterException` if an invalid parameter or invalid type of parameter is passed. Head to the [Handling Builder Errors](#handling-builder-errors) section to find out more.
 
  - **"remote" errors**: when a query is sent to the IGDB API, but for some reason the query fails. This happens only, when a non-successful response code is recieved from the API. In this case the [endpoint methods](#endpoints) will throw an `IGDBEndpointException`. Head to the [Handling Request Errors](#handling-request-errors) section to find out more.

@@ -79,7 +79,7 @@ array (size=5)
 
 ## Using the Query Builder
 
-An example to see how to use the [IGDB Query Builder](#igdb-query-builder) to build the query strings.
+An example to see how to use the [IGDB Query Builder](#the-query-builder) to build the query strings.
 
 > Make sure to place your [query builder configuration](#configuring-methods) and [endpoint method](#endpoints) calls in a try...catch block to be able to catch errors!
 
@@ -163,9 +163,9 @@ array (size=5)
 
 ## Query Builder with Options
 
-The [IGDB Query Builder](#igdb-query-builder) still supports the legacy `$options` array to parameterize the query.
+The [IGDB Query Builder](#the-query-builder) still supports the legacy `$options` array to parameterize the query.
 
->:warning Using the Builder this way is not recommended as this functionality may be removed in future versions. Use the [builder approach](#builder-approach) instead.
+>:warning Using the Builder this way is not recommended as this functionality may be removed in future versions. Use the [builder approach](#builder-methods) instead.
 
 ## Example {.tabset}
 ### Source
