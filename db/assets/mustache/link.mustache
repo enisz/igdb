@@ -1,7 +1,6 @@
 <a
-    href="{{#local}}documentation{{href}}{{/local}}{{^local}}{{href}}{{/local}}"
+    href="{{#local}}documentation{{{href}}}{{/local}}{{^local}}{{{href}}}{{/local}}"
     title="{{title}}{{^local}} (external link){{/local}}"
     target="{{#local}}_self{{/local}}{{^local}}_blank{{/local}}"
-    />
-        {{local}}{{text}}{{^local}} <i class="fa-solid fa-arrow-up-right-from-square fa-2xs"></i>{{/local}}
-</a>`
+    >
+        {{{text}}}{{^local}} <i class="fa-solid fa-arrow-up-right-from-square fa-2xs"></i>{{/local}}</a>
