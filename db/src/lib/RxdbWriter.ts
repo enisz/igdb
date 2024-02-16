@@ -242,12 +242,13 @@ export default class RxdbWriter extends FileWriter {
       }
 
       const severity = getSeverity(quote);
+      const [first, ...rest] = quote.split(' ');
 
       const context = {
         severity,
         icon: getIcon(severity),
         title: getTitle(severity),
-        quote
+        quote: first.startsWith(':') ? rest.join(' ') : quote,
       };
 
       return MustacheHandler.render('blockquote', context);
