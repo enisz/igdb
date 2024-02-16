@@ -34,7 +34,7 @@ Check out [this article](https://developer.mozilla.org/en-US/docs/Web/Progressiv
 ## Setting up your project
 
 The project has multiple PHP files which are in the `src` folder of the repository:
- - **IGDB.php**: the wrapper classx
+ - **IGDB.php**: the wrapper class
  - **IGDBQueryBuilder.php**: the query builder
  - **IGDBConstants.php**: global constants for the package
  - **IGDBUtils.php**: utility and helper methods
