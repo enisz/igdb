@@ -51,7 +51,10 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.subscriptions.push(
       this.scrollSpyService.getActiveObservable().subscribe(
-        (fragments: string[]) => this.activeIds = fragments
+        (fragments: string[]) => {
+          this.activeIds = fragments;
+          this.keepLinkInView(fragments[fragments.length - 1]);
+        }
       )
     );
   }
@@ -80,5 +83,24 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnDestroy {
   private hideSidebar(): void {
     this.sidebar.nativeElement.classList.remove('sidebar-visible');
     this.sidebar.nativeElement.classList.add('sidebar-hidden');
+  }
+
+  private keepLinkInView(id: string): void {
+    const activeNav = document.getElementById('nav-link-' + id);
+
+    if (activeNav) {
+      const isInViewport = (element: HTMLElement) => {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top >= 69 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
+    if (!isInViewport(activeNav))
+      activeNav.scrollIntoView({ block: 'nearest' });
+    }
   }
 }

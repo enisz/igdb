@@ -8,17 +8,34 @@
             @if (sections && topics) {
                 @for (topic of topics; track topic.id) {
                     <li class="nav-item section-title">
-                        <a class="nav-link scrollto {{ activeIds.includes(topic.slug) ? 'active' : ''}}" routerLink="/documentation" [fragment]="topic.slug" (click)="closeSidebar()">
-                            <span class="theme-icon-holder me-2">
-                                <i class="fas {{ topic.icon }}"></i>
-                            </span>
-                            {{ topic.title }}
+                        <a
+                            [id]="'nav-link-' + topic.slug"
+                            [ngClass]="{ 'active': activeIds.includes(topic.slug)}"
+                            class="nav-link scrollto"
+                            routerLink="/documentation"
+                            [fragment]="topic.slug"
+                            (click)="closeSidebar()"
+                            >
+                                <span class="theme-icon-holder me-2">
+                                    <i class="fas" [ngClass]="topic.icon"></i>
+                                </span>
+                                {{ topic.title }}
                         </a>
                     </li>
 
                     @for (section of filterByTopic(topic.id); track section.id) {
                         <li class="nav-item">
-                            <a [ngStyle]="{ 'padding-left': (section.level * 10) + 'px' }" class="nav-link scrollto {{ activeIds.includes(section.slug) ? 'active' : ''}}" routerLink="/documentation" [fragment]="section.slug" (click)="closeSidebar()">{{ section.title }}</a>
+                            <a
+                                [id]="'nav-link-' + section.slug"
+                                [ngStyle]="{ 'padding-left': (section.level * 10) + 'px' }"
+                                [ngClass]="{'active': activeIds.includes(section.slug)}"
+                                class="nav-link scrollto"
+                                routerLink="/documentation"
+                                [fragment]="section.slug"
+                                (click)="closeSidebar()"
+                                >
+                                    {{ section.title }}
+                            </a>
                         </li>
                     }
                 }

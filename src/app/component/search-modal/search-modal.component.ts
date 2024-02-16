@@ -307,7 +307,7 @@ export class SearchModalComponent implements OnInit, AfterViewInit, OnDestroy {
     if (button && modal) {
       const { top: modalTop, bottom: modalBottom } = modal.getBoundingClientRect();
       const { top: buttonTop, bottom: buttonBottom } = button.getBoundingClientRect();
-      const scrollTop = modal.scrollTop;
+      const { scrollTop } = modal;
 
       if (this.activeRow === 0) {
         modal.scrollTo({ behavior: 'instant', top: 0 });

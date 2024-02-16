@@ -28,7 +28,6 @@
                         class="list-group-item list-group-item-action d-flex flex-row justify-content-between"
                         (click)="handleListItemClick(groupItem)"
                         [ngClass]="{ 'active': activeRow === groupItem.id}"
-                        toViewport
                     >
                         <span [innerHTML]="groupItem.title | escape | emphasize: searchForm.get('term')?.value"></span>
                         @if (groupItem.clearable) {
