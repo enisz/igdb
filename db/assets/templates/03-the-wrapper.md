@@ -300,6 +300,7 @@ public function age_rating(string $query | IGDBQueryBuilder $builder) throws IGD
 Fetching records from IGDB API using the [Age Rating](https://api-docs.igdb.com/#age-rating) endpoint.
 
 **Endpoint Description**: Age Rating according to various rating organisations
+
 **Endpoint URL**: `https://api.igdb.com/v4/age-rating`
 
 **Parameters**:
@@ -321,14 +322,14 @@ Fetching records from IGDB API using the [Age Rating](https://api-docs.igdb.com/
 public function age_rating_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Age Rating](https://api-docs.igdb.com/#age-rating) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Age Rating](https://api-docs.igdb.com/#age_rating) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Age Rating according to various rating organisations
 
-**Endpoint URL**: `https://api.igdb.com/v4/age-rating/count`
+**Endpoint URL**: `https://api.igdb.com/v4/age_rating/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -352,6 +353,7 @@ public function age_rating_content_description(string $query | IGDBQueryBuilder 
 Fetching records from IGDB API using the [Age Rating Content Description](https://api-docs.igdb.com/#age-rating-content-description) endpoint.
 
 **Endpoint Description**: Age Rating Descriptors
+
 **Endpoint URL**: `https://api.igdb.com/v4/age-rating-content-description`
 
 **Parameters**:
@@ -373,14 +375,14 @@ Fetching records from IGDB API using the [Age Rating Content Description](https:
 public function age_rating_content_description_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Age Rating Content Description](https://api-docs.igdb.com/#age-rating-content-description) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Age Rating Content Description](https://api-docs.igdb.com/#age_rating_content_description) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Age Rating Descriptors
 
-**Endpoint URL**: `https://api.igdb.com/v4/age-rating-content-description/count`
+**Endpoint URL**: `https://api.igdb.com/v4/age_rating_content_description/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -404,6 +406,7 @@ public function alternative_name(string $query | IGDBQueryBuilder $builder) thro
 Fetching records from IGDB API using the [Alternative Name](https://api-docs.igdb.com/#alternative-name) endpoint.
 
 **Endpoint Description**: Alternative and international game titles
+
 **Endpoint URL**: `https://api.igdb.com/v4/alternative-name`
 
 **Parameters**:
@@ -425,14 +428,14 @@ Fetching records from IGDB API using the [Alternative Name](https://api-docs.igd
 public function alternative_name_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Alternative Name](https://api-docs.igdb.com/#alternative-name) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Alternative Name](https://api-docs.igdb.com/#alternative_name) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Alternative and international game titles
 
-**Endpoint URL**: `https://api.igdb.com/v4/alternative-name/count`
+**Endpoint URL**: `https://api.igdb.com/v4/alternative_name/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -456,6 +459,7 @@ public function artwork(string $query | IGDBQueryBuilder $builder) throws IGDBEn
 Fetching records from IGDB API using the [Artwork](https://api-docs.igdb.com/#artwork) endpoint.
 
 **Endpoint Description**: official artworks (resolution and aspect ratio may vary)
+
 **Endpoint URL**: `https://api.igdb.com/v4/artwork`
 
 **Parameters**:
@@ -484,7 +488,7 @@ Fetching the number of records from IGDB API using the [Artwork](https://api-doc
 **Endpoint URL**: `https://api.igdb.com/v4/artwork/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -508,6 +512,7 @@ public function character(string $query | IGDBQueryBuilder $builder) throws IGDB
 Fetching records from IGDB API using the [Character](https://api-docs.igdb.com/#character) endpoint.
 
 **Endpoint Description**: Video game characters
+
 **Endpoint URL**: `https://api.igdb.com/v4/character`
 
 **Parameters**:
@@ -536,7 +541,7 @@ Fetching the number of records from IGDB API using the [Character](https://api-d
 **Endpoint URL**: `https://api.igdb.com/v4/character/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -560,6 +565,7 @@ public function character_mug_shot(string $query | IGDBQueryBuilder $builder) th
 Fetching records from IGDB API using the [Character Mug Shot](https://api-docs.igdb.com/#character-mug-shot) endpoint.
 
 **Endpoint Description**: Images depicting game characters
+
 **Endpoint URL**: `https://api.igdb.com/v4/character-mug-shot`
 
 **Parameters**:
@@ -581,14 +587,14 @@ Fetching records from IGDB API using the [Character Mug Shot](https://api-docs.i
 public function character_mug_shot_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Character Mug Shot](https://api-docs.igdb.com/#character-mug-shot) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Character Mug Shot](https://api-docs.igdb.com/#character_mug_shot) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Images depicting game characters
 
-**Endpoint URL**: `https://api.igdb.com/v4/character-mug-shot/count`
+**Endpoint URL**: `https://api.igdb.com/v4/character_mug_shot/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -612,6 +618,7 @@ public function collection(string $query | IGDBQueryBuilder $builder) throws IGD
 Fetching records from IGDB API using the [Collection](https://api-docs.igdb.com/#collection) endpoint.
 
 **Endpoint Description**: Collection, AKA Series
+
 **Endpoint URL**: `https://api.igdb.com/v4/collection`
 
 **Parameters**:
@@ -640,7 +647,7 @@ Fetching the number of records from IGDB API using the [Collection](https://api-
 **Endpoint URL**: `https://api.igdb.com/v4/collection/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -664,6 +671,7 @@ public function collection_membership(string $query | IGDBQueryBuilder $builder)
 Fetching records from IGDB API using the [Collection Membership](https://api-docs.igdb.com/#collection-membership) endpoint.
 
 **Endpoint Description**: The Collection Memberships.
+
 **Endpoint URL**: `https://api.igdb.com/v4/collection-membership`
 
 **Parameters**:
@@ -685,14 +693,14 @@ Fetching records from IGDB API using the [Collection Membership](https://api-doc
 public function collection_membership_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Collection Membership](https://api-docs.igdb.com/#collection-membership) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Collection Membership](https://api-docs.igdb.com/#collection_membership) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: The Collection Memberships.
 
-**Endpoint URL**: `https://api.igdb.com/v4/collection-membership/count`
+**Endpoint URL**: `https://api.igdb.com/v4/collection_membership/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -716,6 +724,7 @@ public function collection_membership_type(string $query | IGDBQueryBuilder $bui
 Fetching records from IGDB API using the [Collection Membership Type](https://api-docs.igdb.com/#collection-membership-type) endpoint.
 
 **Endpoint Description**: Enums for collection membership types.
+
 **Endpoint URL**: `https://api.igdb.com/v4/collection-membership-type`
 
 **Parameters**:
@@ -737,14 +746,14 @@ Fetching records from IGDB API using the [Collection Membership Type](https://ap
 public function collection_membership_type_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Collection Membership Type](https://api-docs.igdb.com/#collection-membership-type) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Collection Membership Type](https://api-docs.igdb.com/#collection_membership_type) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Enums for collection membership types.
 
-**Endpoint URL**: `https://api.igdb.com/v4/collection-membership-type/count`
+**Endpoint URL**: `https://api.igdb.com/v4/collection_membership_type/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -768,6 +777,7 @@ public function collection_relation(string $query | IGDBQueryBuilder $builder) t
 Fetching records from IGDB API using the [Collection Relation](https://api-docs.igdb.com/#collection-relation) endpoint.
 
 **Endpoint Description**: Describes Relationship between Collections.
+
 **Endpoint URL**: `https://api.igdb.com/v4/collection-relation`
 
 **Parameters**:
@@ -789,14 +799,14 @@ Fetching records from IGDB API using the [Collection Relation](https://api-docs.
 public function collection_relation_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Collection Relation](https://api-docs.igdb.com/#collection-relation) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Collection Relation](https://api-docs.igdb.com/#collection_relation) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Describes Relationship between Collections.
 
-**Endpoint URL**: `https://api.igdb.com/v4/collection-relation/count`
+**Endpoint URL**: `https://api.igdb.com/v4/collection_relation/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -820,6 +830,7 @@ public function collection_relation_type(string $query | IGDBQueryBuilder $build
 Fetching records from IGDB API using the [Collection Relation Type](https://api-docs.igdb.com/#collection-relation-type) endpoint.
 
 **Endpoint Description**: Collection Relation Types
+
 **Endpoint URL**: `https://api.igdb.com/v4/collection-relation-type`
 
 **Parameters**:
@@ -841,14 +852,14 @@ Fetching records from IGDB API using the [Collection Relation Type](https://api-
 public function collection_relation_type_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Collection Relation Type](https://api-docs.igdb.com/#collection-relation-type) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Collection Relation Type](https://api-docs.igdb.com/#collection_relation_type) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Collection Relation Types
 
-**Endpoint URL**: `https://api.igdb.com/v4/collection-relation-type/count`
+**Endpoint URL**: `https://api.igdb.com/v4/collection_relation_type/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -872,6 +883,7 @@ public function collection_type(string $query | IGDBQueryBuilder $builder) throw
 Fetching records from IGDB API using the [Collection Type](https://api-docs.igdb.com/#collection-type) endpoint.
 
 **Endpoint Description**: Enums for collection types.
+
 **Endpoint URL**: `https://api.igdb.com/v4/collection-type`
 
 **Parameters**:
@@ -893,14 +905,14 @@ Fetching records from IGDB API using the [Collection Type](https://api-docs.igdb
 public function collection_type_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Collection Type](https://api-docs.igdb.com/#collection-type) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Collection Type](https://api-docs.igdb.com/#collection_type) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Enums for collection types.
 
-**Endpoint URL**: `https://api.igdb.com/v4/collection-type/count`
+**Endpoint URL**: `https://api.igdb.com/v4/collection_type/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -924,6 +936,7 @@ public function company(string $query | IGDBQueryBuilder $builder) throws IGDBEn
 Fetching records from IGDB API using the [Company](https://api-docs.igdb.com/#company) endpoint.
 
 **Endpoint Description**: Video game companies. Both publishers &amp; developers
+
 **Endpoint URL**: `https://api.igdb.com/v4/company`
 
 **Parameters**:
@@ -952,7 +965,7 @@ Fetching the number of records from IGDB API using the [Company](https://api-doc
 **Endpoint URL**: `https://api.igdb.com/v4/company/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -976,6 +989,7 @@ public function company_logo(string $query | IGDBQueryBuilder $builder) throws I
 Fetching records from IGDB API using the [Company Logo](https://api-docs.igdb.com/#company-logo) endpoint.
 
 **Endpoint Description**: The logos of developers and publishers
+
 **Endpoint URL**: `https://api.igdb.com/v4/company-logo`
 
 **Parameters**:
@@ -997,14 +1011,14 @@ Fetching records from IGDB API using the [Company Logo](https://api-docs.igdb.co
 public function company_logo_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Company Logo](https://api-docs.igdb.com/#company-logo) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Company Logo](https://api-docs.igdb.com/#company_logo) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: The logos of developers and publishers
 
-**Endpoint URL**: `https://api.igdb.com/v4/company-logo/count`
+**Endpoint URL**: `https://api.igdb.com/v4/company_logo/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1028,6 +1042,7 @@ public function company_website(string $query | IGDBQueryBuilder $builder) throw
 Fetching records from IGDB API using the [Company Website](https://api-docs.igdb.com/#company-website) endpoint.
 
 **Endpoint Description**: Company Website
+
 **Endpoint URL**: `https://api.igdb.com/v4/company-website`
 
 **Parameters**:
@@ -1049,14 +1064,14 @@ Fetching records from IGDB API using the [Company Website](https://api-docs.igdb
 public function company_website_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Company Website](https://api-docs.igdb.com/#company-website) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Company Website](https://api-docs.igdb.com/#company_website) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Company Website
 
-**Endpoint URL**: `https://api.igdb.com/v4/company-website/count`
+**Endpoint URL**: `https://api.igdb.com/v4/company_website/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1080,6 +1095,7 @@ public function cover(string $query | IGDBQueryBuilder $builder) throws IGDBEndp
 Fetching records from IGDB API using the [Cover](https://api-docs.igdb.com/#cover) endpoint.
 
 **Endpoint Description**: The cover art of games
+
 **Endpoint URL**: `https://api.igdb.com/v4/cover`
 
 **Parameters**:
@@ -1108,7 +1124,7 @@ Fetching the number of records from IGDB API using the [Cover](https://api-docs.
 **Endpoint URL**: `https://api.igdb.com/v4/cover/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1132,6 +1148,7 @@ public function event(string $query | IGDBQueryBuilder $builder) throws IGDBEndp
 Fetching records from IGDB API using the [Event](https://api-docs.igdb.com/#event) endpoint.
 
 **Endpoint Description**: Gaming event like GamesCom, Tokyo Game Show, PAX or GSL
+
 **Endpoint URL**: `https://api.igdb.com/v4/event`
 
 **Parameters**:
@@ -1160,7 +1177,7 @@ Fetching the number of records from IGDB API using the [Event](https://api-docs.
 **Endpoint URL**: `https://api.igdb.com/v4/event/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1184,6 +1201,7 @@ public function event_logo(string $query | IGDBQueryBuilder $builder) throws IGD
 Fetching records from IGDB API using the [Event Logo](https://api-docs.igdb.com/#event-logo) endpoint.
 
 **Endpoint Description**: Logo for the event
+
 **Endpoint URL**: `https://api.igdb.com/v4/event-logo`
 
 **Parameters**:
@@ -1205,14 +1223,14 @@ Fetching records from IGDB API using the [Event Logo](https://api-docs.igdb.com/
 public function event_logo_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Event Logo](https://api-docs.igdb.com/#event-logo) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Event Logo](https://api-docs.igdb.com/#event_logo) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Logo for the event
 
-**Endpoint URL**: `https://api.igdb.com/v4/event-logo/count`
+**Endpoint URL**: `https://api.igdb.com/v4/event_logo/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1236,6 +1254,7 @@ public function event_network(string $query | IGDBQueryBuilder $builder) throws 
 Fetching records from IGDB API using the [Event Network](https://api-docs.igdb.com/#event-network) endpoint.
 
 **Endpoint Description**: Urls related to the event like twitter, facebook and youtube
+
 **Endpoint URL**: `https://api.igdb.com/v4/event-network`
 
 **Parameters**:
@@ -1257,14 +1276,14 @@ Fetching records from IGDB API using the [Event Network](https://api-docs.igdb.c
 public function event_network_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Event Network](https://api-docs.igdb.com/#event-network) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Event Network](https://api-docs.igdb.com/#event_network) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Urls related to the event like twitter, facebook and youtube
 
-**Endpoint URL**: `https://api.igdb.com/v4/event-network/count`
+**Endpoint URL**: `https://api.igdb.com/v4/event_network/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1288,6 +1307,7 @@ public function external_game(string $query | IGDBQueryBuilder $builder) throws 
 Fetching records from IGDB API using the [External Game](https://api-docs.igdb.com/#external-game) endpoint.
 
 **Endpoint Description**: Game IDs on other services
+
 **Endpoint URL**: `https://api.igdb.com/v4/external-game`
 
 **Parameters**:
@@ -1309,14 +1329,14 @@ Fetching records from IGDB API using the [External Game](https://api-docs.igdb.c
 public function external_game_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [External Game](https://api-docs.igdb.com/#external-game) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [External Game](https://api-docs.igdb.com/#external_game) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Game IDs on other services
 
-**Endpoint URL**: `https://api.igdb.com/v4/external-game/count`
+**Endpoint URL**: `https://api.igdb.com/v4/external_game/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1340,6 +1360,7 @@ public function franchise(string $query | IGDBQueryBuilder $builder) throws IGDB
 Fetching records from IGDB API using the [Franchise](https://api-docs.igdb.com/#franchise) endpoint.
 
 **Endpoint Description**: A list of video game franchises such as Star Wars.
+
 **Endpoint URL**: `https://api.igdb.com/v4/franchise`
 
 **Parameters**:
@@ -1368,7 +1389,7 @@ Fetching the number of records from IGDB API using the [Franchise](https://api-d
 **Endpoint URL**: `https://api.igdb.com/v4/franchise/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1392,6 +1413,7 @@ public function game(string $query | IGDBQueryBuilder $builder) throws IGDBEndpo
 Fetching records from IGDB API using the [Game](https://api-docs.igdb.com/#game) endpoint.
 
 **Endpoint Description**: Video Games!
+
 **Endpoint URL**: `https://api.igdb.com/v4/game`
 
 **Parameters**:
@@ -1420,7 +1442,7 @@ Fetching the number of records from IGDB API using the [Game](https://api-docs.i
 **Endpoint URL**: `https://api.igdb.com/v4/game/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1444,6 +1466,7 @@ public function game_engine(string $query | IGDBQueryBuilder $builder) throws IG
 Fetching records from IGDB API using the [Game Engine](https://api-docs.igdb.com/#game-engine) endpoint.
 
 **Endpoint Description**: Video game engines such as unreal engine.
+
 **Endpoint URL**: `https://api.igdb.com/v4/game-engine`
 
 **Parameters**:
@@ -1465,14 +1488,14 @@ Fetching records from IGDB API using the [Game Engine](https://api-docs.igdb.com
 public function game_engine_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Game Engine](https://api-docs.igdb.com/#game-engine) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Game Engine](https://api-docs.igdb.com/#game_engine) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Video game engines such as unreal engine.
 
-**Endpoint URL**: `https://api.igdb.com/v4/game-engine/count`
+**Endpoint URL**: `https://api.igdb.com/v4/game_engine/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1496,6 +1519,7 @@ public function game_engine_logo(string $query | IGDBQueryBuilder $builder) thro
 Fetching records from IGDB API using the [Game Engine Logo](https://api-docs.igdb.com/#game-engine-logo) endpoint.
 
 **Endpoint Description**: The logos of game engines
+
 **Endpoint URL**: `https://api.igdb.com/v4/game-engine-logo`
 
 **Parameters**:
@@ -1517,14 +1541,14 @@ Fetching records from IGDB API using the [Game Engine Logo](https://api-docs.igd
 public function game_engine_logo_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Game Engine Logo](https://api-docs.igdb.com/#game-engine-logo) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Game Engine Logo](https://api-docs.igdb.com/#game_engine_logo) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: The logos of game engines
 
-**Endpoint URL**: `https://api.igdb.com/v4/game-engine-logo/count`
+**Endpoint URL**: `https://api.igdb.com/v4/game_engine_logo/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1548,6 +1572,7 @@ public function game_localization(string $query | IGDBQueryBuilder $builder) thr
 Fetching records from IGDB API using the [Game Localization](https://api-docs.igdb.com/#game-localization) endpoint.
 
 **Endpoint Description**: Game localization for a game
+
 **Endpoint URL**: `https://api.igdb.com/v4/game-localization`
 
 **Parameters**:
@@ -1569,14 +1594,14 @@ Fetching records from IGDB API using the [Game Localization](https://api-docs.ig
 public function game_localization_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Game Localization](https://api-docs.igdb.com/#game-localization) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Game Localization](https://api-docs.igdb.com/#game_localization) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Game localization for a game
 
-**Endpoint URL**: `https://api.igdb.com/v4/game-localization/count`
+**Endpoint URL**: `https://api.igdb.com/v4/game_localization/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1600,6 +1625,7 @@ public function game_mode(string $query | IGDBQueryBuilder $builder) throws IGDB
 Fetching records from IGDB API using the [Game Mode](https://api-docs.igdb.com/#game-mode) endpoint.
 
 **Endpoint Description**: Single player, Multiplayer etc
+
 **Endpoint URL**: `https://api.igdb.com/v4/game-mode`
 
 **Parameters**:
@@ -1621,14 +1647,14 @@ Fetching records from IGDB API using the [Game Mode](https://api-docs.igdb.com/#
 public function game_mode_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Game Mode](https://api-docs.igdb.com/#game-mode) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Game Mode](https://api-docs.igdb.com/#game_mode) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Single player, Multiplayer etc
 
-**Endpoint URL**: `https://api.igdb.com/v4/game-mode/count`
+**Endpoint URL**: `https://api.igdb.com/v4/game_mode/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1652,6 +1678,7 @@ public function game_version(string $query | IGDBQueryBuilder $builder) throws I
 Fetching records from IGDB API using the [Game Version](https://api-docs.igdb.com/#game-version) endpoint.
 
 **Endpoint Description**: Details about game editions and versions.
+
 **Endpoint URL**: `https://api.igdb.com/v4/game-version`
 
 **Parameters**:
@@ -1673,14 +1700,14 @@ Fetching records from IGDB API using the [Game Version](https://api-docs.igdb.co
 public function game_version_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Game Version](https://api-docs.igdb.com/#game-version) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Game Version](https://api-docs.igdb.com/#game_version) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Details about game editions and versions.
 
-**Endpoint URL**: `https://api.igdb.com/v4/game-version/count`
+**Endpoint URL**: `https://api.igdb.com/v4/game_version/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1704,6 +1731,7 @@ public function game_version_feature(string $query | IGDBQueryBuilder $builder) 
 Fetching records from IGDB API using the [Game Version Feature](https://api-docs.igdb.com/#game-version-feature) endpoint.
 
 **Endpoint Description**: Features and descriptions of what makes each version&#x2F;edition different from the main game
+
 **Endpoint URL**: `https://api.igdb.com/v4/game-version-feature`
 
 **Parameters**:
@@ -1725,14 +1753,14 @@ Fetching records from IGDB API using the [Game Version Feature](https://api-docs
 public function game_version_feature_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Game Version Feature](https://api-docs.igdb.com/#game-version-feature) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Game Version Feature](https://api-docs.igdb.com/#game_version_feature) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Features and descriptions of what makes each version&#x2F;edition different from the main game
 
-**Endpoint URL**: `https://api.igdb.com/v4/game-version-feature/count`
+**Endpoint URL**: `https://api.igdb.com/v4/game_version_feature/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1756,6 +1784,7 @@ public function game_version_feature_value(string $query | IGDBQueryBuilder $bui
 Fetching records from IGDB API using the [Game Version Feature Value](https://api-docs.igdb.com/#game-version-feature-value) endpoint.
 
 **Endpoint Description**: The bool&#x2F;text value of the feature
+
 **Endpoint URL**: `https://api.igdb.com/v4/game-version-feature-value`
 
 **Parameters**:
@@ -1777,14 +1806,14 @@ Fetching records from IGDB API using the [Game Version Feature Value](https://ap
 public function game_version_feature_value_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Game Version Feature Value](https://api-docs.igdb.com/#game-version-feature-value) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Game Version Feature Value](https://api-docs.igdb.com/#game_version_feature_value) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: The bool&#x2F;text value of the feature
 
-**Endpoint URL**: `https://api.igdb.com/v4/game-version-feature-value/count`
+**Endpoint URL**: `https://api.igdb.com/v4/game_version_feature_value/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1808,6 +1837,7 @@ public function game_video(string $query | IGDBQueryBuilder $builder) throws IGD
 Fetching records from IGDB API using the [Game Video](https://api-docs.igdb.com/#game-video) endpoint.
 
 **Endpoint Description**: A video associated with a game
+
 **Endpoint URL**: `https://api.igdb.com/v4/game-video`
 
 **Parameters**:
@@ -1829,14 +1859,14 @@ Fetching records from IGDB API using the [Game Video](https://api-docs.igdb.com/
 public function game_video_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Game Video](https://api-docs.igdb.com/#game-video) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Game Video](https://api-docs.igdb.com/#game_video) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: A video associated with a game
 
-**Endpoint URL**: `https://api.igdb.com/v4/game-video/count`
+**Endpoint URL**: `https://api.igdb.com/v4/game_video/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1860,6 +1890,7 @@ public function genre(string $query | IGDBQueryBuilder $builder) throws IGDBEndp
 Fetching records from IGDB API using the [Genre](https://api-docs.igdb.com/#genre) endpoint.
 
 **Endpoint Description**: Genres of video game
+
 **Endpoint URL**: `https://api.igdb.com/v4/genre`
 
 **Parameters**:
@@ -1888,7 +1919,7 @@ Fetching the number of records from IGDB API using the [Genre](https://api-docs.
 **Endpoint URL**: `https://api.igdb.com/v4/genre/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1932,12 +1963,12 @@ Fetching records from IGDB API using the [Involved Company](https://api-docs.igd
 public function involved_company_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Involved Company](https://api-docs.igdb.com/#involved-company) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Involved Company](https://api-docs.igdb.com/#involved_company) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
-**Endpoint URL**: `https://api.igdb.com/v4/involved-company/count`
+**Endpoint URL**: `https://api.igdb.com/v4/involved_company/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -1961,6 +1992,7 @@ public function keyword(string $query | IGDBQueryBuilder $builder) throws IGDBEn
 Fetching records from IGDB API using the [Keyword](https://api-docs.igdb.com/#keyword) endpoint.
 
 **Endpoint Description**: Keywords are words or phrases that get tagged to a game such as &quot;world war 2&quot; or &quot;steampunk&quot;.
+
 **Endpoint URL**: `https://api.igdb.com/v4/keyword`
 
 **Parameters**:
@@ -1989,7 +2021,7 @@ Fetching the number of records from IGDB API using the [Keyword](https://api-doc
 **Endpoint URL**: `https://api.igdb.com/v4/keyword/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2013,6 +2045,7 @@ public function language_support(string $query | IGDBQueryBuilder $builder) thro
 Fetching records from IGDB API using the [Language Support](https://api-docs.igdb.com/#language-support) endpoint.
 
 **Endpoint Description**: Games can be played with different languages for voice acting, subtitles, or the interface language.
+
 **Endpoint URL**: `https://api.igdb.com/v4/language-support`
 
 **Parameters**:
@@ -2034,14 +2067,14 @@ Fetching records from IGDB API using the [Language Support](https://api-docs.igd
 public function language_support_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Language Support](https://api-docs.igdb.com/#language-support) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Language Support](https://api-docs.igdb.com/#language_support) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Games can be played with different languages for voice acting, subtitles, or the interface language.
 
-**Endpoint URL**: `https://api.igdb.com/v4/language-support/count`
+**Endpoint URL**: `https://api.igdb.com/v4/language_support/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2065,6 +2098,7 @@ public function language_support_type(string $query | IGDBQueryBuilder $builder)
 Fetching records from IGDB API using the [Language Support Type](https://api-docs.igdb.com/#language-support-type) endpoint.
 
 **Endpoint Description**: Language Support Types contains the identifiers for the support types that Language Support uses.
+
 **Endpoint URL**: `https://api.igdb.com/v4/language-support-type`
 
 **Parameters**:
@@ -2086,14 +2120,14 @@ Fetching records from IGDB API using the [Language Support Type](https://api-doc
 public function language_support_type_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Language Support Type](https://api-docs.igdb.com/#language-support-type) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Language Support Type](https://api-docs.igdb.com/#language_support_type) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Language Support Types contains the identifiers for the support types that Language Support uses.
 
-**Endpoint URL**: `https://api.igdb.com/v4/language-support-type/count`
+**Endpoint URL**: `https://api.igdb.com/v4/language_support_type/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2117,6 +2151,7 @@ public function language(string $query | IGDBQueryBuilder $builder) throws IGDBE
 Fetching records from IGDB API using the [Language](https://api-docs.igdb.com/#language) endpoint.
 
 **Endpoint Description**: Languages that are used in the Language Support endpoint.
+
 **Endpoint URL**: `https://api.igdb.com/v4/language`
 
 **Parameters**:
@@ -2145,7 +2180,7 @@ Fetching the number of records from IGDB API using the [Language](https://api-do
 **Endpoint URL**: `https://api.igdb.com/v4/language/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2169,6 +2204,7 @@ public function multiplayer_mode(string $query | IGDBQueryBuilder $builder) thro
 Fetching records from IGDB API using the [Multiplayer Mode](https://api-docs.igdb.com/#multiplayer-mode) endpoint.
 
 **Endpoint Description**: Data about the supported multiplayer types
+
 **Endpoint URL**: `https://api.igdb.com/v4/multiplayer-mode`
 
 **Parameters**:
@@ -2190,14 +2226,14 @@ Fetching records from IGDB API using the [Multiplayer Mode](https://api-docs.igd
 public function multiplayer_mode_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Multiplayer Mode](https://api-docs.igdb.com/#multiplayer-mode) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Multiplayer Mode](https://api-docs.igdb.com/#multiplayer_mode) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Data about the supported multiplayer types
 
-**Endpoint URL**: `https://api.igdb.com/v4/multiplayer-mode/count`
+**Endpoint URL**: `https://api.igdb.com/v4/multiplayer_mode/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2221,6 +2257,7 @@ public function network_type(string $query | IGDBQueryBuilder $builder) throws I
 Fetching records from IGDB API using the [Network Type](https://api-docs.igdb.com/#network-type) endpoint.
 
 **Endpoint Description**: Social networks related to the event like twitter, facebook and youtube
+
 **Endpoint URL**: `https://api.igdb.com/v4/network-type`
 
 **Parameters**:
@@ -2242,14 +2279,14 @@ Fetching records from IGDB API using the [Network Type](https://api-docs.igdb.co
 public function network_type_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Network Type](https://api-docs.igdb.com/#network-type) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Network Type](https://api-docs.igdb.com/#network_type) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Social networks related to the event like twitter, facebook and youtube
 
-**Endpoint URL**: `https://api.igdb.com/v4/network-type/count`
+**Endpoint URL**: `https://api.igdb.com/v4/network_type/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2273,6 +2310,7 @@ public function platform(string $query | IGDBQueryBuilder $builder) throws IGDBE
 Fetching records from IGDB API using the [Platform](https://api-docs.igdb.com/#platform) endpoint.
 
 **Endpoint Description**: The hardware used to run the game or game delivery network
+
 **Endpoint URL**: `https://api.igdb.com/v4/platform`
 
 **Parameters**:
@@ -2301,7 +2339,7 @@ Fetching the number of records from IGDB API using the [Platform](https://api-do
 **Endpoint URL**: `https://api.igdb.com/v4/platform/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2325,6 +2363,7 @@ public function platform_family(string $query | IGDBQueryBuilder $builder) throw
 Fetching records from IGDB API using the [Platform Family](https://api-docs.igdb.com/#platform-family) endpoint.
 
 **Endpoint Description**: A collection of closely related platforms
+
 **Endpoint URL**: `https://api.igdb.com/v4/platform-family`
 
 **Parameters**:
@@ -2346,14 +2385,14 @@ Fetching records from IGDB API using the [Platform Family](https://api-docs.igdb
 public function platform_family_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Platform Family](https://api-docs.igdb.com/#platform-family) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Platform Family](https://api-docs.igdb.com/#platform_family) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: A collection of closely related platforms
 
-**Endpoint URL**: `https://api.igdb.com/v4/platform-family/count`
+**Endpoint URL**: `https://api.igdb.com/v4/platform_family/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2377,6 +2416,7 @@ public function platform_logo(string $query | IGDBQueryBuilder $builder) throws 
 Fetching records from IGDB API using the [Platform Logo](https://api-docs.igdb.com/#platform-logo) endpoint.
 
 **Endpoint Description**: Logo for a platform
+
 **Endpoint URL**: `https://api.igdb.com/v4/platform-logo`
 
 **Parameters**:
@@ -2398,14 +2438,14 @@ Fetching records from IGDB API using the [Platform Logo](https://api-docs.igdb.c
 public function platform_logo_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Platform Logo](https://api-docs.igdb.com/#platform-logo) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Platform Logo](https://api-docs.igdb.com/#platform_logo) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Logo for a platform
 
-**Endpoint URL**: `https://api.igdb.com/v4/platform-logo/count`
+**Endpoint URL**: `https://api.igdb.com/v4/platform_logo/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2449,12 +2489,12 @@ Fetching records from IGDB API using the [Platform Version](https://api-docs.igd
 public function platform_version_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Platform Version](https://api-docs.igdb.com/#platform-version) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Platform Version](https://api-docs.igdb.com/#platform_version) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
-**Endpoint URL**: `https://api.igdb.com/v4/platform-version/count`
+**Endpoint URL**: `https://api.igdb.com/v4/platform_version/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2478,6 +2518,7 @@ public function platform_version_company(string $query | IGDBQueryBuilder $build
 Fetching records from IGDB API using the [Platform Version Company](https://api-docs.igdb.com/#platform-version-company) endpoint.
 
 **Endpoint Description**: A platform developer
+
 **Endpoint URL**: `https://api.igdb.com/v4/platform-version-company`
 
 **Parameters**:
@@ -2499,14 +2540,14 @@ Fetching records from IGDB API using the [Platform Version Company](https://api-
 public function platform_version_company_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Platform Version Company](https://api-docs.igdb.com/#platform-version-company) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Platform Version Company](https://api-docs.igdb.com/#platform_version_company) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: A platform developer
 
-**Endpoint URL**: `https://api.igdb.com/v4/platform-version-company/count`
+**Endpoint URL**: `https://api.igdb.com/v4/platform_version_company/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2530,6 +2571,7 @@ public function platform_version_release_date(string $query | IGDBQueryBuilder $
 Fetching records from IGDB API using the [Platform Version Release Date](https://api-docs.igdb.com/#platform-version-release-date) endpoint.
 
 **Endpoint Description**: A handy endpoint that extends platform release dates. Used to dig deeper into release dates, platforms and versions.
+
 **Endpoint URL**: `https://api.igdb.com/v4/platform-version-release-date`
 
 **Parameters**:
@@ -2551,14 +2593,14 @@ Fetching records from IGDB API using the [Platform Version Release Date](https:/
 public function platform_version_release_date_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Platform Version Release Date](https://api-docs.igdb.com/#platform-version-release-date) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Platform Version Release Date](https://api-docs.igdb.com/#platform_version_release_date) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: A handy endpoint that extends platform release dates. Used to dig deeper into release dates, platforms and versions.
 
-**Endpoint URL**: `https://api.igdb.com/v4/platform-version-release-date/count`
+**Endpoint URL**: `https://api.igdb.com/v4/platform_version_release_date/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2582,6 +2624,7 @@ public function platform_website(string $query | IGDBQueryBuilder $builder) thro
 Fetching records from IGDB API using the [Platform Website](https://api-docs.igdb.com/#platform-website) endpoint.
 
 **Endpoint Description**: The main website for the platform
+
 **Endpoint URL**: `https://api.igdb.com/v4/platform-website`
 
 **Parameters**:
@@ -2603,14 +2646,14 @@ Fetching records from IGDB API using the [Platform Website](https://api-docs.igd
 public function platform_website_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Platform Website](https://api-docs.igdb.com/#platform-website) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Platform Website](https://api-docs.igdb.com/#platform_website) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: The main website for the platform
 
-**Endpoint URL**: `https://api.igdb.com/v4/platform-website/count`
+**Endpoint URL**: `https://api.igdb.com/v4/platform_website/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2634,6 +2677,7 @@ public function player_perspective(string $query | IGDBQueryBuilder $builder) th
 Fetching records from IGDB API using the [Player Perspective](https://api-docs.igdb.com/#player-perspective) endpoint.
 
 **Endpoint Description**: Player perspectives describe the view&#x2F;perspective of the player in a video game.
+
 **Endpoint URL**: `https://api.igdb.com/v4/player-perspective`
 
 **Parameters**:
@@ -2655,14 +2699,14 @@ Fetching records from IGDB API using the [Player Perspective](https://api-docs.i
 public function player_perspective_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Player Perspective](https://api-docs.igdb.com/#player-perspective) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Player Perspective](https://api-docs.igdb.com/#player_perspective) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: Player perspectives describe the view&#x2F;perspective of the player in a video game.
 
-**Endpoint URL**: `https://api.igdb.com/v4/player-perspective/count`
+**Endpoint URL**: `https://api.igdb.com/v4/player_perspective/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2686,6 +2730,7 @@ public function region(string $query | IGDBQueryBuilder $builder) throws IGDBEnd
 Fetching records from IGDB API using the [Region](https://api-docs.igdb.com/#region) endpoint.
 
 **Endpoint Description**: Region for game localization
+
 **Endpoint URL**: `https://api.igdb.com/v4/region`
 
 **Parameters**:
@@ -2714,7 +2759,7 @@ Fetching the number of records from IGDB API using the [Region](https://api-docs
 **Endpoint URL**: `https://api.igdb.com/v4/region/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2738,6 +2783,7 @@ public function release_date(string $query | IGDBQueryBuilder $builder) throws I
 Fetching records from IGDB API using the [Release Date](https://api-docs.igdb.com/#release-date) endpoint.
 
 **Endpoint Description**: A handy endpoint that extends game release dates. Used to dig deeper into release dates, platforms and versions.
+
 **Endpoint URL**: `https://api.igdb.com/v4/release-date`
 
 **Parameters**:
@@ -2759,14 +2805,14 @@ Fetching records from IGDB API using the [Release Date](https://api-docs.igdb.co
 public function release_date_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Release Date](https://api-docs.igdb.com/#release-date) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Release Date](https://api-docs.igdb.com/#release_date) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: A handy endpoint that extends game release dates. Used to dig deeper into release dates, platforms and versions.
 
-**Endpoint URL**: `https://api.igdb.com/v4/release-date/count`
+**Endpoint URL**: `https://api.igdb.com/v4/release_date/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2790,6 +2836,7 @@ public function release_date_status(string $query | IGDBQueryBuilder $builder) t
 Fetching records from IGDB API using the [Release Date Status](https://api-docs.igdb.com/#release-date-status) endpoint.
 
 **Endpoint Description**: An endpoint to provide definition of all of the current release date statuses.
+
 **Endpoint URL**: `https://api.igdb.com/v4/release-date-status`
 
 **Parameters**:
@@ -2811,14 +2858,14 @@ Fetching records from IGDB API using the [Release Date Status](https://api-docs.
 public function release_date_status_count(string $query = "" | IGDBQueryBuilder $builder) throws IGDBEndpointException: integer
 ```
 
-Fetching the number of records from IGDB API using the [Release Date Status](https://api-docs.igdb.com/#release-date-status) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
+Fetching the number of records from IGDB API using the [Release Date Status](https://api-docs.igdb.com/#release_date_status) endpoint. This method will return the record count matching the filter query. If the number of all records are required the method can be called without a filter query.
 
 **Endpoint Description**: An endpoint to provide definition of all of the current release date statuses.
 
-**Endpoint URL**: `https://api.igdb.com/v4/release-date-status/count`
+**Endpoint URL**: `https://api.igdb.com/v4/release_date_status/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2842,6 +2889,7 @@ public function screenshot(string $query | IGDBQueryBuilder $builder) throws IGD
 Fetching records from IGDB API using the [Screenshot](https://api-docs.igdb.com/#screenshot) endpoint.
 
 **Endpoint Description**: Screenshots of games
+
 **Endpoint URL**: `https://api.igdb.com/v4/screenshot`
 
 **Parameters**:
@@ -2870,7 +2918,7 @@ Fetching the number of records from IGDB API using the [Screenshot](https://api-
 **Endpoint URL**: `https://api.igdb.com/v4/screenshot/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2919,7 +2967,7 @@ Fetching the number of records from IGDB API using the [Search](https://api-docs
 **Endpoint URL**: `https://api.igdb.com/v4/search/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2943,6 +2991,7 @@ public function theme(string $query | IGDBQueryBuilder $builder) throws IGDBEndp
 Fetching records from IGDB API using the [Theme](https://api-docs.igdb.com/#theme) endpoint.
 
 **Endpoint Description**: Video game themes
+
 **Endpoint URL**: `https://api.igdb.com/v4/theme`
 
 **Parameters**:
@@ -2971,7 +3020,7 @@ Fetching the number of records from IGDB API using the [Theme](https://api-docs.
 **Endpoint URL**: `https://api.igdb.com/v4/theme/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
@@ -2995,6 +3044,7 @@ public function website(string $query | IGDBQueryBuilder $builder) throws IGDBEn
 Fetching records from IGDB API using the [Website](https://api-docs.igdb.com/#website) endpoint.
 
 **Endpoint Description**: A website url, usually associated with a game
+
 **Endpoint URL**: `https://api.igdb.com/v4/website`
 
 **Parameters**:
@@ -3023,7 +3073,7 @@ Fetching the number of records from IGDB API using the [Website](https://api-doc
 **Endpoint URL**: `https://api.igdb.com/v4/website/count`
 
 **Parameters**:
- - `$query`: an apicalypse formatted query string or a configured IGDBQueryBuilder instance
+ - `$query` [optional]: an apicalypse formatted query string or a configured IGDBQueryBuilder instance. If called with an empty string, or without parameter then all records will be counted.
 
 **Returns**: the number of records matching the filter query
 
