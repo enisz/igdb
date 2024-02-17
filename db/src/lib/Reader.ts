@@ -16,7 +16,7 @@ export default class Reader extends FileReader {
             .map((filename: string) => {
                 const content = FileHandler.readFile(Path.join(this.getPath(), filename));
                 const path = Path.join(this.getPath(), filename);
-                const timestamp = ChildProcess.execSync(`git log --format=%ct "${path}"`, { encoding: 'utf-8'}).trim();
+                const timestamp = ChildProcess.execSync(`git log --format=%ct "${path}"`, { encoding: 'utf-8'}).trim().split('\n')[0];
 
                 return new File(this.getPath(), filename, content, parseInt(timestamp, 10) || null);
             });
