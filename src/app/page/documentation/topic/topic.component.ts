@@ -5,6 +5,7 @@ import { RxDocument } from 'rxdb';
 import { SectionDocumentMethods, SectionDocumentType } from '../../../database/document/section.document';
 import { TopicDocumentMethods, TopicDocumentType } from '../../../database/document/topic.document';
 import { AgoPipe } from '../../../pipe/ago.pipe';
+import { CustomDatePipe } from '../../../pipe/custom-date.pipe';
 import { TokenPipe } from '../../../pipe/token.pipe';
 import { DocumentationService } from '../../../service/documentation.service';
 import { ScrollSpyService } from '../../../service/scroll-spy.service';
@@ -13,7 +14,7 @@ import { SectionComponent } from '../section/section.component';
 @Component({
   selector: 'app-topic',
   standalone: true,
-  imports: [SectionComponent, AgoPipe, DatePipe, TokenPipe, NgbScrollSpyModule],
+  imports: [SectionComponent, AgoPipe, DatePipe, TokenPipe, NgbScrollSpyModule, CustomDatePipe],
   templateUrl: './topic.component.html',
   styleUrl: './topic.component.scss'
 })

@@ -5,7 +5,7 @@
                 {{ topic.title }}
                 <span class="docs-time">
                 @if (topic.date) {
-                    Last updated: {{ topic.date * 1000 | date: 'longDate' }} ({{ topic.date * 1000 | ago }})
+                    Last updated: {{ topic.date * 1000 | customDate }} ({{ topic.date * 1000 | ago }})
                 } @else {
                     Not published yet.
                 }
