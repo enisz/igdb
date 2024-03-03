@@ -336,10 +336,10 @@ Fetching the number of records from IGDB API using the [Age Rating](https://api-
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->age_rating_count($query);
 
-    // all record count
+    // count all records
     $igdb->age_rating_count();
 
 ?>
@@ -389,10 +389,10 @@ Fetching the number of records from IGDB API using the [Age Rating Content Descr
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->age_rating_content_description_count($query);
 
-    // all record count
+    // count all records
     $igdb->age_rating_content_description_count();
 
 ?>
@@ -442,10 +442,10 @@ Fetching the number of records from IGDB API using the [Alternative Name](https:
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->alternative_name_count($query);
 
-    // all record count
+    // count all records
     $igdb->alternative_name_count();
 
 ?>
@@ -495,10 +495,10 @@ Fetching the number of records from IGDB API using the [Artwork](https://api-doc
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->artwork_count($query);
 
-    // all record count
+    // count all records
     $igdb->artwork_count();
 
 ?>
@@ -548,10 +548,10 @@ Fetching the number of records from IGDB API using the [Character](https://api-d
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->character_count($query);
 
-    // all record count
+    // count all records
     $igdb->character_count();
 
 ?>
@@ -601,10 +601,10 @@ Fetching the number of records from IGDB API using the [Character Mug Shot](http
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->character_mug_shot_count($query);
 
-    // all record count
+    // count all records
     $igdb->character_mug_shot_count();
 
 ?>
@@ -654,10 +654,10 @@ Fetching the number of records from IGDB API using the [Collection](https://api-
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->collection_count($query);
 
-    // all record count
+    // count all records
     $igdb->collection_count();
 
 ?>
@@ -707,10 +707,10 @@ Fetching the number of records from IGDB API using the [Collection Membership](h
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->collection_membership_count($query);
 
-    // all record count
+    // count all records
     $igdb->collection_membership_count();
 
 ?>
@@ -760,10 +760,10 @@ Fetching the number of records from IGDB API using the [Collection Membership Ty
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->collection_membership_type_count($query);
 
-    // all record count
+    // count all records
     $igdb->collection_membership_type_count();
 
 ?>
@@ -813,10 +813,10 @@ Fetching the number of records from IGDB API using the [Collection Relation](htt
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->collection_relation_count($query);
 
-    // all record count
+    // count all records
     $igdb->collection_relation_count();
 
 ?>
@@ -866,10 +866,10 @@ Fetching the number of records from IGDB API using the [Collection Relation Type
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->collection_relation_type_count($query);
 
-    // all record count
+    // count all records
     $igdb->collection_relation_type_count();
 
 ?>
@@ -919,10 +919,10 @@ Fetching the number of records from IGDB API using the [Collection Type](https:/
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->collection_type_count($query);
 
-    // all record count
+    // count all records
     $igdb->collection_type_count();
 
 ?>
@@ -972,10 +972,10 @@ Fetching the number of records from IGDB API using the [Company](https://api-doc
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->company_count($query);
 
-    // all record count
+    // count all records
     $igdb->company_count();
 
 ?>
@@ -1025,10 +1025,10 @@ Fetching the number of records from IGDB API using the [Company Logo](https://ap
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->company_logo_count($query);
 
-    // all record count
+    // count all records
     $igdb->company_logo_count();
 
 ?>
@@ -1078,10 +1078,10 @@ Fetching the number of records from IGDB API using the [Company Website](https:/
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->company_website_count($query);
 
-    // all record count
+    // count all records
     $igdb->company_website_count();
 
 ?>
@@ -1131,10 +1131,10 @@ Fetching the number of records from IGDB API using the [Cover](https://api-docs.
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->cover_count($query);
 
-    // all record count
+    // count all records
     $igdb->cover_count();
 
 ?>
@@ -1184,10 +1184,10 @@ Fetching the number of records from IGDB API using the [Event](https://api-docs.
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->event_count($query);
 
-    // all record count
+    // count all records
     $igdb->event_count();
 
 ?>
@@ -1237,10 +1237,10 @@ Fetching the number of records from IGDB API using the [Event Logo](https://api-
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->event_logo_count($query);
 
-    // all record count
+    // count all records
     $igdb->event_logo_count();
 
 ?>
@@ -1290,10 +1290,10 @@ Fetching the number of records from IGDB API using the [Event Network](https://a
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->event_network_count($query);
 
-    // all record count
+    // count all records
     $igdb->event_network_count();
 
 ?>
@@ -1343,10 +1343,10 @@ Fetching the number of records from IGDB API using the [External Game](https://a
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->external_game_count($query);
 
-    // all record count
+    // count all records
     $igdb->external_game_count();
 
 ?>
@@ -1396,10 +1396,10 @@ Fetching the number of records from IGDB API using the [Franchise](https://api-d
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->franchise_count($query);
 
-    // all record count
+    // count all records
     $igdb->franchise_count();
 
 ?>
@@ -1449,10 +1449,10 @@ Fetching the number of records from IGDB API using the [Game](https://api-docs.i
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->game_count($query);
 
-    // all record count
+    // count all records
     $igdb->game_count();
 
 ?>
@@ -1502,10 +1502,10 @@ Fetching the number of records from IGDB API using the [Game Engine](https://api
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->game_engine_count($query);
 
-    // all record count
+    // count all records
     $igdb->game_engine_count();
 
 ?>
@@ -1555,10 +1555,10 @@ Fetching the number of records from IGDB API using the [Game Engine Logo](https:
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->game_engine_logo_count($query);
 
-    // all record count
+    // count all records
     $igdb->game_engine_logo_count();
 
 ?>
@@ -1608,10 +1608,10 @@ Fetching the number of records from IGDB API using the [Game Localization](https
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->game_localization_count($query);
 
-    // all record count
+    // count all records
     $igdb->game_localization_count();
 
 ?>
@@ -1661,10 +1661,10 @@ Fetching the number of records from IGDB API using the [Game Mode](https://api-d
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->game_mode_count($query);
 
-    // all record count
+    // count all records
     $igdb->game_mode_count();
 
 ?>
@@ -1714,10 +1714,10 @@ Fetching the number of records from IGDB API using the [Game Version](https://ap
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->game_version_count($query);
 
-    // all record count
+    // count all records
     $igdb->game_version_count();
 
 ?>
@@ -1767,10 +1767,10 @@ Fetching the number of records from IGDB API using the [Game Version Feature](ht
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->game_version_feature_count($query);
 
-    // all record count
+    // count all records
     $igdb->game_version_feature_count();
 
 ?>
@@ -1820,10 +1820,10 @@ Fetching the number of records from IGDB API using the [Game Version Feature Val
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->game_version_feature_value_count($query);
 
-    // all record count
+    // count all records
     $igdb->game_version_feature_value_count();
 
 ?>
@@ -1873,10 +1873,10 @@ Fetching the number of records from IGDB API using the [Game Video](https://api-
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->game_video_count($query);
 
-    // all record count
+    // count all records
     $igdb->game_video_count();
 
 ?>
@@ -1926,10 +1926,10 @@ Fetching the number of records from IGDB API using the [Genre](https://api-docs.
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->genre_count($query);
 
-    // all record count
+    // count all records
     $igdb->genre_count();
 
 ?>
@@ -1975,10 +1975,10 @@ Fetching the number of records from IGDB API using the [Involved Company](https:
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->involved_company_count($query);
 
-    // all record count
+    // count all records
     $igdb->involved_company_count();
 
 ?>
@@ -2028,10 +2028,10 @@ Fetching the number of records from IGDB API using the [Keyword](https://api-doc
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->keyword_count($query);
 
-    // all record count
+    // count all records
     $igdb->keyword_count();
 
 ?>
@@ -2081,10 +2081,10 @@ Fetching the number of records from IGDB API using the [Language Support](https:
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->language_support_count($query);
 
-    // all record count
+    // count all records
     $igdb->language_support_count();
 
 ?>
@@ -2134,10 +2134,10 @@ Fetching the number of records from IGDB API using the [Language Support Type](h
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->language_support_type_count($query);
 
-    // all record count
+    // count all records
     $igdb->language_support_type_count();
 
 ?>
@@ -2187,10 +2187,10 @@ Fetching the number of records from IGDB API using the [Language](https://api-do
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->language_count($query);
 
-    // all record count
+    // count all records
     $igdb->language_count();
 
 ?>
@@ -2240,10 +2240,10 @@ Fetching the number of records from IGDB API using the [Multiplayer Mode](https:
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->multiplayer_mode_count($query);
 
-    // all record count
+    // count all records
     $igdb->multiplayer_mode_count();
 
 ?>
@@ -2293,10 +2293,10 @@ Fetching the number of records from IGDB API using the [Network Type](https://ap
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->network_type_count($query);
 
-    // all record count
+    // count all records
     $igdb->network_type_count();
 
 ?>
@@ -2346,10 +2346,10 @@ Fetching the number of records from IGDB API using the [Platform](https://api-do
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->platform_count($query);
 
-    // all record count
+    // count all records
     $igdb->platform_count();
 
 ?>
@@ -2399,10 +2399,10 @@ Fetching the number of records from IGDB API using the [Platform Family](https:/
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->platform_family_count($query);
 
-    // all record count
+    // count all records
     $igdb->platform_family_count();
 
 ?>
@@ -2452,10 +2452,10 @@ Fetching the number of records from IGDB API using the [Platform Logo](https://a
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->platform_logo_count($query);
 
-    // all record count
+    // count all records
     $igdb->platform_logo_count();
 
 ?>
@@ -2501,10 +2501,10 @@ Fetching the number of records from IGDB API using the [Platform Version](https:
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->platform_version_count($query);
 
-    // all record count
+    // count all records
     $igdb->platform_version_count();
 
 ?>
@@ -2554,10 +2554,10 @@ Fetching the number of records from IGDB API using the [Platform Version Company
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->platform_version_company_count($query);
 
-    // all record count
+    // count all records
     $igdb->platform_version_company_count();
 
 ?>
@@ -2607,10 +2607,10 @@ Fetching the number of records from IGDB API using the [Platform Version Release
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->platform_version_release_date_count($query);
 
-    // all record count
+    // count all records
     $igdb->platform_version_release_date_count();
 
 ?>
@@ -2660,10 +2660,10 @@ Fetching the number of records from IGDB API using the [Platform Website](https:
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->platform_website_count($query);
 
-    // all record count
+    // count all records
     $igdb->platform_website_count();
 
 ?>
@@ -2713,10 +2713,10 @@ Fetching the number of records from IGDB API using the [Player Perspective](http
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->player_perspective_count($query);
 
-    // all record count
+    // count all records
     $igdb->player_perspective_count();
 
 ?>
@@ -2766,10 +2766,10 @@ Fetching the number of records from IGDB API using the [Region](https://api-docs
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->region_count($query);
 
-    // all record count
+    // count all records
     $igdb->region_count();
 
 ?>
@@ -2819,10 +2819,10 @@ Fetching the number of records from IGDB API using the [Release Date](https://ap
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->release_date_count($query);
 
-    // all record count
+    // count all records
     $igdb->release_date_count();
 
 ?>
@@ -2872,10 +2872,10 @@ Fetching the number of records from IGDB API using the [Release Date Status](htt
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->release_date_status_count($query);
 
-    // all record count
+    // count all records
     $igdb->release_date_status_count();
 
 ?>
@@ -2925,10 +2925,10 @@ Fetching the number of records from IGDB API using the [Screenshot](https://api-
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->screenshot_count($query);
 
-    // all record count
+    // count all records
     $igdb->screenshot_count();
 
 ?>
@@ -2974,10 +2974,10 @@ Fetching the number of records from IGDB API using the [Search](https://api-docs
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->search_count($query);
 
-    // all record count
+    // count all records
     $igdb->search_count();
 
 ?>
@@ -3027,10 +3027,10 @@ Fetching the number of records from IGDB API using the [Theme](https://api-docs.
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->theme_count($query);
 
-    // all record count
+    // count all records
     $igdb->theme_count();
 
 ?>
@@ -3080,10 +3080,10 @@ Fetching the number of records from IGDB API using the [Website](https://api-doc
 ```php
 <?php
 
-    // filtered record count
+    // count filtered records
     $igdb->website_count($query);
 
-    // all record count
+    // count all records
     $igdb->website_count();
 
 ?>
