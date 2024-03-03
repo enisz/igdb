@@ -4,3 +4,10 @@ export interface IViewportDimension {
 }
 
 export type IViewportBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+
+export interface IScrollPosition {
+    documentHeight: number;
+    viewportTop: number;
+    viewportBottom: number;
+    scrollPercentage: number;
+}

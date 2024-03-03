@@ -1,16 +1,3 @@
-h3.latest-commits {
-    text-align: left;
-}
-
-ul.commits {
-    & > li {
-        text-align: left;
-        color: white;
-    }
-    list-style: none;
-    padding-left: 0;
-}
-
 ntkme-github-button {
     position: relative;
     z-index: 999;

@@ -139,15 +139,11 @@
                                         </div>
                                     </div>
                                 </form>
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-12">
+
                                             <pre>
                                                 <code class="language-php hljs" data-highlighted="yes"><span class="hljs-variable">$igdb</span> = <span class="hljs-keyword">new</span> <span class="hljs-title function_ invoke__">IGDB</span>(<span class="hljs-string">"{{ getTokens().clientId || '{client_id}' }}"</span>, <span class="hljs-string">"{{ getTokens().accessToken || '{access_token}' }}"</span>);</code>
                                             </pre>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 @if(tokenForm.dirty && tokenForm.getError('alreadySaved')) {
                                     <div class="d-flex flex-row-reverse">
                                         <small>
@@ -188,22 +184,5 @@
         </div>
     </div>
 </div>
-
-<section class="cta-section text-center py-5 theme-bg-dark position-relative">
-    <div class="theme-bg-shapes-right"></div>
-    <div class="theme-bg-shapes-left"></div>
-    <div class="container">
-        <h3 class="latest-commits mb-2 text-white mb-3">Latest Commits</h3>
-        <ul class="commits">
-            @for (commit of latestCommits | async; track $index) {
-                <li><small>{{ commit.commit.message }}</small></li>
-            }
-        </ul>
-        <!-- <div class="section-intro text-white mb-3 single-col-max mx-auto">Want to launch your software project and start getting traction from your target users? Check out our premium <a class="text-white" href="https://themes.3rdwavemedia.com/bootstrap-templates/startup/coderpro-bootstrap-5-startup-template-for-software-projects/">Bootstrap 5 startup template CoderPro</a>! It has everything you need to promote your product.</div>
-        <div class="pt-3 text-center">
-            <a class="btn btn-light" href="https://themes.3rdwavemedia.com/bootstrap-templates/startup/coderpro-bootstrap-5-startup-template-for-software-projects/">Get CoderPro<i class="fas fa-arrow-alt-circle-right ml-2"></i></a>
-        </div> -->
-    </div>
-</section>
 
 <app-page-footer></app-page-footer>

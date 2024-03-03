@@ -3,10 +3,10 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgbDropdownModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { IRelease } from '../../interface/git.interface';
-import { GitService } from '../../service/git.service';
+import { IScrollPosition } from '../../interface/viewport.interface';
 import { NetworkService } from '../../service/network.service';
 import { ToastService } from '../../service/toast.service';
+import { ViewportService } from '../../service/viewport.service';
 import { SearchFormComponent } from '../search-form/search-form.component';
 
 @Component({
@@ -19,22 +19,27 @@ import { SearchFormComponent } from '../search-form/search-form.component';
 export class TopBarComponent implements OnInit, OnDestroy {
   @Input('hamburger') public hamburger = false;
   @Input('searchbar') public searchbar = false;
-  public latestRelease!: IRelease;
+  @Input('progressbar') public progressbar = false;
   private subscriptions: Subscription[] = [];
   public isOnline = true;
   public percentage = 0;
 
   public constructor(
     private readonly networkService: NetworkService,
-    private readonly gitService: GitService,
     private readonly toastService: ToastService,
+    private readonly viewportService: ViewportService,
   ) { }
 
   public async ngOnInit(): Promise<void> {
-    this.latestRelease = await this.gitService.getLatestRelease();
     this.subscriptions.push(
       this.networkService.getStatusObservable().subscribe(
         (online: boolean) => this.isOnline = online
+      )
+    );
+
+    this.subscriptions.push(
+      this.viewportService.getScrollObservable().subscribe(
+        (scroll: IScrollPosition) => this.percentage = scroll.scrollPercentage
       )
     );
   }
@@ -59,6 +64,6 @@ export class TopBarComponent implements OnInit, OnDestroy {
   }
 
   public downloadNotification(): void {
-    this.toastService.info(`Downloading ${this.latestRelease.name}!`)
+    this.toastService.info('Downloading latest release from git...');
   }
 }

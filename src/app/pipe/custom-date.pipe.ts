@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true
 })
 export class CustomDatePipe implements PipeTransform {
-  transform(value: number): unknown {
+  transform(value: number | string): string {
     const date = new Date(value);
     const ordinal = this.ordinal(date.getDate());
     const month = this.month(date.getMonth());

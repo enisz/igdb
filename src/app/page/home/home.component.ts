@@ -11,11 +11,10 @@ import { PageFooterComponent } from '../../component/page-footer/page-footer.com
 import { SearchFormComponent } from '../../component/search-form/search-form.component';
 import { TopBarComponent } from '../../component/top-bar/top-bar.component';
 import { TopicDocumentMethods, TopicDocumentType } from '../../database/document/topic.document';
-import { ICommits } from '../../interface/git.interface';
 import { IToken } from '../../interface/token.interface';
 import { IViewportBreakpoint } from '../../interface/viewport.interface';
+import { CustomDatePipe } from '../../pipe/custom-date.pipe';
 import { DocumentationService } from '../../service/documentation.service';
-import { GitService } from '../../service/git.service';
 import { ToastService } from '../../service/toast.service';
 import { TokenService } from '../../service/token.service';
 import { ViewportService } from '../../service/viewport.service';
@@ -23,7 +22,7 @@ import { ViewportService } from '../../service/viewport.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [TopBarComponent, PageFooterComponent, RouterLink, CommonModule, NtkmeButtonModule, NgbCollapse, ReactiveFormsModule, NgbTooltipModule, SearchFormComponent],
+  imports: [TopBarComponent, PageFooterComponent, RouterLink, CommonModule, NtkmeButtonModule, NgbCollapse, ReactiveFormsModule, NgbTooltipModule, SearchFormComponent, CustomDatePipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -31,7 +30,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('collapse') private collapse!: ElementRef<HTMLDivElement>;
   public isCollapsed = true;
   public topics: RxDocument<TopicDocumentType, TopicDocumentMethods>[] = [];
-  public latestCommits!: Promise<ICommits[]>;
   public user = 'enisz';
   public repo = 'igdb';
   public count = true;
@@ -42,7 +40,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public constructor(
     private readonly documentationService: DocumentationService,
-    private readonly gitService: GitService,
     private readonly viewportService: ViewportService,
     private readonly tokenService: TokenService,
     private readonly viewportScroller: ViewportScroller,
@@ -75,7 +72,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public async ngOnInit(): Promise<void> {
     this.topics = await this.documentationService.getAllTopics();
-    this.latestCommits = this.gitService.getLatestCommits(5);
 
     this.subscriptions.push(
       this.viewportService.getBreakpointObservable().subscribe(

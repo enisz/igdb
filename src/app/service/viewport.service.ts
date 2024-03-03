@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, fromEvent } from 'rxjs';
-import { IViewportBreakpoint, IViewportDimension } from '../interface/viewport.interface';
+import { IScrollPosition, IViewportBreakpoint, IViewportDimension } from '../interface/viewport.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -8,10 +8,12 @@ import { IViewportBreakpoint, IViewportDimension } from '../interface/viewport.i
 export class ViewportService {
   private breakpointSubject: BehaviorSubject<IViewportBreakpoint>;
   private viewportSubject: BehaviorSubject<IViewportDimension>;
+  private scrollSubject: BehaviorSubject<IScrollPosition>;
 
   constructor() {
     this.breakpointSubject = new BehaviorSubject(this.calculateBreakpoint(window.innerWidth));
     this.viewportSubject = new BehaviorSubject(this.getViewportDimensions());
+    this.scrollSubject = new BehaviorSubject(this.getScrollPosition());
 
     fromEvent(window, 'resize').subscribe(
       () => {
@@ -23,6 +25,10 @@ export class ViewportService {
           this.breakpointSubject.next(breakpoint);
         }
       }
+    );
+
+    fromEvent(window, 'scroll').subscribe(
+      () => this.scrollSubject.next(this.getScrollPosition())
     );
   }
 
@@ -40,6 +46,10 @@ export class ViewportService {
 
   public getBreakpointObservable(): Observable<IViewportBreakpoint> {
     return this.breakpointSubject.asObservable();
+  }
+
+  public getScrollObservable(): Observable<IScrollPosition> {
+    return this.scrollSubject.asObservable();
   }
 
   private calculateBreakpoint(width: number): IViewportBreakpoint {
@@ -62,6 +72,30 @@ export class ViewportService {
     return {
       width: window.innerWidth,
       height: window.innerHeight,
+    }
+  }
+
+  private getScrollPosition(): IScrollPosition {
+    const body = document.body;
+    const html = document.documentElement;
+
+    const documentHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight,
+    );
+
+    const viewportTop = window.scrollY;
+    const viewportBottom = this.getViewportDimensions().height;
+    const scrollPercentage = Math.ceil(viewportTop / documentHeight * 100);
+
+    return {
+      documentHeight,
+      viewportTop,
+      viewportBottom,
+      scrollPercentage,
     }
   }
 }
