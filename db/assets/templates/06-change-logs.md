@@ -5,6 +5,22 @@ icon: fa-clipboard-list
 
 # Change Log
 
+## v5.0.0 - March 03, 2024
+
+Major version! May break your project! Make sure to check the new features
+
+ - IGDBUtils [webhook](#webhooks) support
+ - [IGDBQueryBuilder](#the-query-builder) updates:
+   - building standard and multiquery query strings is now separated to their respective methods:
+     - [`build`](#apicalypse): standard apicalypse query
+     - [`build_multiquery`](#multiquery): multiquery query string
+ - [Wrapper](#the-wrapper) updates:
+   - synchronised API endpoints from IGDB, every available endpoint has its wrapper endpoint method counterpart
+   - endpoint methods - and multiquery - now accept both an apicalypse query string or a configured IGDBQueryBuilder instance(s)
+   - every endpoint method has its count counterpart. Count parameter is no longer available for the endpoint methods
+   - multiple constant values are moved to a dedicated file `IGDBConstants.php`.
+ - the documentation is completely rewritten in Angular and [it can be installed on multiple devices as a PWA](#installing-the-application)!
+
 ## v4.3.2 - October 26, 2023
  - Added new endpoint methods to the wrapper
    - [collection_membership](#collection-membership)
