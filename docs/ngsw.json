@@ -1,0 +1,143 @@
+{
+  "configVersion": 1,
+  "timestamp": 1709590579659,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/chunk-2CJAWYAV.js",
+        "/chunk-6XSMP2KR.js",
+        "/chunk-ECNDB3FZ.js",
+        "/chunk-MSBEWFBG.js",
+        "/chunk-QPMAT6N2.js",
+        "/chunk-WWRPXXER.js",
+        "/favicon.ico",
+        "/index.html",
+        "/main-6MHC226C.js",
+        "/manifest.webmanifest",
+        "/polyfills-CG2UM2YX.js",
+        "/scripts-DZNAUCVQ.js",
+        "/styles-7ANQFRW3.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/assets/database.json",
+        "/assets/icons/debug.log",
+        "/assets/icons/icon-128x128.png",
+        "/assets/icons/icon-144x144.png",
+        "/assets/icons/icon-152x152.png",
+        "/assets/icons/icon-192x192.png",
+        "/assets/icons/icon-384x384.png",
+        "/assets/icons/icon-512x512.png",
+        "/assets/icons/icon-72x72.png",
+        "/assets/icons/icon-96x96.png",
+        "/assets/icons/logo.psd",
+        "/assets/images/coderdocs-logo.svg",
+        "/assets/images/coderpro-features-thumb.png",
+        "/assets/images/coderpro-features.png",
+        "/assets/images/coderpro-home-thumb.png",
+        "/assets/images/coderpro-home.png",
+        "/assets/images/coderpro-pricing-thumb.png",
+        "/assets/images/coderpro-pricing.png",
+        "/assets/images/features/appify-add-members.gif",
+        "/assets/images/features/appify-theme-projects-overview-lg.jpg",
+        "/assets/theme/_base.scss",
+        "/assets/theme/_docs.scss",
+        "/assets/theme/_mixins.scss",
+        "/assets/theme/styles.scss",
+        "/assets/theme/theme.scss",
+        "/media/fa-brands-400-4RSXLDQT.woff2",
+        "/media/fa-brands-400-RP3MZ4AX.ttf",
+        "/media/fa-regular-400-6ODLNN6G.woff2",
+        "/media/fa-regular-400-VE33OVPX.ttf",
+        "/media/fa-solid-900-BALFL4QR.ttf",
+        "/media/fa-solid-900-ZZETRIYD.woff2",
+        "/media/fa-v4compatibility-5WGRUVBC.woff2",
+        "/media/fa-v4compatibility-7DCIFHD7.ttf"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/assets/database.json": "096744c9b881345c8b57517903522d36b5fef3b3",
+    "/assets/icons/debug.log": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "/assets/icons/icon-128x128.png": "144c88cc05e451dc7805eb2d27efbceecf57a06f",
+    "/assets/icons/icon-144x144.png": "b54e10900eb3f4196446db944110d3d877249e55",
+    "/assets/icons/icon-152x152.png": "2d9d3be099064473d6841b9490e9a2bfdc7d1ca3",
+    "/assets/icons/icon-192x192.png": "9f078733fe75d378dd0478725378b3e43df6fd06",
+    "/assets/icons/icon-384x384.png": "cc996f14c56f75d9207a5b45386dbea123b05671",
+    "/assets/icons/icon-512x512.png": "7762aaa6d24804087eeef8e97719532465f67f58",
+    "/assets/icons/icon-72x72.png": "3dd9f8a6a3356f7d0a2dde200eba54bf14cd020b",
+    "/assets/icons/icon-96x96.png": "b286147cbbcde54398089eda8352c7399293ae1b",
+    "/assets/icons/logo.psd": "3c3e7c8df34f4750bed80245032b1f7e66837db0",
+    "/assets/images/coderdocs-logo.svg": "4eeb2a3cf1b79a8d4a1a1e0aa29fe4f7c3894684",
+    "/assets/images/coderpro-features-thumb.png": "876c7a5930a2e608a25de5303758ee83a3d0400c",
+    "/assets/images/coderpro-features.png": "86a0dcdea5c735a59ba211b0b37466ddc43464ff",
+    "/assets/images/coderpro-home-thumb.png": "5f781d5fa7d6348a9efc5c828092b7254fa38053",
+    "/assets/images/coderpro-home.png": "51d585bb42872c596c60963f2f6c839e2aa047f1",
+    "/assets/images/coderpro-pricing-thumb.png": "b4336e117ccd3c7eeff3d28038bb61d171bf9135",
+    "/assets/images/coderpro-pricing.png": "9acedeb5ef74c2c3d378b55913f8d50eebdaa932",
+    "/assets/images/features/appify-add-members.gif": "541575f58b8310b4b47b5b84f4d34441b467a201",
+    "/assets/images/features/appify-theme-projects-overview-lg.jpg": "a9ac18d86c126850539b7b45b386ef630a9571f6",
+    "/assets/theme/_base.scss": "e13301505653e8db7adb74d397f3de2a18570144",
+    "/assets/theme/_docs.scss": "761081d60955e40cb6fc4c5010493acf4590a7ba",
+    "/assets/theme/_mixins.scss": "c6fc2d65a2b1feb3830380eb35020de1c7d07d65",
+    "/assets/theme/styles.scss": "91829e9b1f75e206200d9b32838a1eb7cfe6ca21",
+    "/assets/theme/theme.scss": "e12fea7d05df966918f78d21a930472159acb347",
+    "/chunk-2CJAWYAV.js": "220dc154a936438881405644efa92e752d67e7b5",
+    "/chunk-6XSMP2KR.js": "5f90b00e727959b3f96e670066ee9711787168d1",
+    "/chunk-ECNDB3FZ.js": "97611c6e1043603c8d78184661a21278f991755c",
+    "/chunk-MSBEWFBG.js": "9ab9d2732bc8b123b6f914c500ccd86b3f10831b",
+    "/chunk-QPMAT6N2.js": "43e1cf2463eba42135cf03777f18a60402292a8d",
+    "/chunk-WWRPXXER.js": "4165a8d8fbe8eb1e72ee79ffce02d091a0b5ba72",
+    "/favicon.ico": "866c3c706b32ea58623b19dddfe536416ee3ed7d",
+    "/index.html": "0f00e1aaeebf854d12eaf80ab22f85fdfe8c7743",
+    "/main-6MHC226C.js": "3bbedd1ab09e2f31c76887351c3058a6d4e8d450",
+    "/manifest.webmanifest": "9251dc6aea0cb6d5bc7310f098af0d10ccad3ff1",
+    "/media/fa-brands-400-4RSXLDQT.woff2": "4022f95e001d734ca8f082b8e7627abd205609ec",
+    "/media/fa-brands-400-RP3MZ4AX.ttf": "acaf5320927fc169b0089f8f25afb9cfbad353b4",
+    "/media/fa-regular-400-6ODLNN6G.woff2": "2ed706340547d19c10a409ee02fb08f3d52ff670",
+    "/media/fa-regular-400-VE33OVPX.ttf": "784b4d493ab9a7996b07e4f9f71674b2f2e43e22",
+    "/media/fa-solid-900-BALFL4QR.ttf": "54217d79e7b35011798d712a96d1c4ea08a0ca70",
+    "/media/fa-solid-900-ZZETRIYD.woff2": "1aae708e3b94ee981b452a918d28ed037fbb5e18",
+    "/media/fa-v4compatibility-5WGRUVBC.woff2": "7009126c938f8dad77426a5b44bc21685ee8dfec",
+    "/media/fa-v4compatibility-7DCIFHD7.ttf": "e47d5bf853d39ec86e62f4897cbcac7dd5c3b5b9",
+    "/polyfills-CG2UM2YX.js": "8758dc9fb93959b8a6c6ee04793c65df80b82558",
+    "/scripts-DZNAUCVQ.js": "239f04edae6b4588d195bf669507bf51b6e20164",
+    "/styles-7ANQFRW3.css": "c764691d220498fbd35937065602cac85ad1943d"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
