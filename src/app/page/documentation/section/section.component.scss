@@ -1,0 +1,13 @@
+div.tab-pane {
+    & > p {
+        padding: 10px;
+    }
+
+    & > pre {
+        margin-bottom: 0px;
+    }
+}
+
+ul.nav.nav-tabs > li.nav-item {
+    padding-bottom: 1px;
+}

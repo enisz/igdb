@@ -1,0 +1,18 @@
+@if (section) {
+    <section class="docs-section" [id]="section.slug" #element>
+        @if (section.level === 1) {
+            <h1 class="section-heading">{{ section.title }}</h1>
+        } @else if (section.level === 2) {
+            <h2 class="section-heading">{{ section.title }}</h2>
+        } @else if (section.level === 2) {
+            <h3 class="section-heading">{{ section.title }}</h3>
+        } @else if (section.level === 2) {
+            <h4 class="section-heading">{{ section.title }}</h4>
+        } @else if (section.level === 2) {
+            <h5 class="section-heading">{{ section.title }}</h5>
+        } @else {
+            <h6 class="section-heading">{{ section.title }}</h6>
+        }
+        <p [innerHTML]="section.html | token | safeHtml"></p>
+    </section>
+}

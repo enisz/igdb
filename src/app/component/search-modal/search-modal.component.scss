@@ -1,0 +1,11 @@
+@import 'bootstrap/scss/_functions';
+@import 'bootstrap/scss/_variables';
+@import 'bootstrap/scss/_mixins';
+
+ngb-modal-window {
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    box-shadow: $box-shadow;
+}

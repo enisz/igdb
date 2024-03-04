@@ -1,0 +1,14 @@
+@media (min-width: 1200px) {
+    div#docs-sidebar {
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+}
+
+ul.section-items > li.nav-item.section-title {
+    &:first-child {
+        margin-top: 0px;
+    }
+    margin-top: 16px;
+}

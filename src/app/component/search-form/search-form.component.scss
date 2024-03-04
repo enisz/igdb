@@ -1,0 +1,11 @@
+.search-form .search-btn {
+  & kbd {
+    opacity: 0.5;
+  }
+
+  top: 0;
+}
+
+input.form-control.search-input {
+  cursor: pointer;
+}

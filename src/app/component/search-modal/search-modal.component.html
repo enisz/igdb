@@ -1,0 +1,55 @@
+<ng-template #content let-modal>
+	<div class="modal-header bg-primary">
+		<form class="w-100" [formGroup]="searchForm">
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" placeholder="search the docs..." class="form-control" formControlName="term" (input)="handleSearch()" />
+                <span class="input-group-text" id="basic-addon1" style="cursor: pointer;" (click)="clearSearchField()">
+                    <i class="fa-regular fa-circle-xmark"></i>
+                </span>
+            </div>
+        </form>
+	</div>
+	<div class="modal-body" id="modal-body">
+        @for (listGroup of modalListGroup; track $index) {
+            <div class="d-flex flex-row align-items-center mb-2">
+                <span class="theme-icon-holder me-2">
+                    <i class="fa-solid fa-xl {{ listGroup.icon }}"></i>
+                </span>
+                <h5 class="mb-0" [innerHTML]="listGroup.title | emphasize: searchForm.get('term')?.value"></h5>
+            </div>
+            <div class="list-group {{ !$last ? 'mb-4' : '' }}">
+                @for (groupItem of listGroup.items; track groupItem.id) {
+                    <button
+                        [id]="'button-' + groupItem.id"
+                        type="button"
+                        class="list-group-item list-group-item-action d-flex flex-row justify-content-between"
+                        (click)="handleListItemClick(groupItem)"
+                        [ngClass]="{ 'active': activeRow === groupItem.id}"
+                    >
+                        <span [innerHTML]="groupItem.title | escape | emphasize: searchForm.get('term')?.value"></span>
+                        @if (groupItem.clearable) {
+                            <button type="button" class="btn-close" aria-label="Close" (click)="removeHistoryItem(groupItem.title)"></button>
+                        }
+                    </button>
+                }
+            </div>
+        } @empty {
+            <span class="d-block w-100 text-center">
+                @if(searchForm.get('term')?.value.length) {
+                    There is no match for your search!
+                } @else {
+                    Your search history is empty!
+                }
+            </span>
+        }
+	</div>
+	<div class="modal-footer d-flex flex-row justify-content-between align-items-center">
+        <small>
+            <kbd>Esc</kbd> to close
+        </small>
+		<button type="button" class="btn btn-sm btn-outline-dark" (click)="close()">Close</button>
+	</div>
+</ng-template>

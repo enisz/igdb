@@ -1,0 +1,45 @@
+<div id="docs-sidebar" class="docs-sidebar shadow-lg" #sidebar>
+    <div class="top-search-box d-lg-none p-3">
+        <app-search-form></app-search-form>
+    </div>
+
+    <nav id="docs-nav" class="docs-nav navbar">
+        <ul class="section-items list-unstyled nav flex-column pb-3" id="docs-nav">
+            @if (sections && topics) {
+                @for (topic of topics; track topic.id) {
+                    <li class="nav-item section-title">
+                        <a
+                            [id]="'nav-link-' + topic.slug"
+                            [ngClass]="{ 'active': activeIds.includes(topic.slug)}"
+                            class="nav-link scrollto"
+                            routerLink="/documentation"
+                            [fragment]="topic.slug"
+                            (click)="closeSidebar()"
+                            >
+                                <span class="theme-icon-holder me-2">
+                                    <i class="fas" [ngClass]="topic.icon"></i>
+                                </span>
+                                {{ topic.title }}
+                        </a>
+                    </li>
+
+                    @for (section of filterByTopic(topic.id); track section.id) {
+                        <li class="nav-item">
+                            <a
+                                [id]="'nav-link-' + section.slug"
+                                [ngStyle]="{ 'padding-left': (section.level * 10) + 'px' }"
+                                [ngClass]="{'active': activeIds.includes(section.slug)}"
+                                class="nav-link scrollto"
+                                routerLink="/documentation"
+                                [fragment]="section.slug"
+                                (click)="closeSidebar()"
+                                >
+                                    {{ section.title }}
+                            </a>
+                        </li>
+                    }
+                }
+            }
+        </ul>
+    </nav>
+</div>

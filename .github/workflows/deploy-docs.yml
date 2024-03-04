@@ -1,0 +1,29 @@
+name: Deploy Documentation
+on:
+  push:
+    branches:
+      - "documentation"
+
+jobs:
+  publish:
+    name: Deploying Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker://node:18-alpine
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Building Application
+        run: |
+          npm ci
+          npm run db:prod
+          npm run build
+          cp ./dist/igdb-docs/browser/index.html ./dist/igdb-docs/browser/404.html
+
+      - name: Publishing
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: documentation
+          folder: ./dist/igdb-docs/browser
+          target-folder: ./docs

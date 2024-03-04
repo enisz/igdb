@@ -1,0 +1,188 @@
+<app-top-bar></app-top-bar>
+
+<div class="page-header theme-bg-dark py-5 text-center position-relative">
+    <div class="theme-bg-shapes-right"></div>
+    <div class="theme-bg-shapes-left"></div>
+    <div class="container">
+        <h1 class="page-heading single-col-max mx-auto">Documentation</h1>
+        <div class="page-intro single-col-max mx-auto">IGDB PHP Wrapper</div>
+        <div class="main-search-box pt-3 d-block mx-auto">
+            <app-search-form></app-search-form>
+        </div>
+        <div class="github-button-container">
+            @for (type of types; track $index) {
+                <ntkme-github-button
+                    [user]="user"
+                    [repo]="repo"
+                    [count]="count"
+                    [size]="size"
+                    [type]="type"
+                    [target]="'_blank'"
+                ></ntkme-github-button>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="page-content">
+    <div class="container">
+        <div class="docs-overview py-5">
+            <div class="row">
+                <div class="col text-center">
+                    <button
+                        class="btn btn-light mb-3"
+                        type="button"
+                        (click)="toggleCollapse()"
+                    >
+                        Add your tokens to the examples!
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div #collapse [ngbCollapse]="isCollapsed" class="mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">
+                                    <span class="theme-icon-holder card-icon-holder me-2">
+                                        <i class="fa-solid fa-user"></i>
+                                    </span>
+                                    <span class="card-title-text">Personalise the docs!</span>
+                                </h5>
+                                <p>
+                                    The documentation contains many example codes where your IGDB tokens are required for instantiate classes. Here you can provide your own tokens to have them replaced in these examples offering you copy-paste ready snippets.
+                                </p>
+
+                                <div class="callout-block callout-block-danger me-1">
+                                    <div class="content">
+                                        <h4 class="callout-title">
+                                            <span class="callout-icon-holder">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </span>
+                                            Important
+                                        </h4>
+                                        <p>Your tokens are not sent or saved anywhere else but your browser. These tokens will be used only to replace values in the documentation. You can delete your tokens anytime by pressing the button below.</p>
+                                        <p class="mb-0 d-flex flex-row-reverse">
+                                            <button class="btn btn-danger btn-sm" (click)="deleteTokens()" [disabled]="isDeleteTokensDisabled()">Delete my tokens!</button>
+                                        </p>
+                                    </div>
+                                </div>
+                                <form [formGroup]="tokenForm">
+                                    <div class="row">
+                                        <div class="col-md-6 col-12 mb-2">
+                                            <div class="input-group">
+                                                <span class="input-group-text" id="client-id-addon">
+                                                    <i class="fa-solid fa-id-card"></i>
+                                                </span>
+                                                <input type="text" class="form-control token-field" [ngClass]="{ 'is-valid': tokenForm.get('clientId')?.valid && tokenForm.dirty, 'is-invalid': !tokenForm.get('clientId')?.valid && tokenForm.dirty}" placeholder="Client ID" formControlName="clientId">
+                                                <div class="valid-feedback ms-5 mt-2">
+                                                    Looks like a valid client ID!
+                                                </div>
+                                                <div class="invalid-feedback ms-5 mt-2">
+                                                    @for (error of getValidationErrors('clientId'); track $index) {
+                                                        @if(error === 'pattern') { <span class="d-block">Doesn't seem to be a valid token!</span> }
+                                                        @if(error === 'minlength') { <span class="d-block">Token is not long enough!</span> }
+                                                        @if(error === 'maxlength') { <span class="d-block">Token is too long!</span> }
+                                                        @if(error === 'required') { <span class="d-block">This field cannot be empty!</span> }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12 mb-2">
+                                            <div class="input-group">
+                                                <span class="input-group-text" id="client-id-addon">
+                                                    <i class="fa-solid fa-key"></i>
+                                                </span>
+                                                <input type="text" class="form-control token-field" [ngClass]="{ 'is-valid': tokenForm.get('accessToken')?.valid && tokenForm.dirty, 'is-invalid': !tokenForm.get('accessToken')?.valid && tokenForm.dirty}" placeholder="Access Token" formControlName="accessToken">
+                                                <div class="valid-feedback ms-5 mt-2">
+                                                    Looks like a valid access token!
+                                                </div>
+                                                <div class="invalid-feedback ms-5 mt-2">
+                                                    @for (error of getValidationErrors('accessToken'); track $index) {
+                                                        @if(error === 'pattern') { <span class="d-block">Doesn't seem to be a valid token!</span> }
+                                                        @if(error === 'minlength') { <span class="d-block">Token is not long enough!</span> }
+                                                        @if(error === 'maxlength') { <span class="d-block">Token is too long!</span> }
+                                                        @if(error === 'required') { <span class="d-block">This field cannot be empty!</span> }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-12 order-4 order-md-4">
+                                            @if(tokenForm.getError('alreadySaved') !== null && tokenForm.dirty) {
+                                                <div class="col-12 alert alert-danger mb-0" role="alert">
+                                                    These tokens are already saved!
+                                                </div>
+                                            }
+                                        </div> -->
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="callout-block callout-block-info me-1">
+                                                <div class="content">
+                                                    <h4 class="callout-title">
+                                                        <span class="callout-icon-holder">
+                                                            <i class="fas fa-circle-info"></i>
+                                                        </span>
+                                                        Info
+                                                    </h4>
+                                                    <p>Checking "Remember my tokens!" means your tokens will be saved in the local storage of your browser and they will be available on your next visit. If unchecked, the toknes are stored in your browser's session storage, meaning your tokens will be erased when you close your browser.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" id="flexCheckChecked" formControlName="remember">
+                                                <label class="form-check-label" for="flexCheckChecked">
+                                                    Remember my tokens!
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                            <pre>
+                                                <code class="language-php hljs" data-highlighted="yes"><span class="hljs-variable">$igdb</span> = <span class="hljs-keyword">new</span> <span class="hljs-title function_ invoke__">IGDB</span>(<span class="hljs-string">"{{ getTokens().clientId || '{client_id}' }}"</span>, <span class="hljs-string">"{{ getTokens().accessToken || '{access_token}' }}"</span>);</code>
+                                            </pre>
+
+                                @if(tokenForm.dirty && tokenForm.getError('alreadySaved')) {
+                                    <div class="d-flex flex-row-reverse">
+                                        <small>
+                                            Tokens are already saved!
+                                        </small>
+                                    </div>
+                                }
+                                <p class="mb-0 d-flex flex-row-reverse">
+                                    <button class="btn btn-success btn-sm ms-2" [disabled]="!tokenForm.valid" (click)="setTokens()">{{ getTokens().clientId === '' ? 'Save' : 'Update' }}</button>
+                                    <button class="btn btn-light btn-sm ms-2" (click)="toggleCollapse()">Close</button>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                @for(topic of topics; track topic.id) {
+                    <div class="col-12 col-lg-4 py-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">
+                                    <span class="theme-icon-holder card-icon-holder me-2">
+                                        <i class="fas {{ topic.icon }}"></i>
+                                    </span>
+                                    <span class="card-title-text">{{ topic.title }}</span>
+                                </h5>
+                                <div class="card-text">
+                                    {{ topic.overview }}
+                                </div>
+                                <a class="card-link-mask" routerLink="documentation" [fragment]="topic.slug"></a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-page-footer></app-page-footer>

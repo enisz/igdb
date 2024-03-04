@@ -1,0 +1,17 @@
+<app-top-bar
+    [hamburger]="true"
+    [searchbar]="true"
+    [progressbar]="true"
+></app-top-bar>
+
+<div class="docs-wrapper">
+    <app-sidebar></app-sidebar>
+
+    <div class="docs-content">
+        <div class="container">
+            @for (topic of topics; track topic.id) {
+                <app-topic [topic-id]="topic.id"></app-topic>
+            }
+        </div>
+    </div>
+</div>
